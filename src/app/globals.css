@@ -31,6 +31,11 @@ h3 {
 }
 
 .reveal {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.is-ready .reveal {
   opacity: 0;
   transform: translateY(20px);
   transition:
@@ -38,7 +43,7 @@ h3 {
     transform 620ms ease;
 }
 
-.reveal.in-view {
+.is-ready .reveal.in-view {
   opacity: 1;
   transform: translateY(0);
 }
@@ -70,6 +75,11 @@ h3 {
   width: 100%;
 }
 
+.marquee-track {
+  animation: marquee 26s linear infinite;
+  will-change: transform;
+}
+
 @keyframes product-in {
   from {
     opacity: 0;
@@ -80,6 +90,16 @@ h3 {
   }
 }
 
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -87,5 +107,9 @@ h3 {
     animation-duration: 1ms !important;
     scroll-behavior: auto !important;
     transition-duration: 1ms !important;
+  }
+
+  .marquee-track {
+    animation: none;
   }
 }
