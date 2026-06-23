@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import {
   ArrowRight,
   BadgeCheck,
@@ -93,7 +92,7 @@ const policies = [
 
 export default function WhyBuyFromUsPage() {
   return (
-    <div className="overflow-hidden bg-[linear-gradient(180deg,#ffffff_0%,#f4f8ff_58%,#ffffff_100%)] text-[#07111f]">
+    <div className="overflow-hidden bg-[linear-gradient(180deg,#ffffff_0%,#f4f9ff_58%,#ffffff_100%)] text-[#050b14]">
       <RevealController />
       <Header />
 
@@ -104,7 +103,7 @@ export default function WhyBuyFromUsPage() {
             <h1 className="mx-auto mt-5 max-w-[960px] text-[clamp(48px,8vw,96px)] leading-[0.96] font-semibold tracking-normal">
               A cleaner way to buy local Apple and PS5 drops.
             </h1>
-            <p className="mx-auto mt-6 max-w-[720px] text-[clamp(17px,2vw,21px)] leading-[1.58] text-[#687386]">
+            <p className="mx-auto mt-6 max-w-[720px] text-[clamp(17px,2vw,21px)] leading-[1.58] text-[#667085]">
               MacVault is built for buyers who want product truth before a visit, payment, or
               reservation. The site should reduce doubt before WhatsApp starts.
             </p>
@@ -117,7 +116,7 @@ export default function WhyBuyFromUsPage() {
           </div>
         </section>
 
-        <section className="border-y border-[#07111f1f] bg-white py-[86px]">
+        <section className="border-y border-[#050b141f] bg-white py-[60px]">
           <div className={containerClass}>
             <div className="reveal mb-10 text-center">
               <Tag>THE DIFFERENCE</Tag>
@@ -126,19 +125,19 @@ export default function WhyBuyFromUsPage() {
               </h2>
             </div>
 
-            <div className="grid grid-cols-3 border-y border-[#07111f1f] max-[940px]:grid-cols-1">
+            <div className="grid grid-cols-3 border-y border-[#050b141f] max-[940px]:grid-cols-1">
               {principles.map((principle, index) => {
                 const Icon = principle.icon;
 
                 return (
                   <div
-                    className="reveal min-h-[230px] border-r border-[#07111f1f] p-7 last:border-r-0 max-[940px]:border-b max-[940px]:last:border-b-0"
+                    className="reveal min-h-[230px] border-r border-[#050b141f] p-7 last:border-r-0 max-[940px]:border-b max-[940px]:last:border-b-0"
                     style={{ transitionDelay: `${index * 100}ms` }}
                     key={principle.title}
                   >
-                    <Icon className="mb-8 size-6 text-[#007aff]" strokeWidth={2} />
+                    <Icon className="mb-8 size-6 text-[#0a84ff]" strokeWidth={2} />
                     <h3 className="text-[26px] leading-tight font-semibold">{principle.title}</h3>
-                    <p className="mt-3 text-[15px] leading-[1.55] text-[#687386]">
+                    <p className="mt-3 text-[15px] leading-[1.55] text-[#667085]">
                       {principle.text}
                     </p>
                   </div>
@@ -148,35 +147,35 @@ export default function WhyBuyFromUsPage() {
           </div>
         </section>
 
-        <section className={`${containerClass} py-[104px]`}>
+        <section className={`${containerClass} py-[60px]`}>
           <div className="reveal mb-10 max-w-[760px]">
             <Tag>COMPARISON</Tag>
             <h2 className="mt-2 text-[clamp(34px,5vw,64px)] leading-none font-semibold tracking-normal">
               Not a generic listing flow.
             </h2>
-            <p className="mt-[18px] text-[17px] leading-[1.56] text-[#687386]">
+            <p className="mt-[18px] text-[17px] leading-[1.56] text-[#667085]">
               MacVault pages are designed to answer the practical questions that usually slow down
               local electronics buying.
             </p>
           </div>
 
-          <div className="border-y border-[#07111f1f] bg-white">
-            <div className="grid grid-cols-2 border-b border-[#07111f1f] text-sm font-semibold text-[#687386] max-sm:grid-cols-1">
-              <div className="border-r border-[#07111f1f] p-5 max-sm:border-r-0 max-sm:border-b">
+          <div className="border-y border-[#050b141f] bg-white">
+            <div className="grid grid-cols-2 border-b border-[#050b141f] text-sm font-semibold text-[#667085] max-sm:grid-cols-1">
+              <div className="border-r border-[#050b141f] p-5 max-sm:border-r-0 max-sm:border-b">
                 Typical listing
               </div>
               <div className="p-5">MacVault flow</div>
             </div>
             {comparisonRows.map((row, index) => (
               <div
-                className="reveal grid grid-cols-2 border-b border-[#07111f1f] last:border-b-0 max-sm:grid-cols-1"
+                className="reveal grid grid-cols-2 border-b border-[#050b141f] last:border-b-0 max-sm:grid-cols-1"
                 style={{ transitionDelay: `${index * 80}ms` }}
                 key={row.typical}
               >
-                <div className="border-r border-[#07111f1f] p-5 text-[15px] leading-normal text-[#687386] max-sm:border-r-0 max-sm:border-b">
+                <div className="border-r border-[#050b141f] p-5 text-[15px] leading-normal text-[#667085] max-sm:border-r-0 max-sm:border-b">
                   {row.typical}
                 </div>
-                <div className="p-5 text-[15px] leading-normal font-medium text-[#07111f]">
+                <div className="p-5 text-[15px] leading-normal font-medium text-[#050b14]">
                   {row.macvault}
                 </div>
               </div>
@@ -184,7 +183,7 @@ export default function WhyBuyFromUsPage() {
           </div>
         </section>
 
-        <section className="bg-[#f4f8ff] py-[104px]">
+        <section className="bg-[#f4f9ff] py-[60px]">
           <div className={containerClass}>
             <div className="reveal mb-11 text-center">
               <Tag>LOCAL SUPPORT FLOW</Tag>
@@ -193,21 +192,21 @@ export default function WhyBuyFromUsPage() {
               </h2>
             </div>
 
-            <div className="timeline reveal relative grid grid-cols-4 border-t border-[#07111f29] max-[940px]:grid-cols-2 max-sm:grid-cols-1">
+            <div className="timeline reveal relative grid grid-cols-4 border-t border-[#050b1429] max-[940px]:grid-cols-2 max-sm:grid-cols-1">
               {supportFlow.map((step) => {
                 const Icon = step.icon;
 
                 return (
                   <div
-                    className="min-h-64 border-r border-[#07111f1f] pt-7 pr-7 last:border-r-0 max-[940px]:border-b"
+                    className="min-h-64 border-r border-[#050b141f] pt-7 pr-7 last:border-r-0 max-[940px]:border-b"
                     key={step.number}
                   >
-                    <div className="inline-flex size-[42px] items-center justify-center rounded-full border border-[#007aff42] bg-white text-[#007aff]">
+                    <div className="inline-flex size-[42px] items-center justify-center rounded-full border border-[#0a84ff42] bg-white text-[#0a84ff]">
                       <Icon className="size-5" strokeWidth={1.9} />
                     </div>
-                    <div className="mt-5 text-[13px] font-bold text-[#007aff]">{step.number}</div>
+                    <div className="mt-5 text-[13px] font-bold text-[#0a84ff]">{step.number}</div>
                     <h3 className="mt-2 mb-2 text-2xl font-semibold">{step.title}</h3>
-                    <p className="max-w-[230px] text-[15px] leading-normal text-[#687386]">
+                    <p className="max-w-[230px] text-[15px] leading-normal text-[#667085]">
                       {step.text}
                     </p>
                   </div>
@@ -217,7 +216,7 @@ export default function WhyBuyFromUsPage() {
           </div>
         </section>
 
-        <section className="bg-[#07111f] py-[86px] text-white">
+        <section className="bg-[#050b14] py-[60px] text-white">
           <div className={`${containerClass} grid grid-cols-[0.9fr_1.1fr] gap-[56px] max-[940px]:grid-cols-1`}>
             <div className="reveal">
               <Tag>BUYING POLICY</Tag>
@@ -237,7 +236,7 @@ export default function WhyBuyFromUsPage() {
                   style={{ transitionDelay: `${index * 80}ms` }}
                   key={policy}
                 >
-                  <span className="mt-1 grid size-7 shrink-0 place-items-center rounded-full bg-white text-[#007aff]">
+                  <span className="mt-1 grid size-7 shrink-0 place-items-center rounded-full bg-white text-[#0a84ff]">
                     <ShieldCheck className="size-4" strokeWidth={2} />
                   </span>
                   <p className="text-[17px] leading-normal text-white/75">{policy}</p>
@@ -247,23 +246,20 @@ export default function WhyBuyFromUsPage() {
           </div>
         </section>
 
-        <section className="bg-white py-24 text-center">
+        <section className="bg-white py-[60px] text-center">
           <div className={`reveal ${containerClass}`}>
             <Tag>READY WHEN YOU ARE</Tag>
             <h2 className="mx-auto mt-2 max-w-[760px] text-[clamp(34px,5vw,64px)] leading-none font-semibold tracking-normal">
               Start with the product page, then confirm on WhatsApp.
             </h2>
-            <p className="mx-auto mt-[18px] max-w-2xl text-[17px] leading-[1.56] text-[#687386]">
+            <p className="mx-auto mt-[18px] max-w-2xl text-[17px] leading-[1.56] text-[#667085]">
               Browse current drops, compare details, and message with the right context.
             </p>
             <div className="mt-[30px] flex flex-wrap justify-center gap-3">
               <Cta href="/products">Browse products</Cta>
-              <Link
-                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-[#007aff38] bg-white px-5 text-sm font-semibold text-[#0759c7] transition-transform hover:-translate-y-0.5"
-                href="/"
-              >
-                Back home <ArrowRight className="size-4" strokeWidth={2} />
-              </Link>
+              <Cta href="/" icon={ArrowRight} variant="secondary">
+                Back home
+              </Cta>
             </div>
           </div>
         </section>

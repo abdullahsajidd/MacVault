@@ -33,13 +33,13 @@ export function ProductSlider({
 
       <div className="mt-4 flex items-center justify-between gap-4">
         <div>
-          <p className="text-sm font-semibold text-[#07111f]">{current.title}</p>
-          <p className="mt-1 text-sm leading-normal text-[#687386]">{current.caption}</p>
+          <p className="text-sm font-semibold text-[#050b14]">{current.title}</p>
+          <p className="mt-1 text-sm leading-normal text-[#667085]">{current.caption}</p>
         </div>
 
         <div className="flex shrink-0 items-center gap-2">
           <button
-            className="grid size-10 place-items-center rounded-full border border-[#07111f1f] bg-white text-[#07111f] transition-colors hover:border-[#007aff52] hover:text-[#007aff]"
+            className="grid size-10 place-items-center rounded-full border border-[#050b141f] bg-white text-[#050b14] transition-colors hover:border-[#0a84ff52] hover:text-[#0a84ff]"
             type="button"
             aria-label={`Show previous ${title} image`}
             onClick={() => goTo("previous")}
@@ -47,7 +47,7 @@ export function ProductSlider({
             <ChevronLeft className="size-4" strokeWidth={2} />
           </button>
           <button
-            className="grid size-10 place-items-center rounded-full border border-[#07111f1f] bg-white text-[#07111f] transition-colors hover:border-[#007aff52] hover:text-[#007aff]"
+            className="grid size-10 place-items-center rounded-full border border-[#050b141f] bg-white text-[#050b14] transition-colors hover:border-[#0a84ff52] hover:text-[#0a84ff]"
             type="button"
             aria-label={`Show next ${title} image`}
             onClick={() => goTo("next")}
@@ -61,7 +61,7 @@ export function ProductSlider({
         {gallery.map((item, index) => (
           <button
             className={`h-1 rounded-full transition-colors ${
-              index === active ? "w-4 bg-[#007aff]" : "w-1 bg-[#07111f2e]"
+              index === active ? "w-4 bg-[#0a84ff]" : "w-1 bg-[#050b142e]"
             }`}
             type="button"
             aria-label={`Show ${item.title}`}

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { ArrowRight, BadgeCheck, MessageCircle, Search, Truck } from "lucide-react";
 import { ProductVisual } from "@/components/product-visual";
 import { RevealController } from "@/components/reveal-controller";
@@ -37,7 +36,7 @@ const buyingModes = [
 
 export default function ProductsPage() {
   return (
-    <div className="overflow-hidden bg-[linear-gradient(180deg,#ffffff_0%,#f4f8ff_58%,#ffffff_100%)] text-[#07111f]">
+    <div className="overflow-hidden bg-[linear-gradient(180deg,#ffffff_0%,#f4f9ff_58%,#ffffff_100%)] text-[#050b14]">
       <RevealController />
       <Header />
 
@@ -48,7 +47,7 @@ export default function ProductsPage() {
             <h1 className="mx-auto mt-5 max-w-[920px] text-[clamp(48px,8vw,96px)] leading-[0.96] font-semibold tracking-normal">
               Browse drops with details before the chat.
             </h1>
-            <p className="mx-auto mt-6 max-w-[720px] text-[clamp(17px,2vw,21px)] leading-[1.58] text-[#687386]">
+            <p className="mx-auto mt-6 max-w-[720px] text-[clamp(17px,2vw,21px)] leading-[1.58] text-[#667085]">
               Every product page is designed for quick local buying: condition, variant, warranty,
               package contents, and reservation context are shown before the CTA.
             </p>
@@ -61,27 +60,27 @@ export default function ProductsPage() {
           </div>
         </section>
 
-        <section className="border-y border-[#07111f1f] bg-white">
+        <section className="border-y border-[#050b141f] bg-white">
           <div className={`${containerClass} grid grid-cols-4 max-[940px]:grid-cols-2 max-sm:grid-cols-1`}>
             {buyingModes.map((mode, index) => {
               const Icon = mode.icon;
 
               return (
                 <div
-                  className="reveal min-h-[142px] border-r border-[#07111f1f] p-6 last:border-r-0 max-[940px]:border-b max-sm:border-r-0"
+                  className="reveal min-h-[142px] border-r border-[#050b141f] p-6 last:border-r-0 max-[940px]:border-b max-sm:border-r-0"
                   style={{ transitionDelay: `${index * 90}ms` }}
                   key={mode.title}
                 >
-                  <Icon className="mb-5 size-5 text-[#007aff]" strokeWidth={2} />
+                  <Icon className="mb-5 size-5 text-[#0a84ff]" strokeWidth={2} />
                   <h2 className="text-xl font-semibold">{mode.title}</h2>
-                  <p className="mt-2 text-sm leading-normal text-[#687386]">{mode.text}</p>
+                  <p className="mt-2 text-sm leading-normal text-[#667085]">{mode.text}</p>
                 </div>
               );
             })}
           </div>
         </section>
 
-        <section id="inventory" className={`${containerClass} py-[104px]`}>
+        <section id="inventory" className={`${containerClass} py-[60px]`}>
           <SectionHead
             kicker="AVAILABLE DROPS"
             title="Inventory built for reservation, not endless browsing."
@@ -97,20 +96,20 @@ export default function ProductsPage() {
 
               return (
                 <span
-                  className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#07111f1f] bg-white px-4 text-sm font-semibold text-[#07111f]"
+                  className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#050b141f] bg-white px-4 text-sm font-semibold text-[#050b14]"
                   key={category}
                 >
                   {category}
-                  <span className="text-[#687386]">{count}</span>
+                  <span className="text-[#667085]">{count}</span>
                 </span>
               );
             })}
           </div>
 
-          <div className="border-y border-[#07111f1f] bg-white">
+          <div className="border-y border-[#050b141f] bg-white">
             {products.map((product, index) => (
               <article
-                className="reveal grid grid-cols-[230px_1fr_190px] gap-7 border-b border-[#07111f1f] p-5 last:border-b-0 max-[940px]:grid-cols-[180px_1fr] max-sm:grid-cols-1"
+                className="reveal grid grid-cols-[230px_1fr_190px] gap-7 border-b border-[#050b141f] p-5 last:border-b-0 max-[940px]:grid-cols-[180px_1fr] max-sm:grid-cols-1"
                 style={{ transitionDelay: `${Math.min(index, 4) * 80}ms` }}
                 key={product.slug}
               >
@@ -123,22 +122,22 @@ export default function ProductsPage() {
 
                 <div className="self-center">
                   <div className="mb-4 flex flex-wrap items-center gap-2 text-xs font-semibold">
-                    <span className="rounded-full bg-[#007aff17] px-2.5 py-1.5 text-[#0759c7]">
+                    <span className="rounded-full bg-[#0a84ff17] px-2.5 py-1.5 text-[#0057d8]">
                       {product.category}
                     </span>
                     <span className="rounded-full bg-[#23c87918] px-2.5 py-1.5 text-[#14773d]">
                       {product.status}
                     </span>
-                    <span className="text-[#687386]">{product.condition}</span>
+                    <span className="text-[#667085]">{product.condition}</span>
                   </div>
                   <h2 className="text-[30px] leading-[1.08] font-semibold">{product.title}</h2>
-                  <p className="mt-3 max-w-[620px] text-[15px] leading-[1.55] text-[#687386]">
+                  <p className="mt-3 max-w-[620px] text-[15px] leading-[1.55] text-[#667085]">
                     {product.summary}
                   </p>
                   <div className="mt-5 flex flex-wrap gap-2">
                     {product.specs.slice(0, 3).map((spec) => (
                       <span
-                        className="rounded-full border border-[#07111f14] bg-[#f8fbff] px-3 py-1.5 text-xs font-medium text-[#687386]"
+                        className="rounded-full border border-[#050b1414] bg-[#f5f5f7] px-3 py-1.5 text-xs font-medium text-[#667085]"
                         key={spec}
                       >
                         {spec}
@@ -147,17 +146,14 @@ export default function ProductsPage() {
                   </div>
                 </div>
 
-                <div className="flex flex-col justify-between gap-5 border-l border-[#07111f1f] pl-6 max-[940px]:col-span-2 max-[940px]:border-l-0 max-[940px]:border-t max-[940px]:pt-5 max-[940px]:pl-0 max-sm:col-span-1">
+                <div className="flex flex-col justify-between gap-5 border-l border-[#050b141f] pl-6 max-[940px]:col-span-2 max-[940px]:border-l-0 max-[940px]:border-t max-[940px]:pt-5 max-[940px]:pl-0 max-sm:col-span-1">
                   <div>
-                    <p className="text-xs font-semibold text-[#687386]">Price</p>
-                    <p className="mt-1 text-lg font-semibold text-[#07111f]">{product.price}</p>
+                    <p className="text-xs font-semibold text-[#667085]">Price</p>
+                    <p className="mt-1 text-lg font-semibold text-[#050b14]">{product.price}</p>
                   </div>
-                  <Link
-                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-[#007aff] bg-[#007aff] px-4 text-sm font-semibold text-white transition-transform hover:-translate-y-0.5"
-                    href={`/products/${product.slug}`}
-                  >
-                    View details <ArrowRight className="size-4" strokeWidth={2} />
-                  </Link>
+                  <Cta href={`/products/${product.slug}`} icon={ArrowRight}>
+                    View details
+                  </Cta>
                 </div>
               </article>
             ))}

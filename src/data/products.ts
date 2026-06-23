@@ -35,7 +35,7 @@ export const products: Product[] = [
     condition: "Sealed / PTA options",
     price: "WhatsApp for today's price",
     badge: "Best flagship",
-    accent: "#007aff",
+    accent: "#0a84ff",
     summary: "Titanium iPhone with clear PTA, storage, color, and warranty notes before reserve.",
     description:
       "A high-demand flagship drop for buyers who want the Pro Max camera system, premium build, and clean local buying support.",
