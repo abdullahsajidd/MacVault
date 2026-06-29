@@ -1,16 +1,21 @@
 import type { CSSProperties } from "react";
+import Image from "next/image";
 import type { ProductVisualKind } from "@/data/products";
 
 export function ProductVisual({
   kind,
   accent,
   label,
+  imageUrl,
+  imageAlt,
   size = "large",
   className = "",
 }: {
   kind: ProductVisualKind;
   accent: string;
   label: string;
+  imageUrl?: string;
+  imageAlt?: string;
   size?: "large" | "compact";
   className?: string;
 }) {
@@ -18,25 +23,36 @@ export function ProductVisual({
 
   return (
     <div
-      className={`relative grid overflow-hidden rounded-lg border border-[#050b141f] bg-[linear-gradient(145deg,#ffffff,#f5f5f7)] ${
-        size === "compact" ? "min-h-[230px]" : "min-h-[360px]"
+      className={`product-visual-frame relative grid overflow-hidden rounded-lg border border-[#050b141f] bg-[linear-gradient(145deg,#ffffff,#f5f5f7)] ${
+        size === "compact" ? "min-h-[230px] aspect-[4/3]" : "min-h-[360px] aspect-[16/11]"
       } ${className}`}
       style={style}
       aria-label={label}
     >
       <div className="absolute inset-x-8 top-8 h-px bg-linear-to-r from-transparent via-[#050b1424] to-transparent" />
       <div className="absolute right-8 bottom-8 left-8 h-px bg-linear-to-r from-transparent via-[#050b1424] to-transparent" />
-      <div className="absolute top-8 right-8 rounded-full border border-[#050b141f] bg-white px-3 py-1 text-xs font-semibold text-[#667085]">
+      <div className="absolute top-8 right-8 z-10 rounded-full border border-[#050b141f] bg-white/92 px-3 py-1 text-xs font-semibold text-[#667085] shadow-[0_10px_24px_rgba(5,20,44,0.08)] backdrop-blur-md">
         {label}
       </div>
-      <div className={`relative grid place-items-center p-8 ${size === "compact" ? "scale-[0.72]" : ""}`}>
-        {kind === "phone" ? <PhoneMock /> : null}
-        {kind === "laptop" ? <LaptopMock /> : null}
-        {kind === "tablet" ? <TabletMock /> : null}
-        {kind === "watch" ? <WatchMock /> : null}
-        {kind === "console" ? <ConsoleMock /> : null}
-        {kind === "audio" ? <AudioMock /> : null}
-      </div>
+      {imageUrl ? (
+        <Image
+          className="product-visual-image object-contain p-5"
+          src={imageUrl}
+          alt={imageAlt ?? label}
+          fill
+          sizes={size === "compact" ? "(max-width: 940px) 180px, 230px" : "(max-width: 1020px) 100vw, 52vw"}
+          unoptimized
+        />
+      ) : (
+        <div className={`relative grid place-items-center p-8 ${size === "compact" ? "scale-[0.72]" : ""}`}>
+          {kind === "phone" ? <PhoneMock /> : null}
+          {kind === "laptop" ? <LaptopMock /> : null}
+          {kind === "tablet" ? <TabletMock /> : null}
+          {kind === "watch" ? <WatchMock /> : null}
+          {kind === "console" ? <ConsoleMock /> : null}
+          {kind === "audio" ? <AudioMock /> : null}
+        </div>
+      )}
     </div>
   );
 }

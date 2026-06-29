@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { ProductGalleryItem } from "@/data/products";
@@ -29,9 +30,18 @@ export function ProductSlider({
 
   return (
     <div className="reveal">
-      <ProductVisual accent={accent} kind={current.kind} label={current.title} />
+      <div className="product-slider-main">
+        <ProductVisual
+          key={current.title}
+          accent={accent}
+          kind={current.kind}
+          label={current.title}
+          imageUrl={current.imageUrl}
+          imageAlt={current.imageAlt}
+        />
+      </div>
 
-      <div className="mt-4 flex items-center justify-between gap-4">
+      <div className="mt-4 flex items-center justify-between gap-4 max-[560px]:flex-col max-[560px]:items-stretch">
         <div>
           <p className="text-sm font-semibold text-[#050b14]">{current.title}</p>
           <p className="mt-1 text-sm leading-normal text-[#667085]">{current.caption}</p>
@@ -39,36 +49,43 @@ export function ProductSlider({
 
         <div className="flex shrink-0 items-center gap-2">
           <button
-            className="grid size-10 place-items-center rounded-full border border-[#050b141f] bg-white text-[#050b14] transition-colors hover:border-[#0a84ff52] hover:text-[#0a84ff]"
+            className="icon-button"
             type="button"
             aria-label={`Show previous ${title} image`}
             onClick={() => goTo("previous")}
           >
-            <ChevronLeft className="size-4" strokeWidth={2} />
+            <ChevronLeft className="size-5" strokeWidth={2} />
           </button>
           <button
-            className="grid size-10 place-items-center rounded-full border border-[#050b141f] bg-white text-[#050b14] transition-colors hover:border-[#0a84ff52] hover:text-[#0a84ff]"
+            className="icon-button"
             type="button"
             aria-label={`Show next ${title} image`}
             onClick={() => goTo("next")}
           >
-            <ChevronRight className="size-4" strokeWidth={2} />
+            <ChevronRight className="size-5" strokeWidth={2} />
           </button>
         </div>
       </div>
 
-      <div className="mt-5 flex gap-2" aria-label={`${title} gallery position`}>
+      <div className="gallery-thumbs mt-5 grid grid-cols-3 gap-3" aria-label={`${title} gallery`}>
         {gallery.map((item, index) => (
           <button
-            className={`h-1 rounded-full transition-colors ${
-              index === active ? "w-4 bg-[#0a84ff]" : "w-1 bg-[#050b142e]"
-            }`}
+            className={`gallery-thumb ${index === active ? "is-active" : ""}`}
             type="button"
             aria-label={`Show ${item.title}`}
             aria-current={index === active ? "true" : undefined}
             onClick={() => setActive(index)}
             key={item.title}
-          />
+          >
+            <Image
+              className="object-contain p-2"
+              src={item.imageUrl}
+              alt={item.imageAlt}
+              fill
+              sizes="140px"
+              unoptimized
+            />
+          </button>
         ))}
       </div>
     </div>

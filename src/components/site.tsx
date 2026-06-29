@@ -1,122 +1,109 @@
-import type { CSSProperties, ReactNode } from "react";
-import Link from "next/link";
-import type { LucideIcon } from "lucide-react";
-import { Menu, MessageCircle } from "lucide-react";
-import { QuoteButton } from "./quote-modal";
+"use client";
 
-export const containerClass =
-  "site-container";
+import type { ReactNode } from "react";
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import {
+  BadgeCheck,
+  Gamepad2,
+  Headphones,
+  Laptop,
+  Menu,
+  MessageCircle,
+  PackageSearch,
+  ShieldCheck,
+  Smartphone,
+  X,
+} from "lucide-react";
+import { Cta } from "@/components/cta";
+import { QuoteButton } from "@/components/quote-modal";
+
+export { Cta } from "@/components/cta";
+
+export const containerClass = "site-container";
+
+const navigationLinks = [
+  { label: "Products", href: "/products" },
+  { label: "Why Buy", href: "/why-buy-from-us" },
+  { label: "Process", href: "/#process" },
+  { label: "Guide", href: "/#guide" },
+  { label: "Support", href: "/#support" },
+];
+
+export function AnimatedText({ children }: { children: ReactNode }) {
+  return <span className="animated-text">{children}</span>;
+}
 
 export function Brand() {
   return (
-    <Link className="inline-flex min-h-11 min-w-max items-center gap-3 text-[15px] font-semibold tracking-[0.02em]" href="/">
-      <span className="grid size-[36px] place-items-center rounded-[14px] bg-linear-to-br from-[#0a84ff] to-[#0057d8] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.24)]">
-        M
-      </span>
-      <span>MacVault</span>
+    <Link className="inline-flex min-h-12 min-w-max items-center" href="/" aria-label="MacVault home">
+      <Image
+        className="h-12 w-auto max-sm:h-10"
+        src="/images/brand/macvault-selected-logo.svg"
+        alt="MacVault"
+        width={600}
+        height={180}
+        priority
+      />
     </Link>
   );
 }
 
 export function Tag({ children }: { children: ReactNode }) {
   return (
-    <span className="inline-flex min-h-9 items-center gap-2 rounded-full border border-[#0a84ff26] bg-white/90 px-3.5 text-[13px] font-semibold tracking-[0.12em] text-[#0057d8] uppercase shadow-[0_10px_30px_rgba(5,20,44,0.05)] max-[425px]:text-[11px] max-[425px]:tracking-[0.1em]">
-      <span className="size-2 rounded-full bg-[#0a84ff]" />
+    <span className="tag-pill inline-flex min-h-9 items-center gap-2 rounded-full border border-[#0a84ff26] bg-white/90 px-3.5 text-[13px] font-semibold tracking-[0.12em] text-[#0057d8] uppercase shadow-[0_10px_30px_rgba(5,20,44,0.05)] max-[425px]:text-[11px] max-[425px]:tracking-[0.1em]">
+      <span className="tag-dot size-2 rounded-full bg-[#0a84ff]" />
       {children}
     </span>
   );
 }
 
-function AnimatedButtonLabel({ children }: { children: string }) {
-  const letters = Array.from(children);
-
-  return (
-    <span className="button-label" aria-hidden="true">
-      {[0, 1].map((row) => (
-        <span className="button-label-row" key={row}>
-          {letters.map((letter, index) => (
-            <span
-              className="button-label-letter"
-              style={{ transitionDelay: `${index * 18}ms` } as CSSProperties}
-              key={`${row}-${letter}-${index}`}
-            >
-              {letter === " " ? "\u00a0" : letter}
-            </span>
-          ))}
-        </span>
-      ))}
-    </span>
-  );
-}
-
-export function Cta({
-  children,
-  href = "/products",
-  variant = "primary",
-  icon: Icon,
-  className = "",
-}: {
-  children: string;
-  href?: string;
-  variant?: "primary" | "secondary" | "dark";
-  icon?: LucideIcon;
-  className?: string;
-}) {
-  const base =
-    "premium-button inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-5 text-sm font-semibold transition-[transform,box-shadow,border-color,background-color] duration-300 hover:-translate-y-0.5";
-  const styles = {
-    primary:
-      "border border-[#0a84ff] bg-[#0a84ff] text-white shadow-[0_14px_34px_rgba(10,132,255,0.22)] hover:border-[#0057d8] hover:bg-[#0057d8] hover:shadow-[0_18px_42px_rgba(10,132,255,0.28)]",
-    secondary:
-      "border border-[#0a84ff30] bg-white/90 text-[#0057d8] hover:border-[#0a84ff] hover:bg-[#f4f9ff] hover:shadow-[0_14px_34px_rgba(5,20,44,0.07)]",
-    dark: "border border-[#102a43] bg-[#102a43] text-white shadow-[0_14px_34px_rgba(5,20,44,0.16)] hover:border-[#0057d8] hover:bg-[#0057d8]",
-  };
-
-  const content = (
-    <>
-      {Icon ? <Icon className="size-4" strokeWidth={2} /> : null}
-      <AnimatedButtonLabel>{children}</AnimatedButtonLabel>
-      <span className="sr-only">{children}</span>
-    </>
-  );
-  const classes = `${base} ${styles[variant]} ${className}`;
-
-  if (href.startsWith("/") || href.startsWith("#")) {
-    return (
-      <Link className={classes} href={href}>
-        {content}
-      </Link>
-    );
-  }
-
-  return (
-    <a className={classes} href={href}>
-      {content}
-    </a>
-  );
-}
-
 export function Header() {
-  const links = [
-    { label: "Products", href: "/products" },
-    { label: "Why Buy", href: "/why-buy-from-us" },
-    { label: "Process", href: "/#process" },
-    { label: "Guide", href: "/#guide" },
-    { label: "Support", href: "/#support" },
-  ];
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRootRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!menuOpen) {
+      return;
+    }
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMenuOpen(false);
+      }
+    };
+    const closeOnOutsideClick = (event: PointerEvent) => {
+      if (
+        event.target instanceof Node &&
+        menuRootRef.current &&
+        !menuRootRef.current.contains(event.target)
+      ) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.body.classList.add("mobile-menu-open");
+    document.addEventListener("keydown", closeOnEscape);
+    document.addEventListener("pointerdown", closeOnOutsideClick);
+
+    return () => {
+      document.body.classList.remove("mobile-menu-open");
+      document.removeEventListener("keydown", closeOnEscape);
+      document.removeEventListener("pointerdown", closeOnOutsideClick);
+    };
+  }, [menuOpen]);
 
   return (
-    <div className="site-container fixed top-5 inset-x-0 z-50 w-full max-sm:top-3">
-      <header className="mx-auto flex min-h-[72px] items-center justify-between rounded-[18px] border border-white/70 bg-white/88 p-2.5 pl-5 text-[#102a43] shadow-[0_18px_60px_rgba(5,20,44,0.10)] backdrop-blur-2xl max-sm:min-h-[64px] max-sm:rounded-[18px] max-sm:p-2.5 max-sm:pl-4">
-        <Link className="inline-flex min-h-11 min-w-max items-center gap-3 text-[15px] font-semibold tracking-[0.02em]" href="/">
-          <span className="grid size-[38px] place-items-center rounded-[13px] bg-[#102a43] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]">
-            M
-          </span>
-          <span>MacVault</span>
-        </Link>
+    <div
+      className="site-header site-container fixed inset-x-0 top-5 z-50 w-full max-sm:top-3"
+      ref={menuRootRef}
+    >
+      <header className="relative z-10 mx-auto flex min-h-[72px] items-center justify-between rounded-[18px] border border-white/70 bg-white/92 p-2.5 pl-5 text-[#102a43] shadow-[0_18px_60px_rgba(5,20,44,0.10)] backdrop-blur-xl max-sm:min-h-[64px] max-sm:p-2 max-sm:pl-4">
+        <Brand />
 
         <nav className="flex items-center gap-1 max-[940px]:hidden" aria-label="Main navigation">
-          {links.map((link) => (
+          {navigationLinks.map((link) => (
             <Link
               className="rounded-full px-3 py-2.5 text-sm font-medium text-[#475467] transition-[background-color,color,transform] duration-300 hover:-translate-y-0.5 hover:bg-[#eef7ff] hover:text-[#0057d8]"
               href={link.href}
@@ -129,18 +116,65 @@ export function Header() {
 
         <div className="flex items-center gap-2">
           <QuoteButton />
-          <Cta className="min-h-11 px-4 max-sm:hidden" icon={MessageCircle}>
+          <Cta className="max-[1120px]:hidden" href="/products" icon={MessageCircle}>
             WhatsApp
           </Cta>
-          <Link
-            className="hidden size-11 place-items-center rounded-[16px] border border-[#0a84ff2e] bg-white text-[#0057d8] max-[940px]:grid"
-            href="/products"
-            aria-label="Browse products"
+          <button
+            className="icon-button hidden max-[940px]:grid"
+            type="button"
+            aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-navigation"
+            onClick={() => setMenuOpen((current) => !current)}
           >
-            <Menu className="size-5" strokeWidth={2} />
-          </Link>
+            {menuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+          </button>
         </div>
       </header>
+
+      <div
+        id="mobile-navigation"
+        className={`mobile-navigation absolute inset-x-[50px] top-[82px] overflow-hidden rounded-[8px] border border-[#0a84ff24] bg-white p-3 shadow-[0_24px_64px_rgba(5,20,44,0.16)] min-[941px]:hidden max-[768px]:inset-x-6 max-[425px]:inset-x-5 ${
+          menuOpen ? "is-open" : ""
+        }`}
+        aria-hidden={!menuOpen}
+      >
+        <nav className="grid gap-1" aria-label="Mobile navigation">
+          {navigationLinks.map((link) => (
+            <Link
+              className="flex min-h-12 items-center justify-between rounded-[6px] px-4 text-[15px] font-semibold text-[#102a43] transition-colors hover:bg-[#eef7ff] hover:text-[#0057d8]"
+              href={link.href}
+              onClick={() => setMenuOpen(false)}
+              tabIndex={menuOpen ? 0 : -1}
+              key={link.label}
+            >
+              {link.label}
+              <PackageSearch className="size-4 text-[#0a84ff]" />
+            </Link>
+          ))}
+        </nav>
+        <div className="mt-3 grid grid-cols-2 gap-2 max-[425px]:grid-cols-1">
+          <Cta
+            asButton
+            icon={PackageSearch}
+            variant="secondary"
+            tabIndex={menuOpen ? 0 : -1}
+            onClick={() => {
+              setMenuOpen(false);
+              window.location.href = "/products";
+            }}
+          >
+            Browse stock
+          </Cta>
+          <Cta
+            href="https://wa.me/?text=Hi%20MacVault%2C%20I%20want%20to%20check%20current%20stock."
+            icon={MessageCircle}
+            className={menuOpen ? "" : "pointer-events-none"}
+          >
+            WhatsApp
+          </Cta>
+        </div>
+      </div>
     </div>
   );
 }
@@ -148,14 +182,21 @@ export function Header() {
 export function SectionHead({
   kicker,
   title,
+  accent,
   text,
   align = "center",
 }: {
   kicker: string;
   title: string;
+  accent: string;
   text: string;
   align?: "center" | "left";
 }) {
+  const accentIndex = title.toLowerCase().indexOf(accent.toLowerCase());
+  const before = accentIndex >= 0 ? title.slice(0, accentIndex) : `${title} `;
+  const highlighted = accentIndex >= 0 ? title.slice(accentIndex, accentIndex + accent.length) : accent;
+  const after = accentIndex >= 0 ? title.slice(accentIndex + accent.length) : "";
+
   return (
     <div
       className={`reveal mb-11 max-w-[760px] ${
@@ -164,7 +205,9 @@ export function SectionHead({
     >
       <Tag>{kicker}</Tag>
       <h2 className="mt-2 text-[clamp(32px,5vw,64px)] leading-none font-semibold tracking-normal max-sm:text-[34px]">
-        {title}
+        {before}
+        <AnimatedText>{highlighted}</AnimatedText>
+        {after}
       </h2>
       <p
         className={`mt-[18px] max-w-2xl text-[17px] leading-[1.56] text-[#667085] max-sm:text-base ${
@@ -181,73 +224,94 @@ export function Footer() {
   const columns = [
     {
       title: "Shop",
+      icon: PackageSearch,
       links: [
-        { label: "Products", href: "/products" },
-        { label: "Why Buy", href: "/why-buy-from-us" },
-        { label: "Current Drops", href: "/#drops" },
+        { label: "All products", href: "/products" },
+        { label: "Why buy from us", href: "/why-buy-from-us" },
       ],
     },
     {
       title: "Categories",
+      icon: Smartphone,
       links: [
-        { label: "iPhones", href: "/products" },
-        { label: "MacBooks", href: "/products" },
-        { label: "PS5 & Accessories", href: "/products" },
+        { label: "iPhones", href: "/products/category/iphone" },
+        { label: "MacBooks", href: "/products/category/mac" },
+        { label: "PS5", href: "/products/category/ps5" },
       ],
     },
     {
       title: "Support",
+      icon: ShieldCheck,
       links: [
-        { label: "Process", href: "/#process" },
-        { label: "Buying Guide", href: "/#guide" },
+        { label: "Our process", href: "/#process" },
+        { label: "Buying guide", href: "/#guide" },
         { label: "Concierge", href: "/#support" },
       ],
     },
   ];
 
   return (
-    <footer className="border-t border-[#102a431f] bg-white text-[#667085]">
-      <div className={`${containerClass} py-12 max-sm:py-10`}>
-        <div className="grid grid-cols-[1.4fr_2fr] gap-10 max-[900px]:grid-cols-1">
+    <footer className="bg-[#07111f] text-white/65">
+      <div className={`${containerClass} py-[60px]`}>
+        <div className="grid grid-cols-[1.3fr_2fr] gap-16 max-[1024px]:grid-cols-1">
           <div>
             <Brand />
-            <p className="mt-5 max-w-[430px] text-[15px] leading-[1.6]">
-              Premium Apple and PS5 drops with verified stock details, clear condition notes, and
-              WhatsApp-first ordering.
+            <p className="mt-5 max-w-[430px] text-[15px] leading-[1.7]">
+              Premium Apple and PS5 stock with verified details, clear condition notes, and a
+              direct local buying flow.
             </p>
-            <div className="mt-6">
-              <Cta href="/products" icon={MessageCircle}>
-                WhatsApp
+            <div className="mt-7">
+              <Cta
+                href="https://wa.me/?text=Hi%20MacVault%2C%20I%20want%20to%20check%20current%20stock."
+                icon={MessageCircle}
+              >
+                Ask MacVault
               </Cta>
             </div>
           </div>
 
-          <div className="grid grid-cols-3 border-y border-[#102a431f] max-sm:grid-cols-1">
-            {columns.map((column) => (
-              <div
-                className="border-r border-[#102a431f] p-5 last:border-r-0 max-sm:border-r-0 max-sm:border-b max-sm:last:border-b-0"
-                key={column.title}
-              >
-                <h3 className="mb-4 text-sm font-semibold text-[#102a43]">{column.title}</h3>
-                <div className="flex flex-col gap-3">
-                  {column.links.map((link) => (
-                    <Link
-                      className="flex min-h-11 items-center text-sm transition-colors hover:text-[#0a84ff]"
-                      href={link.href}
-                      key={link.label}
-                    >
-                      {link.label}
-                    </Link>
-                  ))}
+          <div className="grid grid-cols-3 gap-10 max-[768px]:grid-cols-2 max-[425px]:grid-cols-1">
+            {columns.map((column) => {
+              const Icon = column.icon;
+              return (
+                <div key={column.title}>
+                  <div className="mb-5 flex items-center gap-2 text-white">
+                    <Icon className="size-4 text-[#45a3ff]" />
+                    <h3 className="text-sm font-semibold">{column.title}</h3>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    {column.links.map((link) => (
+                      <Link
+                        className="flex min-h-11 items-center text-sm transition-colors hover:text-[#45a3ff]"
+                        href={link.href}
+                        key={link.label}
+                      >
+                        {link.label}
+                      </Link>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
-        <div className="mt-10 flex items-center justify-between gap-5 border-t border-[#102a431f] pt-5 text-sm max-sm:flex-col max-sm:items-start">
+        <div className="mt-12 flex items-center justify-between gap-5 border-t border-white/12 pt-6 text-sm max-sm:flex-col max-sm:items-start">
           <span>MacVault</span>
-          <span>Curated Apple, PS5, and accessory stock.</span>
+          <div className="flex flex-wrap items-center gap-4">
+            <span className="inline-flex items-center gap-2">
+              <BadgeCheck className="size-4 text-[#45a3ff]" /> Verified stock
+            </span>
+            <span className="inline-flex items-center gap-2">
+              <Laptop className="size-4 text-[#45a3ff]" /> Apple specialists
+            </span>
+            <span className="inline-flex items-center gap-2">
+              <Gamepad2 className="size-4 text-[#45a3ff]" /> Console bundles
+            </span>
+            <span className="sr-only">
+              <Headphones /> Accessories
+            </span>
+          </div>
         </div>
       </div>
     </footer>

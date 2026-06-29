@@ -1,186 +1,170 @@
 "use client";
 
-import { useCallback, useEffect, useId, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState, type RefObject } from "react";
 import { FileText, Send, X } from "lucide-react";
+import { Cta } from "@/components/cta";
 
 function QuoteTag({ children }: { children: string }) {
   return (
-    <span className="inline-flex min-h-9 items-center gap-2 rounded-full border border-[#0a84ff26] bg-white/90 px-3.5 text-[13px] font-semibold tracking-[0.12em] text-[#0057d8] uppercase shadow-[0_10px_30px_rgba(5,20,44,0.05)] max-[425px]:text-[11px] max-[425px]:tracking-[0.1em]">
-      <span className="size-2 rounded-full bg-[#0a84ff]" />
+    <span className="tag-pill inline-flex min-h-9 items-center gap-2 rounded-full border border-[#0a84ff26] bg-white/90 px-3.5 text-[13px] font-semibold tracking-[0.12em] text-[#0057d8] uppercase shadow-[0_10px_30px_rgba(5,20,44,0.05)] max-[425px]:text-[11px] max-[425px]:tracking-[0.1em]">
+      <span className="tag-dot size-2 rounded-full bg-[#0a84ff]" />
       {children}
     </span>
   );
 }
 
-function QuoteModal({ onClose }: { onClose: () => void }) {
+function QuoteModal({
+  onClose,
+  triggerRef,
+}: {
+  onClose: () => void;
+  triggerRef: RefObject<HTMLButtonElement | null>;
+}) {
   const titleId = useId();
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const closingRef = useRef(false);
   const [sent, setSent] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
-  const closeModal = useCallback(() => {
-    document.body.style.overflow = "";
-    setIsVisible(false);
-    onClose();
-  }, [onClose]);
+  const [closing, setClosing] = useState(false);
+
+  const requestClose = useCallback(() => {
+    if (closingRef.current) {
+      return;
+    }
+
+    closingRef.current = true;
+    setClosing(true);
+    closeTimerRef.current = setTimeout(() => {
+      dialogRef.current?.close();
+      onClose();
+      requestAnimationFrame(() => triggerRef.current?.focus());
+    }, 300);
+  }, [onClose, triggerRef]);
 
   useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        closeModal();
-      }
-    };
-    const handleClosePointer = (event: MouseEvent | PointerEvent) => {
-      const target = event.target;
+    const dialog = dialogRef.current;
 
-      if (target instanceof Element && target.closest("[data-quote-close]")) {
-        closeModal();
-      }
+    if (!dialog) {
+      return;
+    }
+
+    if (!dialog.open) {
+      dialog.showModal();
+    }
+
+    const handleCancel = (event: Event) => {
+      event.preventDefault();
+      requestClose();
     };
 
-    document.addEventListener("keydown", handleKeyDown);
-    document.addEventListener("click", handleClosePointer, true);
-    document.addEventListener("pointerdown", handleClosePointer, true);
+    const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    dialog.addEventListener("cancel", handleCancel);
 
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      document.removeEventListener("click", handleClosePointer, true);
-      document.removeEventListener("pointerdown", handleClosePointer, true);
-      document.body.style.overflow = "";
-    };
-  }, [closeModal]);
+      dialog.removeEventListener("cancel", handleCancel);
+      document.body.style.overflow = previousOverflow;
 
-  if (!isVisible) {
-    return null;
-  }
+      if (closeTimerRef.current) {
+        clearTimeout(closeTimerRef.current);
+      }
+    };
+  }, [requestClose]);
 
   return (
     <dialog
-      open
-      className="fixed inset-0 z-[70] h-dvh max-h-none w-screen max-w-none border-0 bg-transparent p-0 text-[#102a43] backdrop:bg-[#07111f]/45 backdrop:backdrop-blur-sm"
-      data-quote-modal-root
-      aria-modal="true"
+      ref={dialogRef}
+      className={`quote-dialog fixed inset-0 z-[70] h-dvh max-h-none w-screen max-w-none border-0 bg-transparent p-0 text-[#102a43] ${
+        closing ? "is-closing" : ""
+      }`}
       aria-labelledby={titleId}
-      onClose={closeModal}
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) {
-          closeModal();
+          requestClose();
         }
       }}
     >
-      <div className="grid min-h-full place-items-center px-5 py-8">
-      <div
-        className="relative max-h-[calc(100dvh-32px)] w-full max-w-[680px] overflow-y-auto rounded-[18px] bg-white text-[#102a43] shadow-[0_34px_90px_rgba(5,20,44,0.22)]"
-        data-quote-card
-      >
-        <div className="bg-[#f4f9ff] px-6 pt-5 pb-5 max-sm:px-5">
-          <div className="flex items-start justify-between gap-4">
-            <QuoteTag>REQUEST A QUOTE</QuoteTag>
-            <form
-              method="dialog"
-            >
-              <button
-                className="inline-flex min-h-10 items-center gap-2 rounded-full bg-white px-3.5 text-sm font-semibold text-[#0057d8] shadow-[0_10px_24px_rgba(5,20,44,0.08)] transition hover:-translate-y-0.5 hover:bg-[#0a84ff] hover:text-white"
-                type="submit"
-                aria-label="Close quote modal"
-                data-quote-close
-              >
-                <X className="size-4" strokeWidth={2} />
+      <div className="quote-dialog-inner grid min-h-full place-items-center px-5 py-8">
+        <div className="relative max-h-[calc(100dvh-32px)] w-full max-w-[680px] overflow-y-auto rounded-[18px] bg-white text-[#102a43] shadow-[0_34px_90px_rgba(5,20,44,0.24)]">
+          <div className="bg-[#f4f9ff] px-6 pt-5 pb-5 max-sm:px-5">
+            <div className="flex items-start justify-between gap-4">
+              <QuoteTag>Request a quote</QuoteTag>
+              <Cta asButton type="button" icon={X} variant="secondary" onClick={requestClose}>
                 Close
-              </button>
-            </form>
-          </div>
-          <h2 id={titleId} className="mt-3 max-w-[520px] text-[clamp(30px,5vw,48px)] leading-none font-semibold tracking-normal">
-            Tell us what you want to reserve.
-          </h2>
-          <p className="mt-3 max-w-[560px] text-[15px] leading-[1.5] text-[#667085]">
-            Share the device, budget, and timing. MacVault can reply with current stock, condition,
-            PTA/warranty notes, and pickup or delivery options.
-          </p>
-        </div>
-
-        <form
-          className="grid gap-3 p-5 max-sm:p-5"
-          onSubmit={(event) => {
-            event.preventDefault();
-            setSent(true);
-          }}
-        >
-          <div className="grid grid-cols-2 gap-4 max-sm:grid-cols-1">
-            <label className="grid gap-2 text-sm font-semibold text-[#102a43]">
-              Name
-              <input
-                className="min-h-12 rounded-[10px] border border-[#102a4318] bg-[#f7fbff] px-4 text-sm font-medium text-[#102a43] outline-none transition focus:border-[#0a84ff] focus:bg-white focus:ring-4 focus:ring-[#0a84ff16]"
-                name="name"
-                placeholder="Your name"
-                type="text"
-              />
-            </label>
-            <label className="grid gap-2 text-sm font-semibold text-[#102a43]">
-              Phone
-              <input
-                className="min-h-12 rounded-[10px] border border-[#102a4318] bg-[#f7fbff] px-4 text-sm font-medium text-[#102a43] outline-none transition focus:border-[#0a84ff] focus:bg-white focus:ring-4 focus:ring-[#0a84ff16]"
-                name="phone"
-                placeholder="WhatsApp number"
-                type="tel"
-              />
-            </label>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4 max-sm:grid-cols-1">
-            <label className="grid gap-2 text-sm font-semibold text-[#102a43]">
-              Product
-              <select
-                className="min-h-12 rounded-[10px] border border-[#102a4318] bg-[#f7fbff] px-4 text-sm font-medium text-[#102a43] outline-none transition focus:border-[#0a84ff] focus:bg-white focus:ring-4 focus:ring-[#0a84ff16]"
-                name="product"
-                defaultValue=""
-              >
-                <option value="" disabled>
-                  Select category
-                </option>
-                <option>iPhone</option>
-                <option>MacBook</option>
-                <option>iPad</option>
-                <option>Apple Watch</option>
-                <option>AirPods</option>
-                <option>PS5</option>
-              </select>
-            </label>
-            <label className="grid gap-2 text-sm font-semibold text-[#102a43]">
-              Budget
-              <input
-                className="min-h-12 rounded-[10px] border border-[#102a4318] bg-[#f7fbff] px-4 text-sm font-medium text-[#102a43] outline-none transition focus:border-[#0a84ff] focus:bg-white focus:ring-4 focus:ring-[#0a84ff16]"
-                name="budget"
-                placeholder="Your range"
-                type="text"
-              />
-            </label>
-          </div>
-
-          <label className="grid gap-2 text-sm font-semibold text-[#102a43]">
-            Notes
-            <textarea
-              className="min-h-[78px] resize-none rounded-[10px] border border-[#102a4318] bg-[#f7fbff] px-4 py-3 text-sm font-medium text-[#102a43] outline-none transition focus:border-[#0a84ff] focus:bg-white focus:ring-4 focus:ring-[#0a84ff16]"
-              name="notes"
-              placeholder="Storage, color, PTA status, condition, pickup timing..."
-            />
-          </label>
-
-          <div className="flex items-center justify-between gap-4 pt-1 max-sm:flex-col max-sm:items-stretch">
-            <p className="text-sm leading-[1.5] text-[#667085]" aria-live="polite">
-              {sent
-                ? "Quote request noted. Use WhatsApp for the fastest stock confirmation."
-                : "No payment or account needed."}
-            </p>
-            <button
-              className="premium-button inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-[#0a84ff] bg-[#0a84ff] px-5 text-sm font-semibold text-white shadow-[0_14px_34px_rgba(10,132,255,0.22)] transition hover:-translate-y-0.5 hover:bg-[#0057d8]"
-              type="submit"
+              </Cta>
+            </div>
+            <h2
+              id={titleId}
+              className="mt-3 max-w-[560px] text-[clamp(30px,5vw,48px)] leading-none font-semibold tracking-normal"
             >
-              <Send className="size-4" strokeWidth={2} />
-              Send request
-            </button>
+              Tell us what you want to <span className="animated-text">reserve</span>.
+            </h2>
+            <p className="mt-3 max-w-[560px] text-[15px] leading-[1.5] text-[#667085]">
+              Share the device, budget, and timing. MacVault can reply with current stock,
+              condition, PTA/warranty notes, and pickup or delivery options.
+            </p>
           </div>
-        </form>
-      </div>
+
+          <form
+            className="grid gap-3 p-5 max-sm:p-5"
+            onSubmit={(event) => {
+              event.preventDefault();
+              setSent(true);
+            }}
+          >
+            <div className="grid grid-cols-2 gap-4 max-sm:grid-cols-1">
+              <label className="grid gap-2 text-sm font-semibold text-[#102a43]">
+                Name
+                <input className="form-field" name="name" placeholder="Your name" type="text" />
+              </label>
+              <label className="grid gap-2 text-sm font-semibold text-[#102a43]">
+                Phone
+                <input className="form-field" name="phone" placeholder="WhatsApp number" type="tel" />
+              </label>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 max-sm:grid-cols-1">
+              <label className="grid gap-2 text-sm font-semibold text-[#102a43]">
+                Product
+                <select className="form-field" name="product" defaultValue="">
+                  <option value="" disabled>
+                    Select category
+                  </option>
+                  <option>iPhone</option>
+                  <option>MacBook</option>
+                  <option>iPad</option>
+                  <option>Apple Watch</option>
+                  <option>AirPods</option>
+                  <option>PS5</option>
+                </select>
+              </label>
+              <label className="grid gap-2 text-sm font-semibold text-[#102a43]">
+                Budget
+                <input className="form-field" name="budget" placeholder="Your range" type="text" />
+              </label>
+            </div>
+
+            <label className="grid gap-2 text-sm font-semibold text-[#102a43]">
+              Notes
+              <textarea
+                className="form-field min-h-[92px] resize-none py-3"
+                name="notes"
+                placeholder="Storage, color, PTA status, condition, pickup timing..."
+              />
+            </label>
+
+            <div className="flex items-center justify-between gap-4 pt-1 max-sm:flex-col max-sm:items-stretch">
+              <p className="text-sm leading-[1.5] text-[#667085]" aria-live="polite">
+                {sent
+                  ? "Quote request noted. Use WhatsApp for the fastest stock confirmation."
+                  : "No payment or account needed."}
+              </p>
+              <Cta asButton type="submit" icon={Send}>
+                Send request
+              </Cta>
+            </div>
+          </form>
+        </div>
       </div>
     </dialog>
   );
@@ -188,21 +172,28 @@ function QuoteModal({ onClose }: { onClose: () => void }) {
 
 export function QuoteButton() {
   const [modalVersion, setModalVersion] = useState<number | null>(null);
-  const closeQuote = () => {
-    setModalVersion(null);
-  };
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   return (
     <>
-      <button
-        className="premium-button inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-[#0a84ff30] bg-white/90 px-4 text-sm font-semibold text-[#0057d8] transition-[transform,box-shadow,border-color,background-color] duration-300 hover:-translate-y-0.5 hover:border-[#0a84ff] hover:bg-[#f4f9ff] hover:shadow-[0_14px_34px_rgba(5,20,44,0.07)] max-[1120px]:hidden"
+      <Cta
+        asButton
+        ref={buttonRef}
+        className="max-[1120px]:hidden"
         type="button"
+        icon={FileText}
+        variant="secondary"
         onClick={() => setModalVersion((current) => (current ?? 0) + 1)}
       >
-        <FileText className="size-4" strokeWidth={2} />
         Request a quote
-      </button>
-      {modalVersion !== null ? <QuoteModal key={modalVersion} onClose={closeQuote} /> : null}
+      </Cta>
+      {modalVersion !== null ? (
+        <QuoteModal
+          key={modalVersion}
+          onClose={() => setModalVersion(null)}
+          triggerRef={buttonRef}
+        />
+      ) : null}
     </>
   );
 }

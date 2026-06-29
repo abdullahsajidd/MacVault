@@ -4,6 +4,9 @@ export type ProductGalleryItem = {
   title: string;
   caption: string;
   kind: ProductVisualKind;
+  imageUrl: string;
+  imageAlt: string;
+  sourceUrl: string;
 };
 
 export type Product = {
@@ -25,7 +28,129 @@ export type Product = {
   gallery: ProductGalleryItem[];
 };
 
-export const products: Product[] = [
+type RawProduct = Omit<Product, "gallery"> & {
+  gallery: Omit<ProductGalleryItem, "imageUrl" | "imageAlt" | "sourceUrl">[];
+};
+
+const unsplashImage = (photoId: string) =>
+  `https://images.unsplash.com/photo-${photoId}?auto=format&fit=crop&w=1200&q=82`;
+
+const productPhotoSets: Record<string, { imageUrl: string; sourceUrl: string }[]> = {
+  "iphone-15-pro-max-256": [
+    {
+      imageUrl: unsplashImage("1695823018812-c684c980ede6"),
+      sourceUrl: "https://unsplash.com/photos/a-close-up-of-a-person-holding-a-cell-phone-KX_7S9bXYjY",
+    },
+    {
+      imageUrl: unsplashImage("1736173155820-f81dca2d1661"),
+      sourceUrl: "https://unsplash.com/photos/a-cell-phone-with-a-picture-of-a-palm-tree-aBobRTxKsaI",
+    },
+    {
+      imageUrl: unsplashImage("1695823018812-c684c980ede6"),
+      sourceUrl: "https://unsplash.com/photos/a-close-up-of-a-person-holding-a-cell-phone-KX_7S9bXYjY",
+    },
+  ],
+  "iphone-14-pro-128": [
+    {
+      imageUrl: unsplashImage("1736173155820-f81dca2d1661"),
+      sourceUrl: "https://unsplash.com/photos/a-cell-phone-with-a-picture-of-a-palm-tree-aBobRTxKsaI",
+    },
+    {
+      imageUrl: unsplashImage("1695823018812-c684c980ede6"),
+      sourceUrl: "https://unsplash.com/photos/a-close-up-of-a-person-holding-a-cell-phone-KX_7S9bXYjY",
+    },
+    {
+      imageUrl: unsplashImage("1736173155820-f81dca2d1661"),
+      sourceUrl: "https://unsplash.com/photos/a-cell-phone-with-a-picture-of-a-palm-tree-aBobRTxKsaI",
+    },
+  ],
+  "macbook-air-m3-13": [
+    {
+      imageUrl: unsplashImage("1573166855576-5e6dca380e7d"),
+      sourceUrl: "https://unsplash.com/photos/person-using-macbook-air-6bI69ihF3MI",
+    },
+    {
+      imageUrl: unsplashImage("1631025049516-1dfb09ae79ca"),
+      sourceUrl: "https://unsplash.com/photos/macbook-pro-on-white-table-K9PXRiSArJA",
+    },
+    {
+      imageUrl: unsplashImage("1637607698934-5e59488c88bd"),
+      sourceUrl: "https://unsplash.com/photos/a-close-up-of-an-apple-laptop-on-a-table-UIAGNeMUHdE",
+    },
+  ],
+  "macbook-pro-m3-pro-14": [
+    {
+      imageUrl: unsplashImage("1627766556564-5d89b3765c46"),
+      sourceUrl: "https://unsplash.com/photos/macbook-pro-on-black-background-fLEwqKoIQDo",
+    },
+    {
+      imageUrl: unsplashImage("1637607698934-5e59488c88bd"),
+      sourceUrl: "https://unsplash.com/photos/a-close-up-of-an-apple-laptop-on-a-table-UIAGNeMUHdE",
+    },
+    {
+      imageUrl: unsplashImage("1631025049516-1dfb09ae79ca"),
+      sourceUrl: "https://unsplash.com/photos/macbook-pro-on-white-table-K9PXRiSArJA",
+    },
+  ],
+  "ipad-pro-m4-11": [
+    {
+      imageUrl: unsplashImage("1548874468-025d0edfdf8b"),
+      sourceUrl: "https://unsplash.com/photos/space-gray-ipad-pro-A5Z9g4xP6Yw",
+    },
+    {
+      imageUrl: unsplashImage("1759820941220-fed6a1010146"),
+      sourceUrl: "https://unsplash.com/photos/two-ipads-side-by-side-on-a-blue-surface-S8Y4GCoVU1E",
+    },
+    {
+      imageUrl: unsplashImage("1548874468-025d0edfdf8b"),
+      sourceUrl: "https://unsplash.com/photos/space-gray-ipad-pro-A5Z9g4xP6Yw",
+    },
+  ],
+  "apple-watch-series-9": [
+    {
+      imageUrl: unsplashImage("1546868871-7041f2a55e12"),
+      sourceUrl: "https://unsplash.com/photos/space-gray-apple-watch-with-black-sports-band-hbTKIbuMmBI",
+    },
+    {
+      imageUrl: unsplashImage("1624096104992-9b4fa3a279dd"),
+      sourceUrl: "https://unsplash.com/photos/black-smart-watch-with-white-background-O43D6CYzxqM",
+    },
+    {
+      imageUrl: unsplashImage("1508685096489-7aacd43bd3b1"),
+      sourceUrl: "https://unsplash.com/photos/person-wearing-apple-watch-at-1424-0vsk2_9dkqo",
+    },
+  ],
+  "airpods-pro-2-usb-c": [
+    {
+      imageUrl: unsplashImage("1679464982201-878a60b941ad"),
+      sourceUrl: "https://unsplash.com/photos/a-black-and-white-photo-of-a-pair-of-ear-buds-wDs5bKlvP4U",
+    },
+    {
+      imageUrl: unsplashImage("1770292170233-5d9e235ec739"),
+      sourceUrl: "https://unsplash.com/photos/white-wireless-earbuds-and-charging-case-on-dark-background-rN1hLIGV4gE",
+    },
+    {
+      imageUrl: unsplashImage("1624258919367-5dc28f5dc293"),
+      sourceUrl: "https://unsplash.com/photos/white-apple-airpods-in-box-oTkAX3MAerc",
+    },
+  ],
+  "ps5-slim-disc-bundle": [
+    {
+      imageUrl: unsplashImage("1622297845775-5ff3fef71d13"),
+      sourceUrl: "https://unsplash.com/photos/white-playstation-five-console-and-controller-ads33nL7V4k",
+    },
+    {
+      imageUrl: unsplashImage("1709587797077-7a2c94411514"),
+      sourceUrl: "https://unsplash.com/photos/a-video-game-console-sitting-on-top-of-a-table-CYpPNooT1NA",
+    },
+    {
+      imageUrl: unsplashImage("1731405858377-6de0070d8d65"),
+      sourceUrl: "https://unsplash.com/photos/a-video-game-console-sitting-on-top-of-a-wooden-table-uY6ZORCOCAM",
+    },
+  ],
+};
+
+const rawProducts: RawProduct[] = [
   {
     slug: "iphone-15-pro-max-256",
     category: "iPhone",
@@ -380,7 +505,43 @@ export const products: Product[] = [
   },
 ];
 
+export const products: Product[] = rawProducts.map((product) => {
+  const photos = productPhotoSets[product.slug];
+
+  return {
+    ...product,
+    gallery: product.gallery.map((item, index) => {
+      const photo = photos[index % photos.length];
+
+      return {
+        ...item,
+        imageUrl: photo.imageUrl,
+        imageAlt: `${product.title} ${item.title}`,
+        sourceUrl: photo.sourceUrl,
+      };
+    }),
+  };
+});
+
 export const productCategories = ["All", "iPhone", "Mac", "iPad", "Watch", "Accessories", "PS5"];
+
+export const categorySlugMap = {
+  iPhone: "iphone",
+  Mac: "mac",
+  iPad: "ipad",
+  Watch: "watch",
+  Accessories: "accessories",
+  PS5: "ps5",
+} as const;
+
+export type ProductCategory = keyof typeof categorySlugMap;
+export type ProductCategorySlug = (typeof categorySlugMap)[ProductCategory];
+
+export const categoryRoutes = Object.entries(categorySlugMap).map(([category, slug]) => ({
+  category: category as ProductCategory,
+  slug,
+  href: `/products/category/${slug}`,
+}));
 
 export const featuredProducts = products.filter((product) =>
   ["iphone-15-pro-max-256", "macbook-air-m3-13", "ps5-slim-disc-bundle"].includes(product.slug),
@@ -388,4 +549,22 @@ export const featuredProducts = products.filter((product) =>
 
 export function getProduct(slug: string) {
   return products.find((product) => product.slug === slug);
+}
+
+export function getCategorySlug(category: string) {
+  return categorySlugMap[category as ProductCategory] ?? category.toLowerCase();
+}
+
+export function getCategoryBySlug(slug: string) {
+  return categoryRoutes.find((route) => route.slug === slug)?.category;
+}
+
+export function getProductsByCategorySlug(slug: string) {
+  const category = getCategoryBySlug(slug);
+
+  if (!category) {
+    return [];
+  }
+
+  return products.filter((product) => product.category === category);
 }

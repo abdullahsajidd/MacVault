@@ -9,8 +9,9 @@ import {
   Search,
   ShieldCheck,
 } from "lucide-react";
+import { Cta } from "@/components/cta";
 import { RevealController } from "@/components/reveal-controller";
-import { Cta, Footer, Header, Tag, containerClass } from "@/components/site";
+import { Footer, Header, Tag, containerClass } from "@/components/site";
 
 export const metadata: Metadata = {
   title: "Why Buy From Us | MacVault",
@@ -101,15 +102,15 @@ export default function WhyBuyFromUsPage() {
           <div className="reveal">
             <Tag>WHY BUY FROM MACVAULT</Tag>
             <h1 className="mx-auto mt-5 max-w-[960px] text-[clamp(48px,8vw,96px)] leading-[0.96] font-semibold tracking-normal">
-              A cleaner way to buy local Apple and PS5 drops.
+              A cleaner way to buy <span className="animated-text">local</span> Apple and PS5 drops.
             </h1>
             <p className="mx-auto mt-6 max-w-[720px] text-[clamp(17px,2vw,21px)] leading-[1.58] text-[#667085]">
               MacVault is built for buyers who want product truth before a visit, payment, or
               reservation. The site should reduce doubt before WhatsApp starts.
             </p>
             <div className="mt-[30px] flex flex-wrap justify-center gap-3">
-              <Cta href="/products">Browse products</Cta>
-              <Cta href="/#process" variant="secondary">
+              <Cta href="/products" icon={Search}>Browse products</Cta>
+              <Cta href="/#process" icon={CalendarCheck} variant="secondary">
                 See process
               </Cta>
             </div>
@@ -121,7 +122,7 @@ export default function WhyBuyFromUsPage() {
             <div className="reveal mb-10 text-center">
               <Tag>THE DIFFERENCE</Tag>
               <h2 className="mx-auto mt-2 max-w-[760px] text-[clamp(34px,5vw,64px)] leading-none font-semibold tracking-normal">
-                Local buying should feel calm, not confusing.
+                Local buying should feel <span className="animated-text">calm</span>, not confusing.
               </h2>
             </div>
 
@@ -151,7 +152,7 @@ export default function WhyBuyFromUsPage() {
           <div className="reveal mb-10 max-w-[760px]">
             <Tag>COMPARISON</Tag>
             <h2 className="mt-2 text-[clamp(34px,5vw,64px)] leading-none font-semibold tracking-normal">
-              Not a generic listing flow.
+              Not a generic <span className="animated-text">listing</span> flow.
             </h2>
             <p className="mt-[18px] text-[17px] leading-[1.56] text-[#667085]">
               MacVault pages are designed to answer the practical questions that usually slow down
@@ -188,17 +189,17 @@ export default function WhyBuyFromUsPage() {
             <div className="reveal mb-11 text-center">
               <Tag>LOCAL SUPPORT FLOW</Tag>
               <h2 className="mx-auto mt-2 max-w-[820px] text-[clamp(34px,5vw,64px)] leading-none font-semibold tracking-normal">
-                Support before, during, and after the purchase.
+                Support before, during, and after the <span className="animated-text">purchase</span>.
               </h2>
             </div>
 
-            <div className="timeline reveal relative grid grid-cols-4 border-t border-[#050b1429] max-[940px]:grid-cols-2 max-sm:grid-cols-1">
+            <div className="grid grid-cols-4 gap-4 max-[940px]:grid-cols-2 max-sm:grid-cols-1">
               {supportFlow.map((step) => {
                 const Icon = step.icon;
 
                 return (
-                  <div
-                    className="min-h-64 border-r border-[#050b141f] pt-7 pr-7 last:border-r-0 max-[940px]:border-b"
+                  <article
+                    className="process-card reveal min-h-64"
                     key={step.number}
                   >
                     <div className="inline-flex size-[42px] items-center justify-center rounded-full border border-[#0a84ff42] bg-white text-[#0a84ff]">
@@ -209,7 +210,7 @@ export default function WhyBuyFromUsPage() {
                     <p className="max-w-[230px] text-[15px] leading-normal text-[#667085]">
                       {step.text}
                     </p>
-                  </div>
+                  </article>
                 );
               })}
             </div>
@@ -221,7 +222,7 @@ export default function WhyBuyFromUsPage() {
             <div className="reveal">
               <Tag>BUYING POLICY</Tag>
               <h2 className="mt-2 text-[clamp(34px,5vw,64px)] leading-none font-semibold tracking-normal">
-                Clear expectations make better buyers.
+                Clear expectations make <span className="animated-text">better</span> buyers.
               </h2>
               <p className="mt-[18px] text-[17px] leading-[1.56] text-white/70">
                 The goal is not to overload buyers. The goal is to surface the exact information
@@ -250,13 +251,13 @@ export default function WhyBuyFromUsPage() {
           <div className={`reveal ${containerClass}`}>
             <Tag>READY WHEN YOU ARE</Tag>
             <h2 className="mx-auto mt-2 max-w-[760px] text-[clamp(34px,5vw,64px)] leading-none font-semibold tracking-normal">
-              Start with the product page, then confirm on WhatsApp.
+              Start with the product page, then <span className="animated-text">confirm</span> on WhatsApp.
             </h2>
             <p className="mx-auto mt-[18px] max-w-2xl text-[17px] leading-[1.56] text-[#667085]">
               Browse current drops, compare details, and message with the right context.
             </p>
             <div className="mt-[30px] flex flex-wrap justify-center gap-3">
-              <Cta href="/products">Browse products</Cta>
+              <Cta href="/products" icon={Search}>Browse products</Cta>
               <Cta href="/" icon={ArrowRight} variant="secondary">
                 Back home
               </Cta>

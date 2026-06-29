@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, BadgeCheck, MessageCircle, PackageCheck, ShieldCheck } from "lucide-react";
+import { Cta } from "@/components/cta";
 import { ProductSlider } from "@/components/product-slider";
 import { ProductVisual } from "@/components/product-visual";
 import { RevealController } from "@/components/reveal-controller";
-import { Cta, Footer, Header, Tag, containerClass } from "@/components/site";
-import { getProduct, products } from "@/data/products";
+import { Footer, Header, Tag, containerClass } from "@/components/site";
+import { getCategorySlug, getProduct, products } from "@/data/products";
 
 type ProductPageProps = {
   params: Promise<{
@@ -73,7 +74,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
             <div className="reveal self-start">
               <Tag>{product.badge}</Tag>
               <h1 className="mt-4 text-[clamp(42px,7vw,78px)] leading-[0.98] font-semibold tracking-normal">
-                {product.title}
+                {product.title} <span className="animated-text">details</span>
               </h1>
               <p className="mt-5 text-[18px] leading-[1.58] text-[#667085]">{product.description}</p>
 
@@ -106,7 +107,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                   <Cta href={whatsappHref} icon={MessageCircle}>
                     Ask on WhatsApp
                   </Cta>
-                  <Cta href="/why-buy-from-us" variant="secondary">
+                  <Cta href="/why-buy-from-us" icon={BadgeCheck} variant="secondary">
                     Why buy from us
                   </Cta>
                 </div>
@@ -120,7 +121,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
             <div className="reveal">
               <Tag>PRODUCT DETAILS</Tag>
               <h2 className="mt-2 text-[clamp(34px,5vw,64px)] leading-none font-semibold tracking-normal">
-                Everything important before you reserve.
+                Everything important before you <span className="animated-text">reserve</span>.
               </h2>
               <p className="mt-[18px] max-w-xl text-[17px] leading-[1.56] text-[#667085]">
                 The page is structured to answer the questions buyers usually repeat in chat.
@@ -162,10 +163,10 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
             <div>
               <Tag>RELATED DROPS</Tag>
               <h2 className="mt-2 text-[clamp(34px,5vw,58px)] leading-none font-semibold tracking-normal">
-                Keep comparing before you message.
+                Keep <span className="animated-text">comparing</span> before you message.
               </h2>
             </div>
-            <Cta href="/products" variant="secondary">
+            <Cta href="/products" icon={ArrowRight} variant="secondary">
               All products
             </Cta>
           </div>
@@ -181,10 +182,17 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                   accent={item.accent}
                   kind={item.gallery[0].kind}
                   label={item.shortTitle}
+                  imageUrl={item.gallery[0].imageUrl}
+                  imageAlt={item.gallery[0].imageAlt}
                   size="compact"
                 />
                 <div className="p-[22px]">
-                  <span className="text-xs font-semibold text-[#0a84ff]">{item.category}</span>
+                  <Link
+                    className="text-xs font-semibold text-[#0a84ff] transition-colors duration-300 ease-out hover:text-[#0057d8]"
+                    href={`/products/category/${getCategorySlug(item.category)}`}
+                  >
+                    {item.category}
+                  </Link>
                   <h3 className="mt-2 text-2xl font-semibold">{item.title}</h3>
                   <p className="mt-2 text-sm leading-normal text-[#667085]">{item.summary}</p>
                   <Cta className="mt-5 min-h-11 px-4" href={`/products/${item.slug}`} icon={ArrowRight} variant="secondary">
@@ -201,7 +209,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
             <div className="reveal">
               <Tag>CONFIDENCE CHECK</Tag>
               <h2 className="mt-2 text-[clamp(34px,5vw,64px)] leading-none font-semibold tracking-normal">
-                Buy with the details in front of you.
+                Buy with the <span className="animated-text">details</span> in front of you.
               </h2>
             </div>
             <div className="reveal border-t border-white/20 pt-6">
