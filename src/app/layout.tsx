@@ -1,5 +1,12 @@
 import type { Metadata } from "next";
+import { Geist } from "next/font/google";
 import "./globals.css";
+
+const geist = Geist({
+  subsets: ["latin"],
+  variable: "--font-tech-sans",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "MacVault | Premium Apple & PS5 Drops",
@@ -13,8 +20,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full">
-      <body className="min-h-full">{children}</body>
+    <html lang="en" className={`${geist.variable} h-full`}>
+      <body className={`${geist.className} min-h-full`}>{children}</body>
     </html>
   );
 }

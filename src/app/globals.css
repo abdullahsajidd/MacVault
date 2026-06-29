@@ -1,25 +1,27 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400..800&display=swap");
 @import "tailwindcss";
 
 :root {
   --background: #ffffff;
-  --foreground: #050b14;
+  --foreground: #102a43;
+  --font-heading: var(--font-tech-sans), sans-serif;
+  --font-body: var(--font-tech-sans), sans-serif;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: "Inter", Arial, sans-serif;
+  --font-sans: var(--font-body);
 }
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 150px;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: "Inter", Arial, sans-serif;
+  font-family: var(--font-body);
 }
 
 .site-container {
@@ -31,6 +33,17 @@ body {
 
 .section-block {
   padding-block: 60px;
+}
+
+.section-anchor {
+  scroll-margin-top: 150px;
+}
+
+.soft-card {
+  border: 1px solid #102a431f;
+  border-radius: 20px;
+  background: #ffffff;
+  padding: 20px;
 }
 
 .hero-title {
@@ -45,7 +58,65 @@ body {
 h1,
 h2,
 h3 {
-  font-family: "Inter", Arial, sans-serif;
+  font-family: var(--font-heading);
+}
+
+button,
+a,
+input,
+textarea,
+select,
+.font-sans {
+  font-family: var(--font-body);
+}
+
+.font-heading {
+  font-family: var(--font-heading);
+}
+
+.hero-accent-word {
+  position: relative;
+  display: inline-block;
+  color: #0057d8;
+  isolation: isolate;
+}
+
+.hero-accent-word::before {
+  content: "";
+  position: absolute;
+  inset: 58% -0.08em 0.04em;
+  z-index: -1;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #bde2ff, #dff4ff, #b9ffd8);
+  transform-origin: left center;
+  animation: accent-swipe 3.8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+.hero-accent-word::after {
+  content: "";
+  position: absolute;
+  top: 0.05em;
+  right: -0.16em;
+  width: 0.1em;
+  height: 0.1em;
+  border-radius: 999px;
+  background: #23c879;
+  box-shadow: 0 0 0 8px #23c87918;
+  animation: accent-pulse 2.4s ease-in-out infinite;
+}
+
+.hover-lift {
+  transition:
+    transform 260ms ease,
+    box-shadow 260ms ease,
+    border-color 260ms ease,
+    background-color 260ms ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  border-color: #0a84ff4d;
+  box-shadow: 0 22px 55px rgba(5, 20, 44, 0.09);
 }
 
 .premium-button svg {
@@ -98,8 +169,8 @@ h3 {
 }
 
 .is-ready .reveal {
-  opacity: 0;
-  transform: translateY(20px);
+  opacity: 1;
+  transform: translateY(0);
   transition:
     opacity 620ms ease,
     transform 620ms ease;
@@ -189,6 +260,10 @@ h3 {
 }
 
 @media (max-width: 768px) {
+  html {
+    scroll-padding-top: 140px;
+  }
+
   .site-container {
     padding-inline: 24px;
   }
@@ -200,29 +275,60 @@ h3 {
   .hero-copy {
     font-size: 18px;
   }
+
+  .section-anchor {
+    scroll-margin-top: 140px;
+  }
+}
+
+@keyframes accent-swipe {
+  0%,
+  100% {
+    transform: scaleX(0.18);
+    opacity: 0.68;
+  }
+
+  45%,
+  72% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+@keyframes accent-pulse {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.72;
+  }
+
+  50% {
+    transform: translateY(-5px) scale(1.16);
+    opacity: 1;
+  }
 }
 
 @media (max-width: 425px) {
   .site-container {
-    padding-inline: 18px;
+    padding-inline: 20px;
   }
 
   .hero-title {
-    font-size: 46px;
+    font-size: 42px;
   }
 
   .hero-copy {
-    font-size: 17px;
+    font-size: 16px;
   }
 }
 
 @media (max-width: 375px) {
   .site-container {
-    padding-inline: 16px;
+    padding-inline: 20px;
   }
 
   .hero-title {
-    font-size: 42px;
+    font-size: 40px;
   }
 }
 
