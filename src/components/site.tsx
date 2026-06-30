@@ -28,7 +28,7 @@ const navigationLinks = [
   { label: "Why Buy", href: "/why-buy-from-us" },
   { label: "Process", href: "/#process" },
   { label: "Guide", href: "/#guide" },
-  { label: "Support", href: "/#support" },
+  { label: "FAQ", href: "/#faq" },
 ];
 
 export function AnimatedText({ children }: { children: ReactNode }) {
@@ -245,83 +245,108 @@ export function Footer() {
       links: [
         { label: "Our process", href: "/#process" },
         { label: "Buying guide", href: "/#guide" },
-        { label: "Concierge", href: "/#support" },
+        { label: "FAQ", href: "/#faq" },
       ],
     },
   ];
 
   return (
-    <footer className="bg-[#07111f] text-white/65">
-      <div className={`${containerClass} py-[56px]`}>
-        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-8 border-b border-white/12 pb-10 max-[760px]:grid-cols-1">
-          <div className="max-w-[620px]">
-            <Brand />
-            <p className="mt-5 text-[17px] leading-[1.65] text-white/72">
-              Premium Apple and PS5 stock with verified details, clear condition notes, and a
-              direct local buying flow.
-            </p>
-          </div>
+    <footer className="border-t border-[#102a4312] bg-[#f6fbff] text-[#667085]">
+      <div className={`${containerClass} py-[60px]`}>
+        <div className="grid gap-5 rounded-[22px] border border-[#0a84ff14] bg-white p-5 shadow-[0_28px_90px_rgba(5,20,44,0.07)]">
+          <div className="grid grid-cols-[minmax(0,1.05fr)_minmax(300px,0.95fr)] gap-5 max-[1024px]:grid-cols-1">
+            <div className="rounded-[18px] bg-[#f4f9ff] p-8 max-[425px]:p-6">
+              <Brand />
+              <p className="mt-6 max-w-[620px] text-[17px] leading-[1.65] text-[#475467]">
+                Premium Apple and PlayStation stock with clear condition notes, direct WhatsApp
+                confirmation, and local buying support before you visit or reserve.
+              </p>
 
-          <div className="flex justify-end max-[760px]:justify-start">
-            <Cta
-              href="https://wa.me/?text=Hi%20MacVault%2C%20I%20want%20to%20check%20current%20stock."
-              icon={MessageCircle}
-            >
-              Ask MacVault
-            </Cta>
-          </div>
-        </div>
+              <div className="mt-7 flex flex-wrap gap-3 text-sm font-semibold text-[#102a43]">
+                <span className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#0a84ff1f] bg-white px-3">
+                  <BadgeCheck className="size-4 text-[#0a84ff]" /> Checked stock
+                </span>
+                <span className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#0a84ff1f] bg-white px-3">
+                  <Laptop className="size-4 text-[#0a84ff]" /> Apple specialists
+                </span>
+                <span className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#0a84ff1f] bg-white px-3">
+                  <Gamepad2 className="size-4 text-[#0a84ff]" /> Console bundles
+                </span>
+                <span className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#0a84ff1f] bg-white px-3">
+                  <Headphones className="size-4 text-[#0a84ff]" /> Accessories
+                </span>
+              </div>
+            </div>
 
-        <div className="grid grid-cols-[1fr_1.6fr] gap-14 py-10 max-[1024px]:grid-cols-1">
-          <div className="grid content-start gap-4">
-            <p className="max-w-[420px] text-sm leading-[1.7] text-white/58">
-              Built for buyers who want clear product truth before a visit, payment, or reservation.
-            </p>
-            <div className="flex flex-wrap gap-3 text-sm text-white/72">
-              <span className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/12 px-3">
-                <BadgeCheck className="size-4 text-[#45a3ff]" /> Verified stock
-              </span>
-              <span className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/12 px-3">
-                <Laptop className="size-4 text-[#45a3ff]" /> Apple specialists
-              </span>
-              <span className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/12 px-3">
-                <Gamepad2 className="size-4 text-[#45a3ff]" /> Console bundles
-              </span>
-              <span className="sr-only">
-                <Headphones /> Accessories
-              </span>
+            <div className="grid content-between rounded-[18px] border border-[#0a84ff14] bg-white p-8 max-[425px]:p-6">
+              <div>
+                <span className="inline-flex min-h-9 items-center rounded-full bg-[#eef7ff] px-3 text-xs font-bold tracking-[0.12em] text-[#0057d8] uppercase">
+                  Current stock
+                </span>
+                <h2 className="mt-4 text-[clamp(30px,4vw,48px)] leading-[1.02] font-semibold tracking-[-0.04em] text-[#102a43]">
+                  Confirm availability before you move.
+                </h2>
+                <p className="mt-4 text-[16px] leading-[1.65] text-[#667085]">
+                  Ask for today&apos;s iPhone, MacBook, iPad, Watch, accessories, or PS5 stock and
+                  get the exact condition and package details.
+                </p>
+              </div>
+
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Cta
+                  href="https://wa.me/?text=Hi%20MacVault%2C%20I%20want%20to%20check%20current%20stock."
+                  icon={MessageCircle}
+                >
+                  Ask MacVault
+                </Cta>
+                <Cta href="/products" icon={PackageSearch} variant="secondary">
+                  Browse stock
+                </Cta>
+              </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-10 max-[768px]:grid-cols-2 max-[425px]:grid-cols-1">
-            {columns.map((column) => {
-              const Icon = column.icon;
-              return (
-                <div key={column.title}>
-                  <div className="mb-4 flex items-center gap-2 text-white">
-                    <Icon className="size-4 text-[#45a3ff]" />
-                    <h3 className="text-sm font-semibold">{column.title}</h3>
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    {column.links.map((link) => (
-                      <Link
-                        className="flex min-h-10 items-center text-sm transition-colors hover:text-[#45a3ff]"
-                        href={link.href}
-                        key={link.label}
-                      >
-                        {link.label}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+          <div className="grid grid-cols-[minmax(240px,0.7fr)_1fr] gap-8 rounded-[18px] border border-[#102a4310] p-8 max-[900px]:grid-cols-1 max-[425px]:p-6">
+            <div>
+              <h3 className="text-sm font-semibold tracking-[0.12em] text-[#102a43] uppercase">
+                MacVault
+              </h3>
+              <p className="mt-4 max-w-[360px] text-sm leading-[1.7]">
+                A cleaner local buying flow for high-intent buyers who want product truth before a
+                visit, payment, or reservation.
+              </p>
+            </div>
 
-        <div className="flex items-center justify-between gap-5 border-t border-white/12 pt-6 text-sm text-white/50 max-sm:flex-col max-sm:items-start">
-          <span>MacVault</span>
-          <span>Verified local Apple and PS5 buying flow.</span>
+            <div className="grid grid-cols-3 gap-8 max-[768px]:grid-cols-2 max-[425px]:grid-cols-1">
+              {columns.map((column) => {
+                const Icon = column.icon;
+                return (
+                  <div key={column.title}>
+                    <div className="mb-4 flex items-center gap-2 text-[#102a43]">
+                      <Icon className="size-4 text-[#0a84ff]" />
+                      <h3 className="text-sm font-semibold">{column.title}</h3>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      {column.links.map((link) => (
+                        <Link
+                          className="flex min-h-10 items-center text-sm transition-colors hover:text-[#0057d8]"
+                          href={link.href}
+                          key={link.label}
+                        >
+                          {link.label}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between gap-5 px-3 pb-1 text-sm text-[#667085] max-sm:flex-col max-sm:items-start">
+            <span>© MacVault</span>
+            <span>Verified local Apple and PlayStation buying flow.</span>
+          </div>
         </div>
       </div>
     </footer>

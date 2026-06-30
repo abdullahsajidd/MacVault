@@ -1,27 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import { type CSSProperties, type PointerEvent, useEffect, useMemo, useState } from "react";
+import { type CSSProperties, type PointerEvent, useEffect, useState } from "react";
 import {
   ArrowRight,
   BadgeCheck,
   CalendarCheck,
-  ChevronLeft,
-  ChevronRight,
+  ChevronDown,
   ClipboardCheck,
   Gamepad2,
   Headphones,
   Laptop,
   MessageCircle,
   PackageCheck,
-  Quote,
   Search,
   Send,
   ShieldCheck,
   Smartphone,
   Sparkles,
-  Star,
-  Truck,
 } from "lucide-react";
 import { ProductVisual } from "@/components/product-visual";
 import { RevealController } from "@/components/reveal-controller";
@@ -33,12 +29,12 @@ const marqueeItems = ["IPHONE", "MACBOOK", "IPAD", "WATCH", "PS5", "AIRPODS", "A
 const verifiedCards = [
   {
     title: "Live stock checked",
-    text: "Availability, color, box, and hold status confirmed before the visit.",
+    text: "Availability, color, box and hold status confirmed before the visit.",
     icon: BadgeCheck,
   },
   {
     title: "Condition upfront",
-    text: "PTA, battery, cycle count, warranty, and bundle contents listed early.",
+    text: "PTA, battery, cycle count and warranty details listed early.",
     icon: ClipboardCheck,
   },
   {
@@ -52,31 +48,31 @@ const whyRows = [
   {
     number: "01",
     title: "Verified stock before commitment.",
-    text: "Buyers know what is actually available before they visit, pay, or reserve.",
+    text: "Stock is checked before a buyer visits, pays or reserves.",
     icon: BadgeCheck,
   },
   {
     number: "02",
     title: "Condition is not hidden.",
-    text: "Sealed, open-box, used, PTA, Non-PTA, battery, cycle count, and warranty details are visible.",
+    text: "Sealed, open box, used, PTA, Non PTA, battery and cycle count details are visible.",
     icon: ClipboardCheck,
   },
   {
     number: "03",
-    title: "WhatsApp-first buying flow.",
-    text: "Every CTA moves a serious buyer into a fast conversation with product context.",
+    title: "WhatsApp first buying flow.",
+    text: "Every CTA opens a focused chat with product context.",
     icon: MessageCircle,
   },
   {
     number: "04",
     title: "Local support after the sale.",
-    text: "Warranty expectations, delivery, pickup, and support terms are framed clearly.",
+    text: "Warranty, delivery, pickup and support terms are framed clearly.",
     icon: ShieldCheck,
   },
 ];
 
 const steps = [
-  { number: "01", title: "Choose", text: "Select a product category or open a verified listing.", icon: Search },
+  { number: "01", title: "Choose", text: "Select a product category or open a checked listing.", icon: Search },
   { number: "02", title: "Confirm", text: "Review condition, PTA status, warranty, and package contents.", icon: ClipboardCheck },
   { number: "03", title: "Message", text: "Open WhatsApp with the selected product details already understood.", icon: Send },
   { number: "04", title: "Reserve", text: "Arrange pickup, delivery, payment, or a short hold on available stock.", icon: CalendarCheck },
@@ -86,65 +82,49 @@ const guideRows = [
   { title: "Sealed", text: "New boxed units with clear warranty expectations.", note: "Highest trust", icon: PackageCheck },
   { title: "Open Box", text: "Checked packaging and condition for better value.", note: "Best value", icon: BadgeCheck },
   { title: "Used", text: "Battery, physical condition, accessories, and limits stated clearly.", note: "Budget option", icon: ClipboardCheck },
-  { title: "PTA / Non-PTA", text: "Phone status is shown before the buyer has to ask.", note: "Critical detail", icon: ShieldCheck },
+  { title: "PTA / Non PTA", text: "Phone status is shown before the buyer has to ask.", note: "Critical detail", icon: ShieldCheck },
 ];
 
-const benefits = [
-  { title: "Verification", text: "Stock, box status, and product condition are confirmed before a buyer commits.", icon: BadgeCheck },
-  { title: "Warranty clarity", text: "Warranty expectations and support terms are written in plain language.", icon: ShieldCheck },
-  { title: "Pickup or delivery", text: "Local handoff options are part of the buying flow, not an afterthought.", icon: Truck },
-  { title: "After-sale support", text: "Buyers can return to MacVault for practical help after the purchase.", icon: Headphones },
+const faqItems = [
+  {
+    question: "Is it safe to buy a used iPhone in Lahore from MacVault?",
+    answer:
+      "Every device is checked for PTA status, battery health and physical condition before it is listed. You can also review the device in person before paying.",
+  },
+  {
+    question: "What does PTA approved mean?",
+    answer:
+      "PTA approved means the device is registered with the Pakistan Telecommunication Authority and can use any local SIM network without restrictions.",
+  },
+  {
+    question: "Do MacVault devices come with a warranty?",
+    answer: "Warranty terms vary by device and are listed clearly on each product page before you reserve.",
+  },
+  {
+    question: "Can I check the device in person before paying?",
+    answer: "Yes, pickup and in person inspection are part of the standard buying flow.",
+  },
+  {
+    question: "Do you deliver outside Lahore?",
+    answer:
+      "Delivery options are confirmed before payment. Share your city on WhatsApp and the team will confirm availability, timing, and delivery charges for your order.",
+  },
 ];
 
-const services = [
-  { title: "Before buying", text: "Guidance on storage, chip, PTA status, condition, and budget fit.", icon: Search },
-  { title: "During buying", text: "Reservation, pickup, delivery, and stock confirmation through WhatsApp.", icon: MessageCircle },
-  { title: "After buying", text: "Warranty expectations and support terms presented in plain language.", icon: ShieldCheck },
-];
-
-const testimonials = [
-  {
-    name: "Hamza A.",
-    role: "iPhone 15 Pro Max buyer",
-    text: "MacVault shared the PTA status, box condition, color, and warranty note before I visited. It felt much cleaner than normal listing chats.",
-  },
-  {
-    name: "Mariam K.",
-    role: "MacBook Air M3 buyer",
-    text: "The MacBook cycle count and charger condition were clear from the start. I did not have to ask ten basic questions before reserving.",
-  },
-  {
-    name: "Saad R.",
-    role: "PS5 bundle buyer",
-    text: "The bundle contents were confirmed on WhatsApp, then pickup was quick. The page made it easy to know what was actually available.",
-  },
-  {
-    name: "Areeba S.",
-    role: "iPad Pro buyer",
-    text: "I wanted a gift and needed clean box details. The listing showed the important points, then the team confirmed everything quickly.",
-  },
-  {
-    name: "Daniyal M.",
-    role: "Apple Watch buyer",
-    text: "Battery, band condition, and pickup timing were already clear. It felt like buying from a showroom, not chasing random posts.",
-  },
-  {
-    name: "Zain H.",
-    role: "AirPods Pro buyer",
-    text: "The sealed status and warranty expectation were simple to check. WhatsApp was fast because the product details were already there.",
-  },
-];
+function homepageCopy(text: string) {
+  return text.replaceAll("-", " ");
+}
 
 function ProductMarquee() {
   return (
-    <section className="overflow-hidden border-y border-[#102a4314] bg-[#07111f] py-4 text-white">
-      <div className="marquee-track flex w-max items-center gap-10">
+    <section className="product-marquee overflow-hidden border-y border-[#0a84ff1a] bg-[#f4f9ff]">
+      <div className="marquee-track flex w-max items-center">
         {[...marqueeItems, ...marqueeItems].map((item, index) => (
           <span
-            className="inline-flex items-center gap-3 text-[13px] font-semibold tracking-[0.22em] text-white/72"
+            className="marquee-item inline-flex items-center font-semibold text-[#102a43]"
             key={`${item}-${index}`}
           >
-            <Sparkles className="size-4 text-[#45a3ff]" />
+            <Sparkles className="marquee-icon text-[#0a84ff]" />
             {item}
           </span>
         ))}
@@ -170,7 +150,7 @@ function HeroVisual() {
     <div
       className="hero-step hero-visual reveal relative mx-auto mt-12 mb-6 flex w-full max-w-[800px] select-none flex-col items-center justify-center px-5 max-sm:mt-8"
       style={{ "--step-delay": "240ms" } as CSSProperties}
-      aria-label="MacVault verified stock animation"
+      aria-label="MacVault checked stock animation"
     >
       <div className="relative flex aspect-[16/10] w-full max-w-[620px] flex-col overflow-hidden rounded-t-[20px] rounded-b-[4px] border-[10px] border-[#d9e8f8] bg-[#eef7ff] shadow-[0_25px_55px_-12px_rgba(10,132,255,0.22)] sm:border-[12px]">
         <div className="absolute top-0 left-1/2 z-30 flex h-[15px] w-[80px] -translate-x-1/2 items-center justify-center rounded-b-md bg-[#d9e8f8]">
@@ -207,7 +187,7 @@ function HeroVisual() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex size-1.5 rounded-full bg-emerald-500" />
             </span>
-            <span>VERIFIED STOCK</span>
+            <span>CHECKED STOCK</span>
           </div>
 
           <div className="animate-sold absolute right-[10%] bottom-[30%] flex select-none items-center gap-2 rounded-full border border-rose-400/30 bg-white/50 px-3.5 py-1.5 text-[10px] font-extrabold tracking-wider text-rose-600 shadow-[0_0_20px_rgba(244,63,94,0.12)] backdrop-blur-md sm:text-xs">
@@ -242,33 +222,60 @@ function HeroVisual() {
 }
 
 function LiveAvailabilitySection() {
-  const categories = new Set(products.map((product) => product.category));
   const stats = [
-    [String(products.length), "total products"],
-    [String(categories.size), "active categories"],
-    ["100%", "verified inventory"],
+    {
+      number: "01",
+      value: "PTA status",
+      label: "Network ready",
+      text: "Approved or Non PTA status is stated clearly before you ask.",
+      icon: PackageCheck,
+    },
+    {
+      number: "02",
+      value: "Battery health",
+      label: "Usage verified",
+      text: "Health percentage and cycle count are shared where they matter.",
+      icon: Search,
+    },
+    {
+      number: "03",
+      value: "Condition & box",
+      label: "What you receive",
+      text: "Screen, body, box, accessories and warranty notes are made clear.",
+      icon: ClipboardCheck,
+    },
   ];
 
   return (
     <section className={`${containerClass} py-[60px]`}>
-      <div className="reveal grid grid-cols-[0.8fr_1.2fr] gap-8 rounded-[8px] bg-white p-6 shadow-[0_18px_60px_rgba(5,20,44,0.08)] max-[940px]:grid-cols-1">
-        <div>
-          <Tag>Live availability</Tag>
-          <h2 className="mt-3 text-[clamp(34px,5vw,64px)] leading-none font-semibold tracking-normal">
-            Product count, category coverage, and <span className="animated-text">verified</span>{" "}
-            status.
+      <div className="stock-check-section reveal">
+        <div className="stock-check-intro">
+          <Tag>Stock snapshot</Tag>
+          <h2 className="mt-5 text-[clamp(38px,4.4vw,68px)] leading-[0.98] font-semibold tracking-[-0.035em]">
+            Know exactly what you&apos;re <span className="animated-text">buying.</span>
           </h2>
-          <p className="mt-4 text-[17px] leading-[1.6] text-[#667085]">
-            The availability section now reflects the actual product data instead of placeholder
-            response metrics.
+          <p className="mt-5 max-w-[570px] text-[17px] leading-[1.65] text-[#667085]">
+            Every listing follows the same three-part check, so the important details are visible
+            before you reserve or visit.
           </p>
+          <div className="stock-check-note">
+            <BadgeCheck aria-hidden="true" />
+            <span>Checked before it goes live</span>
+          </div>
         </div>
-        <div className="grid grid-cols-3 gap-3 max-[640px]:grid-cols-1">
-          {stats.map(([value, label]) => (
-            <div className="availability-stat" key={label}>
-              <strong>{value}</strong>
-              <span>{label}</span>
-            </div>
+        <div className="stock-check-list">
+          {stats.map(({ number, value, label, text, icon: Icon }) => (
+            <article className="stock-check-row" key={number}>
+              <span className="stock-check-number">{number}</span>
+              <span className="stock-check-icon">
+                <Icon aria-hidden="true" />
+              </span>
+              <div className="stock-check-copy">
+                <span>{label}</span>
+                <strong>{value}</strong>
+                <p>{text}</p>
+              </div>
+            </article>
           ))}
         </div>
       </div>
@@ -280,27 +287,60 @@ function CategoryLanesSection() {
   const categories = [
     {
       category: "iPhone",
-      title: "iPhone",
-      text: "PTA status, battery health, color, storage, and box condition framed before chat.",
-      meta: "PTA / Non-PTA",
+      title: "iPhones, PTA and Non PTA",
+      text: "PTA status, battery health, color, storage and box condition framed before chat.",
+      meta: "PTA and Non PTA",
       icon: Smartphone,
       product: products.find((item) => item.category === "iPhone"),
     },
     {
       category: "Mac",
-      title: "Mac",
-      text: "Chip, cycle count, charger condition, storage, and warranty notes stay visible.",
+      title: "MacBooks, Air and Pro",
+      text: "Chip, cycle count, charger condition, storage and warranty notes stay visible.",
       meta: "Air / Pro",
       icon: Laptop,
       product: products.find((item) => item.category === "Mac"),
     },
     {
+      category: "iPad",
+      title: "iPads, all generations",
+      text: "Generation, storage, accessories, box state and warranty notes shown clearly.",
+      meta: "All generations",
+      icon: PackageCheck,
+      product: products.find((item) => item.category === "iPad"),
+    },
+    {
+      category: "Watch",
+      title: "Apple Watch, all sizes",
+      text: "Size, band condition, battery note and box details framed before chat.",
+      meta: "All sizes",
+      icon: BadgeCheck,
+      product: products.find((item) => item.category === "Watch"),
+    },
+    {
+      category: "Accessories",
+      title: "AirPods and Apple accessories",
+      text: "Sealed status, compatibility, case condition and warranty expectations made clear.",
+      meta: "Audio / accessories",
+      icon: Headphones,
+      product: products.find((item) => item.category === "Accessories"),
+    },
+    {
       category: "PS5",
-      title: "PS5",
-      text: "Bundle contents, controller condition, warranty notes, and pickup timing clarified.",
+      title: "PS5 consoles, Disc and Slim",
+      text: "PlayStation console bundle contents, controller condition and pickup timing clarified.",
       meta: "Disc / Slim",
       icon: Gamepad2,
       product: products.find((item) => item.category === "PS5"),
+    },
+    {
+      category: "PS5",
+      title: "PS5 games and accessories",
+      text: "PlayStation games, controller options and accessory bundles will appear here once live.",
+      meta: "Games / accessories",
+      icon: Sparkles,
+      product: products.find((item) => item.category === "PS5"),
+      countOverride: 0,
     },
   ];
 
@@ -308,15 +348,18 @@ function CategoryLanesSection() {
     <section className={`${containerClass} py-[60px]`}>
       <SectionHead
         kicker="Product categories"
-        title="Cleaner category lanes for faster decisions."
-        accent="category"
-        text="Each card links directly to a filtered category page and carries product context before the click."
+        title="Browse by Category"
+        accent="Category"
+        text="Each card links directly to filtered stock and shows product count once live."
       />
 
-      <div className="grid grid-cols-3 gap-5 max-[940px]:grid-cols-1">
+      <div className="grid grid-cols-4 gap-5 max-[1180px]:grid-cols-3 max-[940px]:grid-cols-2 max-[640px]:grid-cols-1">
         {categories.map((item, index) => {
           const Icon = item.icon;
-          const count = products.filter((product) => product.category === item.category).length;
+          const count =
+            "countOverride" in item && typeof item.countOverride === "number"
+              ? item.countOverride
+              : products.filter((product) => product.category === item.category).length;
           const product = item.product ?? products[0];
 
           return (
@@ -331,9 +374,11 @@ function CategoryLanesSection() {
                   <Icon className="size-4" />
                   {item.meta}
                 </span>
-                <span className="rounded-full bg-[#ecfdf3] px-3 py-1 text-xs font-bold text-[#14773d]">
-                  {count} products
-                </span>
+                {count > 0 ? (
+                  <span className="rounded-full bg-[#ecfdf3] px-3 py-1 text-xs font-bold text-[#14773d]">
+                    {count} products
+                  </span>
+                ) : null}
               </div>
               <ProductVisual
                 accent={product.accent}
@@ -364,9 +409,9 @@ function ProductListingSection() {
     <section id="inventory" className={`${containerClass} py-[60px]`}>
       <SectionHead
         kicker="Featured listings"
-        title="Three lanes, cleaner decisions, full product images."
-        accent="cleaner"
-        text="The homepage listing uses uniform contained media frames so portrait and landscape images stay fully visible."
+        title="Available Now"
+        accent="Now"
+        text="Current iPhone, MacBook, iPad, Apple Watch, AirPods and PlayStation stock shown with clear condition notes."
       />
 
       <div className="product-list-grid">
@@ -393,12 +438,16 @@ function ProductListingSection() {
                   {product.status}
                 </span>
               </div>
-              <h3 className="text-[26px] leading-[1.08] font-semibold">{product.title}</h3>
-              <p className="mt-3 text-[15px] leading-[1.55] text-[#667085]">{product.summary}</p>
+              <h3 className="text-[26px] leading-[1.08] font-semibold">
+                {homepageCopy(product.title)}
+              </h3>
+              <p className="mt-3 text-[15px] leading-[1.55] text-[#667085]">
+                {homepageCopy(product.summary)}
+              </p>
               <div className="mt-5 flex flex-wrap gap-2">
                 {product.specs.slice(0, 3).map((spec) => (
                   <span className="rounded-full border border-[#050b1414] bg-[#f5f5f7] px-3 py-1.5 text-xs font-medium text-[#667085]" key={spec}>
-                    {spec}
+                    {homepageCopy(spec)}
                   </span>
                 ))}
               </div>
@@ -415,109 +464,51 @@ function ProductListingSection() {
   );
 }
 
-function BuyingBenefitsSection() {
+function FaqSection() {
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+
   return (
-    <section className="bg-white py-[60px]">
+    <section id="faq" className="section-anchor bg-[#f4f9ff] py-[60px]">
       <div className={containerClass}>
         <SectionHead
-          kicker="Buying benefits"
-          title="Support that covers more than the sale."
-          accent="Support"
-          text="Buyer Match is replaced with practical benefits that explain how MacVault reduces risk."
+          kicker="FAQ"
+          title="Frequently Asked Questions"
+          accent="Questions"
+          text="Clear answers for common iPhone, PTA, warranty and pickup questions."
         />
-        <div className="grid grid-cols-4 gap-4 max-[1180px]:grid-cols-2 max-sm:grid-cols-1">
-          {benefits.map((benefit, index) => {
-            const Icon = benefit.icon;
 
-            return (
-              <article className="benefit-card reveal" style={{ transitionDelay: `${index * 40}ms` }} key={benefit.title}>
-                <Icon className="size-5 text-[#0a84ff]" />
-                <h3 className="mt-8 text-2xl font-semibold">{benefit.title}</h3>
-                <p className="mt-3 text-[15px] leading-[1.55] text-[#667085]">{benefit.text}</p>
-              </article>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function TestimonialsSection() {
-  const [activeSlide, setActiveSlide] = useState(0);
-  const visibleTestimonials = useMemo(
-    () => [0, 1, 2].map((offset) => testimonials[(activeSlide + offset) % testimonials.length]),
-    [activeSlide],
-  );
-
-  const moveSlide = (direction: "prev" | "next") => {
-    setActiveSlide((current) =>
-      direction === "prev"
-        ? (current - 1 + testimonials.length) % testimonials.length
-        : (current + 1) % testimonials.length,
-    );
-  };
-
-  return (
-    <section className="bg-[#f4f9ff] py-[60px]">
-      <div className={containerClass}>
-        <div className="mb-10 flex items-end justify-between gap-6 max-[720px]:items-start">
-          <div className="reveal max-w-[720px]">
-            <Tag>Buyer notes</Tag>
-            <h2 className="mt-2 text-[clamp(34px,5vw,64px)] leading-none font-semibold tracking-normal max-sm:text-[34px]">
-              Real stories, smoother <span className="animated-text">transitions</span>.
-            </h2>
-            <p className="mt-[18px] max-w-2xl text-[17px] leading-[1.56] text-[#667085] max-sm:text-base">
-              Six buyer stories around PTA status, warranty, package contents, and local
-              availability.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <button className="icon-button" type="button" onClick={() => moveSlide("prev")} aria-label="Previous testimonial">
-              <ChevronLeft className="size-5" strokeWidth={2} />
-            </button>
-            <button className="icon-button" type="button" onClick={() => moveSlide("next")} aria-label="Next testimonial">
-              <ChevronRight className="size-5" strokeWidth={2} />
-            </button>
-          </div>
-        </div>
-
-        <div className="testimonial-stage">
-          <div className="testimonial-track grid grid-cols-3 gap-5 max-[1040px]:grid-cols-2 max-[720px]:grid-cols-1" key={activeSlide}>
-            {visibleTestimonials.map((testimonial) => (
-              <article className="flex min-h-[300px] flex-col justify-between rounded-[8px] bg-white p-6 shadow-[inset_0_0_0_1px_rgba(10,132,255,0.10)]" key={testimonial.name}>
-                <div>
-                  <span className="grid size-11 place-items-center rounded-full bg-[#eef7ff] text-[#0a84ff]">
-                    <Quote className="size-5" strokeWidth={2} />
+        <div className="faq-list mx-auto max-w-[1100px]">
+          {faqItems.map((item, index) => (
+            <article
+              className={`faq-accordion reveal ${openFaq === index ? "is-open" : ""}`}
+              style={{ transitionDelay: `${index * 40}ms` }}
+              key={item.question}
+            >
+              <h3>
+                <button
+                  className="faq-trigger"
+                  type="button"
+                  aria-expanded={openFaq === index}
+                  aria-controls={`faq-answer-${index}`}
+                  onClick={() => setOpenFaq((current) => (current === index ? null : index))}
+                >
+                  <span className="faq-number">{String(index + 1).padStart(2, "0")}</span>
+                  <span>{item.question}</span>
+                  <span className="faq-toggle" aria-hidden="true">
+                    <ChevronDown />
                   </span>
-                  <div className="mt-7 mb-3 flex gap-1 text-[#0a84ff]" aria-label="5 star rating">
-                    {[0, 1, 2, 3, 4].map((item) => (
-                      <Star className="size-4 fill-current" strokeWidth={1.8} key={item} />
-                    ))}
-                  </div>
-                  <p className="text-[20px] leading-[1.42] font-medium text-[#102a43] max-sm:text-[18px]">
-                    &ldquo;{testimonial.text}&rdquo;
-                  </p>
+                </button>
+              </h3>
+              <div
+                className="faq-answer"
+                id={`faq-answer-${index}`}
+                aria-hidden={openFaq !== index}
+              >
+                <div>
+                  <p>{item.answer}</p>
                 </div>
-                <div className="mt-7 text-sm">
-                  <strong className="block text-[#102a43]">{testimonial.name}</strong>
-                  <span className="text-[#667085]">{testimonial.role}</span>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-7 flex justify-center gap-2" aria-label="Testimonial pagination">
-          {testimonials.map((testimonial, index) => (
-            <button
-              className={`testimonial-dot ${index === activeSlide ? "is-active" : ""}`}
-              type="button"
-              onClick={() => setActiveSlide(index)}
-              aria-label={`Show testimonial ${index + 1}: ${testimonial.name}`}
-              key={testimonial.name}
-            />
+              </div>
+            </article>
           ))}
         </div>
       </div>
@@ -548,8 +539,8 @@ function WhyChooseSection() {
       <div className={containerClass}>
         <SectionHead
           kicker="Why choose MacVault"
-          title="Less marketplace. More confidence."
-          accent="confidence"
+          title="Less Marketplace. More Confidence."
+          accent="More"
           text="MacVault should feel like a local showroom with clear product truth, not another grid of anonymous listings."
           align="left"
         />
@@ -595,9 +586,9 @@ function ProcessSection() {
       <div className={containerClass}>
         <SectionHead
           kicker="Our process"
-          title="From browsing to reservation in four steps."
-          accent="reservation"
-          text="A direct flow for high-intent buyers who want details first and a human reply fast."
+          title="From Browsing to Reservation"
+          accent="Reservation"
+          text="A direct flow for high intent buyers who want details first and a human reply fast."
         />
 
         <div className="grid grid-cols-4 gap-4 max-[940px]:grid-cols-2 max-sm:grid-cols-1">
@@ -627,8 +618,8 @@ function GuideSection() {
       <div className={containerClass}>
         <SectionHead
           kicker="Buying guide"
-          title="Make condition easy to understand."
-          accent="condition"
+          title="Know the Condition Before You Commit"
+          accent="Condition"
           text="This section gives MacVault a professional dealer feel and reduces repeated questions on WhatsApp."
         />
 
@@ -655,37 +646,6 @@ function GuideSection() {
   );
 }
 
-function SupportSection() {
-  return (
-    <section id="support" className="section-anchor bg-[#eef7ff] py-[60px] text-[#102a43]">
-      <div className={containerClass}>
-        <SectionHead
-          kicker="MacVault concierge"
-          title="Support around the sale, not just a product list."
-          accent="Support"
-          text="Give buyers enough help to choose confidently, then move them to WhatsApp when they are ready."
-        />
-
-        <div className="grid grid-cols-3 gap-4 max-[940px]:grid-cols-1">
-          {services.map((service, index) => {
-            const Icon = service.icon;
-
-            return (
-              <article className="benefit-card reveal" style={{ transitionDelay: `${index * 40}ms` }} key={service.title}>
-                <span className="mb-8 grid size-11 place-items-center rounded-full border border-[#0a84ff24] bg-[#0a84ff12] text-[#0a84ff]">
-                  <Icon className="size-5" strokeWidth={1.9} />
-                </span>
-                <h3 className="mb-3 text-[24px] font-semibold">{service.title}</h3>
-                <p className="text-[15px] leading-normal text-[#667085]">{service.text}</p>
-              </article>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 export default function Home() {
   return (
     <div className="overflow-hidden bg-[linear-gradient(180deg,#ffffff_0%,#f7fbff_42%,#ffffff_100%)] text-[#102a43]">
@@ -696,25 +656,26 @@ export default function Home() {
         <section className={`${containerClass} hero-section relative min-h-[calc(100vh-88px)] pt-32 pb-12 text-center max-sm:min-h-0 max-sm:pt-[106px] max-sm:pb-9`}>
           <div className="hero-content mx-auto max-w-[980px]">
             <div className="hero-step reveal" style={{ "--step-delay": "40ms" } as CSSProperties}>
-              <Tag>Curated Apple and PS5 stock</Tag>
+              <Tag>Lahore tech stock</Tag>
             </div>
 
             <h1 className="hero-step reveal hero-title mx-auto mt-6 max-w-[980px] text-[70px] leading-[0.98] font-semibold tracking-normal max-[768px]:text-[60px] max-[425px]:text-[42px] max-[375px]:text-[40px]" style={{ "--step-delay": "80ms" } as CSSProperties}>
-              Premium Apple drops, <span className="animated-text">verified</span> before you chat.
+              Buy <span className="animated-text">Genuine</span> iPhones, MacBooks, iPads and PS5,{" "}
+              <span className="animated-text">Lahore</span> Stock
             </h1>
 
             <p className="hero-step reveal hero-copy mx-auto mt-6 max-w-[760px] text-[21px] leading-[1.58] text-[#667085] max-[1024px]:text-[19px] max-[768px]:text-[18px] max-[425px]:text-[16px]" style={{ "--step-delay": "120ms" } as CSSProperties}>
-              MacVault brings iPhones, Macs, Apple accessories, and PS5 bundles into a cleaner
-              buying flow: condition first, warranty context clear, and reservation handled with
-              intent.
+              MacVault is a Lahore based reseller of iPhones, MacBooks, iPads, Apple Watches,
+              AirPods, accessories and PS5 consoles and games. Every listing shows PTA status,
+              battery health, cycle count and box condition before you message us.
             </p>
 
             <div className="hero-step reveal mt-[30px] flex flex-wrap justify-center gap-3" style={{ "--step-delay": "160ms" } as CSSProperties}>
               <Cta href="/products" icon={Search}>
-                Browse stock
+                Browse Stock
               </Cta>
               <Cta href="/products" variant="secondary" icon={MessageCircle}>
-                WhatsApp
+                WhatsApp Us
               </Cta>
             </div>
 
@@ -740,18 +701,16 @@ export default function Home() {
         <LiveAvailabilitySection />
         <ProductListingSection />
         <CategoryLanesSection />
-        <BuyingBenefitsSection />
-        <TestimonialsSection />
         <WhyChooseSection />
         <ProcessSection />
         <GuideSection />
-        <SupportSection />
+        <FaqSection />
 
         <section className="bg-linear-to-b from-white to-[#eef7ff] py-[60px] text-center">
           <div className={`reveal ${containerClass}`}>
             <Tag>Today&apos;s stock</Tag>
             <h2 className="mx-auto mt-2 max-w-[820px] text-[clamp(34px,5vw,64px)] leading-none font-semibold tracking-normal max-sm:text-[34px]">
-              Ask what is <span className="animated-text">available</span> before it is gone.
+              Ask What Is <span className="animated-text">Available</span> Before It Is Gone
             </h2>
             <p className="mx-auto mt-[18px] max-w-2xl text-[17px] leading-[1.56] text-[#667085]">
               Get current iPhone, Mac, iPad, Apple Watch, accessory, and PS5 availability directly
@@ -762,7 +721,7 @@ export default function Home() {
                 WhatsApp MacVault
               </Cta>
               <Cta href="/products" icon={ArrowRight} variant="secondary">
-                Review products
+                Review Products
               </Cta>
             </div>
           </div>

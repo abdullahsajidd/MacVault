@@ -27,7 +27,7 @@ export const metadata: Metadata = {
       {
         rel: "mask-icon",
         url: "/safari-pinned-tab.svg",
-        color: "#07111f",
+        color: "#0a84ff",
       },
     ],
   },
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#07111f",
+  themeColor: "#f6fbff",
 };
 
 export default function RootLayout({
