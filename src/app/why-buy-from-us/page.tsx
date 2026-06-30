@@ -10,8 +10,9 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { Cta } from "@/components/cta";
+import { containerClass } from "@/components/layout-classes";
 import { RevealController } from "@/components/reveal-controller";
-import { Footer, Header, Tag, containerClass } from "@/components/site";
+import { Footer, Header, Tag } from "@/components/site";
 
 export const metadata: Metadata = {
   title: "Why Buy From Us | MacVault",

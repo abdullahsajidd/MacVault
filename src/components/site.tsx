@@ -17,11 +17,11 @@ import {
   X,
 } from "lucide-react";
 import { Cta } from "@/components/cta";
+import { containerClass } from "@/components/layout-classes";
 import { QuoteButton } from "@/components/quote-modal";
 
 export { Cta } from "@/components/cta";
-
-export const containerClass = "site-container";
+export { containerClass };
 
 const navigationLinks = [
   { label: "Products", href: "/products" },

@@ -239,6 +239,17 @@ button {
   box-shadow: 0 14px 34px rgba(10, 132, 255, 0.2);
 }
 
+.site-header::before {
+  content: "";
+  position: absolute;
+  inset: 8px 50px -12px;
+  z-index: 0;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.55);
+  filter: blur(22px);
+  pointer-events: none;
+}
+
 .mobile-navigation {
   opacity: 0;
   pointer-events: none;
@@ -760,6 +771,10 @@ body.mobile-menu-open {
     padding-inline: 24px;
   }
 
+  .site-header::before {
+    inset-inline: 24px;
+  }
+
   .section-anchor {
     scroll-margin-top: 140px;
   }
@@ -772,6 +787,10 @@ body.mobile-menu-open {
 @media (max-width: 425px) {
   .site-container {
     padding-inline: 20px;
+  }
+
+  .site-header::before {
+    inset-inline: 20px;
   }
 }
 

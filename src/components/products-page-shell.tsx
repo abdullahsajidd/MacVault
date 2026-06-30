@@ -1,8 +1,9 @@
 import { ArrowRight, BadgeCheck, MessageCircle, Search, Truck } from "lucide-react";
 import { Cta } from "@/components/cta";
+import { containerClass } from "@/components/layout-classes";
 import { ProductVisual } from "@/components/product-visual";
 import { RevealController } from "@/components/reveal-controller";
-import { Footer, Header, SectionHead, Tag, containerClass } from "@/components/site";
+import { Footer, Header, SectionHead, Tag } from "@/components/site";
 import {
   categoryRoutes,
   getCategorySlug,

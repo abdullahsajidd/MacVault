@@ -3,10 +3,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, BadgeCheck, MessageCircle, PackageCheck, ShieldCheck } from "lucide-react";
 import { Cta } from "@/components/cta";
+import { containerClass } from "@/components/layout-classes";
 import { ProductSlider } from "@/components/product-slider";
 import { ProductVisual } from "@/components/product-visual";
 import { RevealController } from "@/components/reveal-controller";
-import { Footer, Header, Tag, containerClass } from "@/components/site";
+import { Footer, Header, Tag } from "@/components/site";
 import { getCategorySlug, getProduct, products } from "@/data/products";
 
 type ProductPageProps = {

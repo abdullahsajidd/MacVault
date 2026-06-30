@@ -70,7 +70,11 @@ export function ProductSlider({
       <div className="gallery-thumbs mt-5 grid grid-cols-3 gap-3" aria-label={`${title} gallery`}>
         {gallery.map((item, index) => (
           <button
-            className={`gallery-thumb ${index === active ? "is-active" : ""}`}
+            className={`gallery-thumb relative min-h-24 overflow-hidden rounded-lg border bg-white transition ${
+              index === active
+                ? "is-active border-[#0a84ff] shadow-[0_0_0_3px_rgba(10,132,255,0.12)]"
+                : "border-[#102a431f]"
+            }`}
             type="button"
             aria-label={`Show ${item.title}`}
             aria-current={index === active ? "true" : undefined}
