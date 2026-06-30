@@ -59,6 +59,10 @@ button {
   padding-inline: 50px;
 }
 
+.site-header.site-container {
+  padding-block: 10px;
+}
+
 .section-block {
   padding-block: 60px;
 }
@@ -744,17 +748,29 @@ body.mobile-menu-open {
   .site-container {
     padding-inline: 42px;
   }
+
+  .site-header::before {
+    inset-inline: 42px;
+  }
 }
 
 @media (max-width: 1366px) {
   .site-container {
     padding-inline: 40px;
   }
+
+  .site-header::before {
+    inset-inline: 40px;
+  }
 }
 
 @media (max-width: 1024px) {
   .site-container {
     padding-inline: 32px;
+  }
+
+  .site-header::before {
+    inset-inline: 32px;
   }
 
   .product-list-grid {

@@ -252,21 +252,44 @@ export function Footer() {
 
   return (
     <footer className="bg-[#07111f] text-white/65">
-      <div className={`${containerClass} py-[60px]`}>
-        <div className="grid grid-cols-[1.3fr_2fr] gap-16 max-[1024px]:grid-cols-1">
-          <div>
+      <div className={`${containerClass} py-[56px]`}>
+        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-8 border-b border-white/12 pb-10 max-[760px]:grid-cols-1">
+          <div className="max-w-[620px]">
             <Brand />
-            <p className="mt-5 max-w-[430px] text-[15px] leading-[1.7]">
+            <p className="mt-5 text-[17px] leading-[1.65] text-white/72">
               Premium Apple and PS5 stock with verified details, clear condition notes, and a
               direct local buying flow.
             </p>
-            <div className="mt-7">
-              <Cta
-                href="https://wa.me/?text=Hi%20MacVault%2C%20I%20want%20to%20check%20current%20stock."
-                icon={MessageCircle}
-              >
-                Ask MacVault
-              </Cta>
+          </div>
+
+          <div className="flex justify-end max-[760px]:justify-start">
+            <Cta
+              href="https://wa.me/?text=Hi%20MacVault%2C%20I%20want%20to%20check%20current%20stock."
+              icon={MessageCircle}
+            >
+              Ask MacVault
+            </Cta>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-[1fr_1.6fr] gap-14 py-10 max-[1024px]:grid-cols-1">
+          <div className="grid content-start gap-4">
+            <p className="max-w-[420px] text-sm leading-[1.7] text-white/58">
+              Built for buyers who want clear product truth before a visit, payment, or reservation.
+            </p>
+            <div className="flex flex-wrap gap-3 text-sm text-white/72">
+              <span className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/12 px-3">
+                <BadgeCheck className="size-4 text-[#45a3ff]" /> Verified stock
+              </span>
+              <span className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/12 px-3">
+                <Laptop className="size-4 text-[#45a3ff]" /> Apple specialists
+              </span>
+              <span className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/12 px-3">
+                <Gamepad2 className="size-4 text-[#45a3ff]" /> Console bundles
+              </span>
+              <span className="sr-only">
+                <Headphones /> Accessories
+              </span>
             </div>
           </div>
 
@@ -275,14 +298,14 @@ export function Footer() {
               const Icon = column.icon;
               return (
                 <div key={column.title}>
-                  <div className="mb-5 flex items-center gap-2 text-white">
+                  <div className="mb-4 flex items-center gap-2 text-white">
                     <Icon className="size-4 text-[#45a3ff]" />
                     <h3 className="text-sm font-semibold">{column.title}</h3>
                   </div>
                   <div className="flex flex-col gap-1">
                     {column.links.map((link) => (
                       <Link
-                        className="flex min-h-11 items-center text-sm transition-colors hover:text-[#45a3ff]"
+                        className="flex min-h-10 items-center text-sm transition-colors hover:text-[#45a3ff]"
                         href={link.href}
                         key={link.label}
                       >
@@ -296,22 +319,9 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 flex items-center justify-between gap-5 border-t border-white/12 pt-6 text-sm max-sm:flex-col max-sm:items-start">
+        <div className="flex items-center justify-between gap-5 border-t border-white/12 pt-6 text-sm text-white/50 max-sm:flex-col max-sm:items-start">
           <span>MacVault</span>
-          <div className="flex flex-wrap items-center gap-4">
-            <span className="inline-flex items-center gap-2">
-              <BadgeCheck className="size-4 text-[#45a3ff]" /> Verified stock
-            </span>
-            <span className="inline-flex items-center gap-2">
-              <Laptop className="size-4 text-[#45a3ff]" /> Apple specialists
-            </span>
-            <span className="inline-flex items-center gap-2">
-              <Gamepad2 className="size-4 text-[#45a3ff]" /> Console bundles
-            </span>
-            <span className="sr-only">
-              <Headphones /> Accessories
-            </span>
-          </div>
+          <span>Verified local Apple and PS5 buying flow.</span>
         </div>
       </div>
     </footer>
