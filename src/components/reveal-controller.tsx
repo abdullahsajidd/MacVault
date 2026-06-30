@@ -37,6 +37,7 @@ export function RevealController() {
 
       if (rect.top < viewportHeight * 0.92 && rect.bottom > 0) {
         target.classList.add("in-view");
+        target.setAttribute("data-in-view", "true");
         return true;
       }
 
@@ -48,6 +49,7 @@ export function RevealController() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add("in-view");
+            entry.target.setAttribute("data-in-view", "true");
             observer.unobserve(entry.target);
           }
         });

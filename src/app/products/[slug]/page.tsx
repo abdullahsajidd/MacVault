@@ -109,7 +109,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                     Ask on WhatsApp
                   </Cta>
                   <Cta href="/why-buy-from-us" icon={BadgeCheck} variant="secondary">
-                    Why buy from us
+                    Why Buy From Us
                   </Cta>
                 </div>
               </div>

@@ -354,7 +354,9 @@ body.mobile-menu-open {
 }
 
 .is-ready .reveal.in-view,
-.is-ready .site-header.in-view {
+.is-ready .reveal[data-in-view="true"],
+.is-ready .site-header.in-view,
+.is-ready .site-header[data-in-view="true"] {
   opacity: 1;
   transform: translateY(0);
   filter: blur(0);

@@ -465,7 +465,7 @@ function ProductListingSection() {
 }
 
 function FaqSection() {
-  const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [openFaq, setOpenFaq] = useState(0);
 
   return (
     <section id="faq" className="section-anchor bg-[#f4f9ff] py-[60px]">
@@ -480,8 +480,7 @@ function FaqSection() {
         <div className="faq-list mx-auto max-w-[1100px]">
           {faqItems.map((item, index) => (
             <article
-              className={`faq-accordion reveal ${openFaq === index ? "is-open" : ""}`}
-              style={{ transitionDelay: `${index * 40}ms` }}
+              className={`faq-accordion ${openFaq === index ? "is-open" : ""}`}
               key={item.question}
             >
               <h3>
@@ -490,7 +489,7 @@ function FaqSection() {
                   type="button"
                   aria-expanded={openFaq === index}
                   aria-controls={`faq-answer-${index}`}
-                  onClick={() => setOpenFaq((current) => (current === index ? null : index))}
+                  onClick={() => setOpenFaq(index)}
                 >
                   <span className="faq-number">{String(index + 1).padStart(2, "0")}</span>
                   <span>{item.question}</span>
@@ -572,7 +571,7 @@ function WhyChooseSection() {
 
         <div className="reveal mt-8">
           <Cta href="/why-buy-from-us" icon={ArrowRight} variant="secondary">
-            Read why buy from us
+            Read Why Buy From Us
           </Cta>
         </div>
       </div>
