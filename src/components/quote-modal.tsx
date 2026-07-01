@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useId, useRef, useState, type RefObject } from "react";
 import { FileText, Send, X } from "lucide-react";
 import { Cta } from "@/components/cta";
+import { createWhatsappHref, phoneDisplay } from "@/data/contact";
 
 function QuoteTag({ children }: { children: string }) {
   return (
@@ -26,6 +27,9 @@ function QuoteModal({
   const closingRef = useRef(false);
   const [sent, setSent] = useState(false);
   const [closing, setClosing] = useState(false);
+
+  const fieldValue = (formData: FormData, field: string) =>
+    formData.get(field)?.toString().trim() || "Not shared";
 
   const requestClose = useCallback(() => {
     if (closingRef.current) {
@@ -109,6 +113,17 @@ function QuoteModal({
             className="grid gap-3 p-5 max-sm:p-5"
             onSubmit={(event) => {
               event.preventDefault();
+              const formData = new FormData(event.currentTarget);
+              const message = [
+                "Hi MacVault, I want to request a quote.",
+                `Name: ${fieldValue(formData, "name")}`,
+                `Phone: ${fieldValue(formData, "phone")}`,
+                `Product: ${fieldValue(formData, "product")}`,
+                `Budget: ${fieldValue(formData, "budget")}`,
+                `Notes: ${fieldValue(formData, "notes")}`,
+              ].join("\n");
+
+              window.open(createWhatsappHref(message), "_blank", "noopener,noreferrer");
               setSent(true);
             }}
           >
@@ -119,7 +134,7 @@ function QuoteModal({
               </label>
               <label className="grid gap-2 text-sm font-semibold text-[#102a43]">
                 Phone
-                <input className="form-field" name="phone" placeholder="WhatsApp number" type="tel" />
+                <input className="form-field" name="phone" placeholder={phoneDisplay} type="tel" />
               </label>
             </div>
 
@@ -156,11 +171,11 @@ function QuoteModal({
             <div className="flex items-center justify-between gap-4 pt-1 max-sm:flex-col max-sm:items-stretch">
               <p className="text-sm leading-[1.5] text-[#667085]" aria-live="polite">
                 {sent
-                  ? "Quote request noted. Use WhatsApp for the fastest stock confirmation."
-                  : "No payment or account needed."}
+                  ? "WhatsApp opened with your request. Send it there to confirm stock."
+                  : `No payment or account needed. Messages open to ${phoneDisplay}.`}
               </p>
               <Cta asButton type="submit" icon={Send}>
-                Send request
+                Send on WhatsApp
               </Cta>
             </div>
           </form>

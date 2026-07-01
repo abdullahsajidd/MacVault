@@ -29,7 +29,7 @@ export function ProductSlider({
   };
 
   return (
-    <div className="reveal">
+    <div className="product-slider reveal w-full max-w-full min-w-0 overflow-hidden">
       <div className="product-slider-main">
         <ProductVisual
           key={current.title}

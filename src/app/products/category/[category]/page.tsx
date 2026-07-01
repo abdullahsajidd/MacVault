@@ -2,6 +2,11 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ProductsPageShell } from "@/components/products-page-shell";
 import { categoryRoutes, getCategoryBySlug, getProductsByCategorySlug } from "@/data/products";
+import { buildMetadata } from "@/lib/seo";
+
+function categoryLabel(category: string) {
+  return category === "Mac" ? "MacBook" : category;
+}
 
 export function generateStaticParams() {
   return categoryRoutes.map((route) => ({ category: route.slug }));
@@ -16,15 +21,21 @@ export async function generateMetadata({
   const category = getCategoryBySlug(slug);
 
   if (!category) {
-    return {
-      title: "Category | MacVault",
-    };
+    return buildMetadata({
+      title: "Category",
+      description: "Browse verified MacVault product drops with clear condition and reservation details.",
+      path: `/products/category/${slug}`,
+      robots: { index: false, follow: true },
+    });
   }
 
-  return {
-    title: `${category} Products | MacVault`,
-    description: `Browse verified MacVault ${category} drops with clear condition, warranty, and reservation details.`,
-  };
+  const label = categoryLabel(category);
+
+  return buildMetadata({
+    title: `${label} Products`,
+    description: `Browse verified MacVault ${label} drops with clear condition, warranty, package, and reservation details.`,
+    path: `/products/category/${slug}`,
+  });
 }
 
 export default async function CategoryPage({ params }: { params: Promise<{ category: string }> }) {
@@ -35,5 +46,11 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
     notFound();
   }
 
-  return <ProductsPageShell items={getProductsByCategorySlug(slug)} activeCategory={category} />;
+  return (
+    <ProductsPageShell
+      items={getProductsByCategorySlug(slug)}
+      activeCategory={category}
+      key={category}
+    />
+  );
 }

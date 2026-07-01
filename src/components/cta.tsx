@@ -29,6 +29,7 @@ type SharedProps = {
   variant?: "primary" | "secondary" | "dark";
   icon?: LucideIcon;
   className?: string;
+  count?: number | string;
 };
 
 type LinkCtaProps = SharedProps & {
@@ -50,13 +51,19 @@ export const Cta = forwardRef<HTMLButtonElement, CtaProps>(function Cta(props, r
     variant = "primary",
     icon: Icon = ArrowRight,
     className = "",
+    count,
   } = props;
   const classes = `button-primary button-${variant} ${className}`;
   const content = (
     <>
       <Icon className="size-4 shrink-0" strokeWidth={2} aria-hidden="true" />
       <AnimatedButtonLabel>{children}</AnimatedButtonLabel>
-      <span className="sr-only">{children}</span>
+      {count !== undefined ? (
+        <span className="button-count-badge" aria-hidden="true">
+          {count}
+        </span>
+      ) : null}
+      <span className="sr-only">{count !== undefined ? `${children} ${count}` : children}</span>
     </>
   );
 
@@ -67,9 +74,10 @@ export const Cta = forwardRef<HTMLButtonElement, CtaProps>(function Cta(props, r
       variant: _variant,
       className: _className,
       children: _children,
+      count: _count,
       ...buttonProps
     } = props;
-    void [_asButton, _icon, _variant, _className, _children];
+    void [_asButton, _icon, _variant, _className, _children, _count];
 
     return (
       <button className={classes} ref={ref} {...buttonProps}>

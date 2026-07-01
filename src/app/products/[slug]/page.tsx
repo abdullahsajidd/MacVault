@@ -8,13 +8,19 @@ import { ProductSlider } from "@/components/product-slider";
 import { ProductVisual } from "@/components/product-visual";
 import { RevealController } from "@/components/reveal-controller";
 import { Footer, Header, Tag } from "@/components/site";
+import { createWhatsappHref } from "@/data/contact";
 import { getCategorySlug, getProduct, products } from "@/data/products";
+import { buildMetadata } from "@/lib/seo";
 
 type ProductPageProps = {
   params: Promise<{
     slug: string;
   }>;
 };
+
+function categoryLabel(category: string) {
+  return category === "Mac" ? "MacBook" : category;
+}
 
 export function generateStaticParams() {
   return products.map((product) => ({
@@ -27,15 +33,29 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   const product = getProduct(slug);
 
   if (!product) {
-    return {
-      title: "Product not found | MacVault",
-    };
+    return buildMetadata({
+      title: "Product not found",
+      description: "The requested MacVault product could not be found.",
+      path: `/products/${slug}`,
+      robots: { index: false, follow: true },
+    });
   }
 
-  return {
-    title: `${product.title} | MacVault`,
+  const productImage = product.gallery[0]?.imageUrl;
+
+  return buildMetadata({
+    title: product.title,
     description: product.summary,
-  };
+    path: `/products/${product.slug}`,
+    images: productImage
+      ? [
+          {
+            url: productImage,
+            alt: product.title,
+          },
+        ]
+      : undefined,
+  });
 }
 
 export default async function ProductDetailPage({ params }: ProductPageProps) {
@@ -50,17 +70,17 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
     .filter((item) => item.category === product.category && item.slug !== product.slug)
     .concat(products.filter((item) => item.category !== product.category))
     .slice(0, 3);
-  const whatsappHref = `https://wa.me/?text=${encodeURIComponent(
+  const whatsappHref = createWhatsappHref(
     `Hi MacVault, I want to check availability for ${product.title}.`,
-  )}`;
+  );
 
   return (
     <div className="overflow-hidden bg-[linear-gradient(180deg,#ffffff_0%,#f4f9ff_62%,#ffffff_100%)] text-[#050b14]">
       <RevealController />
       <Header />
 
-      <main>
-        <section className={`${containerClass} pt-28 pb-[92px] max-sm:pt-[92px]`}>
+      <main className="pt-[50px]">
+        <section className={`${containerClass} pt-32 pb-[92px] max-sm:pt-[106px]`}>
           <Link
             className="reveal mb-8 inline-flex items-center gap-2 text-sm font-semibold text-[#667085] transition-colors hover:text-[#0a84ff]"
             href="/products"
@@ -70,16 +90,41 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
           </Link>
 
           <div className="grid grid-cols-[1.05fr_0.95fr] gap-[58px] max-[1020px]:grid-cols-1">
-            <ProductSlider gallery={product.gallery} accent={product.accent} title={product.title} />
+            <div className="max-[1020px]:order-2">
+              <ProductSlider gallery={product.gallery} accent={product.accent} title={product.title} />
+            </div>
 
-            <div className="reveal self-start">
+            <div className="reveal self-start max-[1020px]:order-1">
               <Tag>{product.badge}</Tag>
               <h1 className="mt-4 text-[clamp(42px,7vw,78px)] leading-[0.98] font-semibold tracking-normal">
                 {product.title} <span className="animated-text">details</span>
               </h1>
               <p className="mt-5 text-[18px] leading-[1.58] text-[#667085]">{product.description}</p>
 
-              <div className="mt-8 border-y border-[#050b141f]">
+              <div id="reserve" className="reserve-card mt-7 rounded-lg border border-[#050b141f] bg-white p-5 shadow-[0_18px_54px_rgba(5,20,44,0.06)]">
+                <div className="flex items-start justify-between gap-4 max-sm:flex-col">
+                  <div>
+                    <p className="text-xs font-semibold tracking-[0.12em] text-[#667085] uppercase">Price and availability</p>
+                    <p className="mt-1 text-2xl font-semibold text-[#050b14]">{product.price}</p>
+                    <p className="mt-2 text-sm leading-normal text-[#667085]">
+                      Confirm today&apos;s unit, condition, package, and hold timing before you move.
+                    </p>
+                  </div>
+                  <span className="rounded-full bg-[#23c87918] px-3 py-1.5 text-xs font-semibold text-[#14773d]">
+                    {product.status}
+                  </span>
+                </div>
+                <div className="mt-5 flex flex-wrap gap-3">
+                  <Cta href={whatsappHref} icon={MessageCircle}>
+                    Check on WhatsApp
+                  </Cta>
+                  <Cta href="/why-us" icon={BadgeCheck} variant="secondary">
+                    Why Us
+                  </Cta>
+                </div>
+              </div>
+
+              <div className="mt-7 border-y border-[#050b141f]">
                 {product.details.map((detail) => (
                   <div
                     className="grid grid-cols-[140px_1fr] gap-4 border-b border-[#050b141f] py-4 last:border-b-0 max-sm:grid-cols-1"
@@ -89,29 +134,6 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                     <strong className="text-base font-semibold text-[#050b14]">{detail.value}</strong>
                   </div>
                 ))}
-              </div>
-
-              <div id="reserve" className="mt-8 rounded-lg border border-[#050b141f] bg-white p-5">
-                <div className="flex items-start justify-between gap-4 max-sm:flex-col">
-                  <div>
-                    <p className="text-xs font-semibold text-[#667085]">Price</p>
-                    <p className="mt-1 text-2xl font-semibold text-[#050b14]">{product.price}</p>
-                    <p className="mt-2 text-sm leading-normal text-[#667085]">
-                      Current market price and exact unit details are confirmed before reservation.
-                    </p>
-                  </div>
-                  <span className="rounded-full bg-[#23c87918] px-3 py-1.5 text-xs font-semibold text-[#14773d]">
-                    {product.status}
-                  </span>
-                </div>
-                <div className="mt-5 flex flex-wrap gap-3">
-                  <Cta href={whatsappHref} icon={MessageCircle}>
-                    Ask on WhatsApp
-                  </Cta>
-                  <Cta href="/why-buy-from-us" icon={BadgeCheck} variant="secondary">
-                    Why Buy From Us
-                  </Cta>
-                </div>
               </div>
             </div>
           </div>
@@ -190,9 +212,9 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                 <div className="p-[22px]">
                   <Link
                     className="text-xs font-semibold text-[#0a84ff] transition-colors duration-300 ease-out hover:text-[#0057d8]"
-                    href={`/products/category/${getCategorySlug(item.category)}`}
+                    href={`/products/category/${getCategorySlug(item.category)}#product-grid`}
                   >
-                    {item.category}
+                    {categoryLabel(item.category)}
                   </Link>
                   <h3 className="mt-2 text-2xl font-semibold">{item.title}</h3>
                   <p className="mt-2 text-sm leading-normal text-[#667085]">{item.summary}</p>

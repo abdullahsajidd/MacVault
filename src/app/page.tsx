@@ -22,6 +22,7 @@ import {
 import { ProductVisual } from "@/components/product-visual";
 import { RevealController } from "@/components/reveal-controller";
 import { Cta, Footer, Header, SectionHead, Tag, containerClass } from "@/components/site";
+import { whatsappStockHref } from "@/data/contact";
 import { getCategorySlug, products } from "@/data/products";
 
 const marqueeItems = ["IPHONE", "MACBOOK", "IPAD", "WATCH", "PS5", "AIRPODS", "ACCESSORIES"];
@@ -113,6 +114,10 @@ const faqItems = [
 
 function homepageCopy(text: string) {
   return text.replaceAll("-", " ");
+}
+
+function homepageCategoryLabel(category: string) {
+  return category === "Mac" ? "MacBook" : category;
 }
 
 function ProductMarquee() {
@@ -365,7 +370,7 @@ function CategoryLanesSection() {
           return (
             <Link
               className="category-card reveal group"
-              href={`/products/category/${getCategorySlug(item.category)}`}
+              href={`/products/category/${getCategorySlug(item.category)}#product-grid`}
               style={{ transitionDelay: `${index * 40}ms` }}
               key={item.title}
             >
@@ -406,7 +411,7 @@ function CategoryLanesSection() {
 
 function ProductListingSection() {
   return (
-    <section id="inventory" className={`${containerClass} py-[60px]`}>
+    <section id="inventory" className={`${containerClass} inventory-anchor py-[60px]`}>
       <SectionHead
         kicker="Featured listings"
         title="Available Now"
@@ -430,9 +435,9 @@ function ProductListingSection() {
               <div className="mb-4 flex flex-wrap items-center gap-2 text-xs font-semibold">
                 <Link
                   className="rounded-full bg-[#0a84ff17] px-2.5 py-1.5 text-[#0057d8] transition-colors duration-300 ease-out hover:bg-[#0a84ff] hover:text-white"
-                  href={`/products/category/${getCategorySlug(product.category)}`}
+                  href={`/products/category/${getCategorySlug(product.category)}#product-grid`}
                 >
-                  {product.category}
+                  {homepageCategoryLabel(product.category)}
                 </Link>
                 <span className="rounded-full bg-[#23c87918] px-2.5 py-1.5 text-[#14773d]">
                   {product.status}
@@ -570,8 +575,8 @@ function WhyChooseSection() {
         </div>
 
         <div className="reveal mt-8">
-          <Cta href="/why-buy-from-us" icon={ArrowRight} variant="secondary">
-            Read Why Buy From Us
+          <Cta href="/why-us" icon={ArrowRight} variant="secondary">
+            Why Us
           </Cta>
         </div>
       </div>
@@ -670,10 +675,10 @@ export default function Home() {
             </p>
 
             <div className="hero-step reveal mt-[30px] flex flex-wrap justify-center gap-3" style={{ "--step-delay": "160ms" } as CSSProperties}>
-              <Cta href="/products" icon={Search}>
+              <Cta href="/products#inventory" icon={Search}>
                 Browse Stock
               </Cta>
-              <Cta href="/products" variant="secondary" icon={MessageCircle}>
+              <Cta href={whatsappStockHref} variant="secondary" icon={MessageCircle}>
                 WhatsApp Us
               </Cta>
             </div>
@@ -716,10 +721,10 @@ export default function Home() {
               on WhatsApp.
             </p>
             <div className="mt-[30px] flex flex-wrap justify-center gap-3">
-              <Cta href="/products" icon={MessageCircle}>
+              <Cta href={whatsappStockHref} icon={MessageCircle}>
                 WhatsApp MacVault
               </Cta>
-              <Cta href="/products" icon={ArrowRight} variant="secondary">
+              <Cta href="/products#inventory" icon={ArrowRight} variant="secondary">
                 Review Products
               </Cta>
             </div>

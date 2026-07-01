@@ -4,33 +4,35 @@ import type { ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   BadgeCheck,
   Gamepad2,
   Headphones,
   Laptop,
+  Mail,
   Menu,
   MessageCircle,
   PackageSearch,
-  ShieldCheck,
+  PhoneCall,
   Smartphone,
   X,
 } from "lucide-react";
 import { Cta } from "@/components/cta";
 import { containerClass } from "@/components/layout-classes";
 import { QuoteButton } from "@/components/quote-modal";
+import { emailAddress, emailHref, phoneDisplay, phoneHref, whatsappStockHref } from "@/data/contact";
 
 export { Cta } from "@/components/cta";
 export { containerClass };
 
 const navigationLinks = [
+  { label: "Home", href: "/" },
+  { label: "About", href: "/about" },
   { label: "Products", href: "/products" },
-  { label: "Why Buy", href: "/why-buy-from-us" },
-  { label: "Process", href: "/#process" },
-  { label: "Guide", href: "/#guide" },
-  { label: "FAQ", href: "/#faq" },
+  { label: "Why Us", href: "/why-us" },
+  { label: "Contact", href: "/contact" },
 ];
-
 export function AnimatedText({ children }: { children: ReactNode }) {
   return <span className="animated-text">{children}</span>;
 }
@@ -62,6 +64,7 @@ export function Tag({ children }: { children: ReactNode }) {
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRootRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   useEffect(() => {
     if (!menuOpen) {
@@ -116,7 +119,7 @@ export function Header() {
 
         <div className="flex items-center gap-2">
           <QuoteButton />
-          <Cta className="max-[1120px]:hidden" href="/products" icon={MessageCircle}>
+          <Cta className="max-[1120px]:hidden" href={whatsappStockHref} icon={MessageCircle}>
             WhatsApp
           </Cta>
           <button
@@ -161,13 +164,13 @@ export function Header() {
             tabIndex={menuOpen ? 0 : -1}
             onClick={() => {
               setMenuOpen(false);
-              window.location.href = "/products";
+              router.push("/products#inventory");
             }}
           >
             Browse stock
           </Cta>
           <Cta
-            href="https://wa.me/?text=Hi%20MacVault%2C%20I%20want%20to%20check%20current%20stock."
+            href={whatsappStockHref}
             icon={MessageCircle}
             className={menuOpen ? "" : "pointer-events-none"}
           >
@@ -223,29 +226,32 @@ export function SectionHead({
 export function Footer() {
   const columns = [
     {
-      title: "Shop",
+      title: "Explore",
       icon: PackageSearch,
       links: [
-        { label: "All products", href: "/products" },
-        { label: "Why Buy From Us", href: "/why-buy-from-us" },
+        { label: "Home", href: "/" },
+        { label: "About", href: "/about" },
+        { label: "Products", href: "/products" },
+        { label: "Why Us", href: "/why-us" },
+        { label: "Contact", href: "/contact" },
       ],
     },
     {
       title: "Categories",
       icon: Smartphone,
       links: [
-        { label: "iPhones", href: "/products/category/iphone" },
-        { label: "MacBooks", href: "/products/category/mac" },
-        { label: "PS5", href: "/products/category/ps5" },
+        { label: "iPhones", href: "/products/category/iphone#product-grid" },
+        { label: "MacBooks", href: "/products/category/mac#product-grid" },
+        { label: "PS5", href: "/products/category/ps5#product-grid" },
       ],
     },
     {
-      title: "Support",
-      icon: ShieldCheck,
+      title: "Contact",
+      icon: MessageCircle,
       links: [
-        { label: "Our process", href: "/#process" },
-        { label: "Buying guide", href: "/#guide" },
-        { label: "FAQ", href: "/#faq" },
+        { label: `WhatsApp ${phoneDisplay}`, href: whatsappStockHref },
+        { label: phoneDisplay, href: phoneHref },
+        { label: emailAddress, href: emailHref },
       ],
     },
   ];
@@ -261,6 +267,23 @@ export function Footer() {
                 Premium Apple and PlayStation stock with clear condition notes, direct WhatsApp
                 confirmation, and local buying support before you visit or reserve.
               </p>
+
+              <div className="mt-5 flex flex-wrap gap-2 text-sm font-semibold text-[#102a43]">
+                <a
+                  className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#0a84ff1f] bg-white px-3 transition-colors hover:border-[#0a84ff66] hover:text-[#0057d8]"
+                  href={phoneHref}
+                >
+                  <PhoneCall className="size-4 text-[#0a84ff]" />
+                  {phoneDisplay}
+                </a>
+                <a
+                  className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#0a84ff1f] bg-white px-3 transition-colors hover:border-[#0a84ff66] hover:text-[#0057d8]"
+                  href={emailHref}
+                >
+                  <Mail className="size-4 text-[#0a84ff]" />
+                  {emailAddress}
+                </a>
+              </div>
 
               <div className="mt-7 flex flex-wrap gap-3 text-sm font-semibold text-[#102a43]">
                 <span className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#0a84ff1f] bg-white px-3">
@@ -288,18 +311,18 @@ export function Footer() {
                 </h2>
                 <p className="mt-4 text-[16px] leading-[1.65] text-[#667085]">
                   Ask for today&apos;s iPhone, MacBook, iPad, Watch, accessories, or PS5 stock and
-                  get the exact condition and package details.
+                  get the exact condition and package details on {phoneDisplay}.
                 </p>
               </div>
 
               <div className="mt-8 flex flex-wrap gap-3">
                 <Cta
-                  href="https://wa.me/?text=Hi%20MacVault%2C%20I%20want%20to%20check%20current%20stock."
+                  href={whatsappStockHref}
                   icon={MessageCircle}
                 >
                   Ask MacVault
                 </Cta>
-                <Cta href="/products" icon={PackageSearch} variant="secondary">
+                <Cta href="/products#inventory" icon={PackageSearch} variant="secondary">
                   Browse stock
                 </Cta>
               </div>
@@ -328,13 +351,23 @@ export function Footer() {
                     </div>
                     <div className="flex flex-col gap-1">
                       {column.links.map((link) => (
-                        <Link
-                          className="flex min-h-10 items-center text-sm transition-colors hover:text-[#0057d8]"
-                          href={link.href}
-                          key={link.label}
-                        >
-                          {link.label}
-                        </Link>
+                        link.href.startsWith("/") ? (
+                          <Link
+                            className="flex min-h-10 items-center break-words text-sm transition-colors hover:text-[#0057d8]"
+                            href={link.href}
+                            key={link.label}
+                          >
+                            {link.label}
+                          </Link>
+                        ) : (
+                          <a
+                            className="flex min-h-10 items-center break-words text-sm transition-colors hover:text-[#0057d8]"
+                            href={link.href}
+                            key={link.label}
+                          >
+                            {link.label}
+                          </a>
+                        )
                       ))}
                     </div>
                   </div>

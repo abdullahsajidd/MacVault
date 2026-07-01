@@ -23,7 +23,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 150px;
+  scroll-padding-top: 112px;
 }
 
 body {
@@ -68,7 +68,11 @@ button {
 }
 
 .section-anchor {
-  scroll-margin-top: 150px;
+  scroll-margin-top: 112px;
+}
+
+.inventory-anchor {
+  scroll-margin-top: 112px;
 }
 
 .hero-section {
@@ -207,6 +211,32 @@ button {
 
 .button-label-row:nth-child(2) .button-label-letter {
   transform: translateY(110%);
+}
+
+.button-count-badge {
+  display: inline-flex;
+  min-width: 26px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: rgba(10, 132, 255, 0.12);
+  padding-inline: 8px;
+  color: var(--electric-dark);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.button-primary:not(.button-secondary):not(.button-dark) .button-count-badge,
+.button-dark .button-count-badge {
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--electric-dark);
+}
+
+.button-secondary .button-count-badge {
+  background: #eef7ff;
+  box-shadow: inset 0 0 0 1px rgba(10, 132, 255, 0.16);
 }
 
 .button-primary:hover .button-label-row:first-child .button-label-letter {
@@ -526,6 +556,19 @@ body.mobile-menu-open {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
+  scroll-margin-top: 118px;
+}
+
+.category-filter-bar {
+  scrollbar-width: none;
+}
+
+.category-filter-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.category-filter-bar .button-primary {
+  flex: 0 0 auto;
 }
 
 .listing-card,
@@ -709,7 +752,16 @@ body.mobile-menu-open {
 }
 
 .product-slider-main {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   animation: imageFade 300ms ease-out both;
+}
+
+.product-slider {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
 }
 
 @keyframes imageFade {
@@ -947,7 +999,7 @@ body.mobile-menu-open {
 
 @media (max-width: 768px) {
   html {
-    scroll-padding-top: 140px;
+    scroll-padding-top: 96px;
   }
 
   .site-container {
@@ -959,11 +1011,33 @@ body.mobile-menu-open {
   }
 
   .section-anchor {
-    scroll-margin-top: 140px;
+    scroll-margin-top: 96px;
+  }
+
+  .inventory-anchor {
+    scroll-margin-top: 96px;
   }
 
   .product-list-grid {
     grid-template-columns: 1fr;
+    scroll-margin-top: 104px;
+  }
+
+  .category-filter-bar {
+    flex-wrap: nowrap !important;
+    justify-content: flex-start !important;
+    gap: 10px;
+    margin-inline: -24px;
+    overflow-x: auto !important;
+    padding-inline: 24px;
+    padding-bottom: 8px;
+    scroll-padding-inline: 24px;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .category-filter-bar .button-primary {
+    scroll-snap-align: start;
   }
 
   .product-marquee {
@@ -1034,6 +1108,12 @@ body.mobile-menu-open {
 
   .site-header::before {
     inset-inline: 20px;
+  }
+
+  .category-filter-bar {
+    margin-inline: -20px;
+    padding-inline: 20px;
+    scroll-padding-inline: 20px;
   }
 
   .stock-check-intro {

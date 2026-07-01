@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, BadgeCheck, MessageCircle, Search, Truck } from "lucide-react";
 import { Cta } from "@/components/cta";
 import { containerClass } from "@/components/layout-classes";
@@ -35,31 +38,94 @@ const buyingModes = [
   },
 ];
 
+const allCategory = "All";
+
+function hrefForCategory(category: string) {
+  return category === allCategory
+    ? "/products#product-grid"
+    : `/products/category/${getCategorySlug(category)}#product-grid`;
+}
+
+function categoryLabel(category: string) {
+  return category === "Mac" ? "MacBook" : category;
+}
+
+function categoryFromPathname(pathname: string, fallback: string) {
+  if (pathname === "/products") {
+    return allCategory;
+  }
+
+  const categoryRoute = categoryRoutes.find((route) => pathname === route.href);
+
+  return categoryRoute?.category ?? fallback;
+}
+
+function productsForCategory(category: string) {
+  return category === allCategory
+    ? products
+    : products.filter((product) => product.category === category);
+}
+
 export function ProductsPageShell({
   items,
-  activeCategory = "All",
+  activeCategory = allCategory,
 }: {
   items: Product[];
   activeCategory?: string;
 }) {
-  const isCategory = activeCategory !== "All";
+  const [selectedCategory, setSelectedCategory] = useState(activeCategory);
+  const isCategory = selectedCategory !== allCategory;
+  const selectedCategoryLabel = categoryLabel(selectedCategory);
+  const visibleItems = useMemo(
+    () => (selectedCategory === activeCategory ? items : productsForCategory(selectedCategory)),
+    [activeCategory, items, selectedCategory],
+  );
   const title = isCategory
-    ? `${activeCategory} drops with verified details before chat.`
+    ? `${selectedCategoryLabel} drops with verified details before chat.`
     : "Browse drops with details before the chat.";
+  const resultLabel = `${visibleItems.length} ${visibleItems.length === 1 ? "drop" : "drops"}`;
+
+  useEffect(() => {
+    const syncCategoryFromUrl = () => {
+      setSelectedCategory((currentCategory) =>
+        categoryFromPathname(window.location.pathname, currentCategory),
+      );
+    };
+
+    window.addEventListener("popstate", syncCategoryFromUrl);
+
+    return () => {
+      window.removeEventListener("popstate", syncCategoryFromUrl);
+    };
+  }, []);
+
+  const selectCategory = (category: string) => {
+    setSelectedCategory(category);
+
+    const nextHref = hrefForCategory(category);
+
+    if (`${window.location.pathname}${window.location.hash}` !== nextHref) {
+      window.history.pushState({ category }, "", nextHref);
+    }
+
+    window.requestAnimationFrame(() => {
+      document.getElementById("product-grid")?.scrollIntoView({ block: "start", behavior: "smooth" });
+    });
+  };
 
   return (
     <div className="overflow-hidden bg-[linear-gradient(180deg,#ffffff_0%,#f4f9ff_58%,#ffffff_100%)] text-[#050b14]">
       <RevealController />
       <Header />
 
-      <main>
-        <section className={`${containerClass} pt-28 pb-20 text-center max-sm:pt-[92px]`}>
+      <main className="pt-[50px]">
+        <section className={`${containerClass} pt-32 pb-20 text-center max-sm:pt-[106px]`}>
           <div className="reveal">
-            <Tag>{isCategory ? `${activeCategory} products` : "MacVault products"}</Tag>
+            <Tag>{isCategory ? `${selectedCategoryLabel} products` : "MacVault products"}</Tag>
             <h1 className="mx-auto mt-5 max-w-[920px] text-[clamp(48px,8vw,96px)] leading-[0.96] font-semibold tracking-normal">
               {isCategory ? (
                 <>
-                  {activeCategory} drops with <span className="animated-text">verified</span>{" "}
+                  {selectedCategoryLabel} drops with <span className="animated-text">verified</span>{" "}
                   details.
                 </>
               ) : (
@@ -77,8 +143,8 @@ export function ProductsPageShell({
               <Cta href="#inventory" icon={Search}>
                 View inventory
               </Cta>
-              <Cta href="/why-buy-from-us" icon={BadgeCheck} variant="secondary">
-                Why Buy From Us
+              <Cta href="/why-us" icon={BadgeCheck} variant="secondary">
+                Why Us
               </Cta>
             </div>
           </div>
@@ -104,40 +170,46 @@ export function ProductsPageShell({
           </div>
         </section>
 
-        <section id="inventory" className={`${containerClass} py-[60px]`}>
+        <section id="inventory" className={`${containerClass} inventory-anchor py-[60px]`}>
           <SectionHead
             kicker="Available drops"
             title={title}
             accent={isCategory ? "verified" : "details"}
-            text="Use the categories as quick signals, then open a product page for gallery, condition, details, and package notes."
+            text={`${resultLabel} shown with gallery, condition, details, and package notes available before chat.`}
           />
+          <p className="sr-only" aria-live="polite">
+            {`${resultLabel} shown for ${selectedCategory}.`}
+          </p>
 
-          <div className="reveal mb-8 flex flex-wrap justify-center gap-2">
+          <div className="category-filter-bar reveal mb-8 flex flex-wrap justify-center gap-2">
             {productCategories.map((category) => {
               const count =
-                category === "All"
+                category === allCategory
                   ? products.length
                   : products.filter((product) => product.category === category).length;
-              const href =
-                category === "All" ? "/products" : `/products/category/${getCategorySlug(category)}`;
-              const isActive = category === activeCategory;
+              const isActive = category === selectedCategory;
 
               return (
                 <Cta
+                  asButton
                   className={isActive ? "category-filter-active" : ""}
-                  href={href}
                   icon={Search}
+                  type="button"
                   variant={isActive ? "primary" : "secondary"}
+                  count={count}
+                  aria-controls="product-grid"
+                  aria-pressed={isActive}
+                  onClick={() => selectCategory(category)}
                   key={category}
                 >
-                  {`${category} ${count}`}
+                  {categoryLabel(category)}
                 </Cta>
               );
             })}
           </div>
 
-          <div className="product-list-grid">
-            {items.map((product, index) => (
+          <div className="product-list-grid" id="product-grid">
+            {visibleItems.map((product, index) => (
               <article
                 className="listing-card reveal"
                 style={{ transitionDelay: `${Math.min(index, 4) * 40}ms` }}
@@ -155,12 +227,14 @@ export function ProductsPageShell({
 
                 <div className="flex grow flex-col p-5">
                   <div className="mb-4 flex flex-wrap items-center gap-2 text-xs font-semibold">
-                    <a
+                    <button
+                      aria-label={`Show ${product.category} products`}
                       className="rounded-full bg-[#0a84ff17] px-2.5 py-1.5 text-[#0057d8] transition-colors duration-300 ease-out hover:bg-[#0a84ff] hover:text-white"
-                      href={`/products/category/${getCategorySlug(product.category)}`}
+                      type="button"
+                      onClick={() => selectCategory(product.category)}
                     >
-                      {product.category}
-                    </a>
+                      {categoryLabel(product.category)}
+                    </button>
                     <span className="rounded-full bg-[#23c87918] px-2.5 py-1.5 text-[#14773d]">
                       {product.status}
                     </span>
@@ -190,11 +264,17 @@ export function ProductsPageShell({
             ))}
           </div>
 
-          {items.length === 0 ? (
+          {visibleItems.length === 0 ? (
             <div className="reveal rounded-[8px] bg-white p-8 text-center shadow-[inset_0_0_0_1px_rgba(5,20,44,0.10)]">
               <p className="text-lg font-semibold">No products are available in this category yet.</p>
               <div className="mt-5">
-                <Cta href="/products" icon={ArrowRight} variant="secondary">
+                <Cta
+                  asButton
+                  type="button"
+                  icon={ArrowRight}
+                  variant="secondary"
+                  onClick={() => selectCategory(allCategory)}
+                >
                   Back to all products
                 </Cta>
               </div>

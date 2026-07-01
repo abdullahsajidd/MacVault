@@ -23,8 +23,10 @@ export function ProductVisual({
 
   return (
     <div
-      className={`product-visual-frame relative grid overflow-hidden rounded-lg border border-[#050b141f] bg-[linear-gradient(145deg,#ffffff,#f5f5f7)] ${
-        size === "compact" ? "min-h-[230px] aspect-[4/3]" : "min-h-[360px] aspect-[16/11]"
+      className={`product-visual-frame relative grid w-full max-w-full min-w-0 overflow-hidden rounded-lg border border-[#050b141f] bg-[linear-gradient(145deg,#ffffff,#f5f5f7)] ${
+        size === "compact"
+          ? "min-h-[230px] aspect-[4/3]"
+          : "min-h-[360px] aspect-[16/11] max-[768px]:min-h-0 max-[768px]:aspect-[4/5]"
       } ${className}`}
       style={style}
       aria-label={label}
@@ -36,7 +38,7 @@ export function ProductVisual({
       </div>
       {imageUrl ? (
         <Image
-          className="product-visual-image object-contain p-5"
+          className={`product-visual-image ${size === "compact" ? "object-cover p-0" : "object-contain p-5"}`}
           src={imageUrl}
           alt={imageAlt ?? label}
           fill

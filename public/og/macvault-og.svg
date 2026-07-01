@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="MacVault verified Apple and PS5 stock">
+  <rect width="1200" height="630" fill="#f7fbff"/>
+  <rect x="54" y="54" width="1092" height="522" rx="42" fill="#ffffff" stroke="#dbeafe" stroke-width="2"/>
+  <circle cx="1012" cy="128" r="82" fill="#0a84ff" opacity="0.11"/>
+  <circle cx="155" cy="516" r="96" fill="#0a84ff" opacity="0.08"/>
+  <g transform="translate(82 92)">
+    <rect width="126" height="126" rx="30" fill="#07111f"/>
+    <path d="M27 35h72a8 8 0 0 1 8 8v51H19V43a8 8 0 0 1 8-8Z" fill="#f8fbff"/>
+    <path d="M31 45h64v39H31V45Z" fill="#0d1726"/>
+    <path d="M16 98h94l8 11H8l8-11Z" fill="#f8fbff"/>
+    <path d="M39 78V54h8l10 14 10-14h8v24h-8V66l-10 12-10-12v12h-8Z" fill="#ffffff"/>
+    <path d="M77 54h10l8 14 8-14h10L99 78h-8L77 54Z" fill="#0a84ff"/>
+  </g>
+  <text x="240" y="145" fill="#07111f" font-family="Inter, Arial, sans-serif" font-size="56" font-weight="800">MacVault</text>
+  <text x="82" y="274" fill="#07111f" font-family="Inter, Arial, sans-serif" font-size="74" font-weight="850">Verified Apple and PS5 stock</text>
+  <text x="82" y="354" fill="#0a84ff" font-family="Inter, Arial, sans-serif" font-size="74" font-weight="850">before the buyer commits.</text>
+  <text x="84" y="438" fill="#526173" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="500">
+    iPhone, MacBook, iPad, Watch, AirPods, accessories and PS5 drops
+  </text>
+  <text x="84" y="486" fill="#526173" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="500">
+    with condition, PTA, warranty and WhatsApp-first confirmation.
+  </text>
+  <rect x="84" y="520" width="260" height="56" rx="28" fill="#0a84ff"/>
+  <text x="122" y="557" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="800">Browse MacVault</text>
+</svg>

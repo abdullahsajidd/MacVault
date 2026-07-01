@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="MacVault">
+  <rect width="512" height="512" rx="112" fill="#07111f"/>
+  <circle cx="384" cy="128" r="54" fill="#0a84ff" opacity="0.16"/>
+  <path d="M97 132h318c20 0 36 16 36 36v198H61V168c0-20 16-36 36-36Z" fill="#f8fbff"/>
+  <path d="M112 154h288v178H112V154Z" fill="#0d1726"/>
+  <path d="M55 378h402l31 41H24l31-41Z" fill="#f8fbff"/>
+  <path d="M150 292V202h32l42 55 42-55h32v90h-32v-42l-42 51-42-51v42h-32Z" fill="#ffffff"/>
+  <path d="M300 202h40l32 54 32-54h40l-54 90h-36l-54-90Z" fill="#0a84ff"/>
+</svg>
