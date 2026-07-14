@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import Image from "next/image";
-import type { ProductVisualKind } from "@/data/products";
+import type { ProductGalleryItem, ProductVisualKind } from "@/data/products";
 
 export function ProductVisual({
   kind,
@@ -8,6 +8,7 @@ export function ProductVisual({
   label,
   imageUrl,
   imageAlt,
+  imageUsage,
   size = "large",
   className = "",
 }: {
@@ -16,6 +17,7 @@ export function ProductVisual({
   label: string;
   imageUrl?: string;
   imageAlt?: string;
+  imageUsage?: ProductGalleryItem["usage"];
   size?: "large" | "compact";
   className?: string;
 }) {
@@ -33,9 +35,11 @@ export function ProductVisual({
     >
       <div className="absolute inset-x-8 top-8 h-px bg-linear-to-r from-transparent via-[#050b1424] to-transparent" />
       <div className="absolute right-8 bottom-8 left-8 h-px bg-linear-to-r from-transparent via-[#050b1424] to-transparent" />
-      <div className="absolute top-8 right-8 z-10 rounded-full border border-[#050b141f] bg-white/92 px-3 py-1 text-xs font-semibold text-[#667085] shadow-[0_10px_24px_rgba(5,20,44,0.08)] backdrop-blur-md">
-        {label}
-      </div>
+      {imageUrl && imageUsage === "reference" ? (
+        <span className="absolute top-4 left-4 z-10 rounded-full border border-white/70 bg-white/90 px-2.5 py-1 text-[11px] font-bold tracking-[0.08em] text-[#475467] uppercase shadow-[0_8px_24px_rgba(5,20,44,0.08)]">
+          Reference photo
+        </span>
+      ) : null}
       {imageUrl ? (
         <Image
           className={`product-visual-image ${size === "compact" ? "object-cover p-0" : "object-contain p-5"}`}

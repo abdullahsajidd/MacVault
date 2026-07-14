@@ -1,11 +1,16 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ProductsPageShell } from "@/components/products-page-shell";
-import { categoryRoutes, getCategoryBySlug, getProductsByCategorySlug } from "@/data/products";
+import {
+  categoryRoutes,
+  getCategoryBySlug,
+  getCategoryLabel,
+  getProductsByCategorySlug,
+} from "@/data/products";
 import { buildMetadata } from "@/lib/seo";
 
 function categoryLabel(category: string) {
-  return category === "Mac" ? "MacBook" : category;
+  return getCategoryLabel(category);
 }
 
 export function generateStaticParams() {
@@ -23,7 +28,7 @@ export async function generateMetadata({
   if (!category) {
     return buildMetadata({
       title: "Category",
-      description: "Browse verified MacVault product drops with clear condition and reservation details.",
+      description: "Browse verified MacVault product listings with clear condition and reservation details.",
       path: `/products/category/${slug}`,
       robots: { index: false, follow: true },
     });
@@ -33,7 +38,7 @@ export async function generateMetadata({
 
   return buildMetadata({
     title: `${label} Products`,
-    description: `Browse verified MacVault ${label} drops with clear condition, warranty, package, and reservation details.`,
+    description: `Browse verified MacVault ${label} listings with clear condition, warranty, package, and reservation details.`,
     path: `/products/category/${slug}`,
   });
 }

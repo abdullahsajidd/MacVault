@@ -16,7 +16,7 @@ const defaultImage: OgImage = {
   url: "/og/macvault-og.svg",
   width: 1200,
   height: 630,
-  alt: "MacVault verified Apple and PS5 stock",
+  alt: "MacVault verified Apple and PlayStation stock",
 };
 
 function fullTitle(title: string) {

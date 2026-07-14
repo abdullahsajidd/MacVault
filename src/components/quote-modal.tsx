@@ -4,6 +4,7 @@ import { useCallback, useEffect, useId, useRef, useState, type RefObject } from 
 import { FileText, Send, X } from "lucide-react";
 import { Cta } from "@/components/cta";
 import { createWhatsappHref, phoneDisplay } from "@/data/contact";
+import { categoryDefinitions } from "@/data/products";
 
 function QuoteTag({ children }: { children: string }) {
   return (
@@ -145,12 +146,11 @@ function QuoteModal({
                   <option value="" disabled>
                     Select category
                   </option>
-                  <option>iPhone</option>
-                  <option>MacBook</option>
-                  <option>iPad</option>
-                  <option>Apple Watch</option>
-                  <option>AirPods</option>
-                  <option>PS5</option>
+                  {categoryDefinitions.map((category) => (
+                    <option value={category.label} key={category.category}>
+                      {category.label}
+                    </option>
+                  ))}
                 </select>
               </label>
               <label className="grid gap-2 text-sm font-semibold text-[#102a43]">

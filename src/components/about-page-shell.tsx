@@ -16,6 +16,7 @@ import {
   Sparkles,
   Store,
 } from "lucide-react";
+import { ComparisonSection } from "@/components/comparison-section";
 import { Cta } from "@/components/cta";
 import { containerClass } from "@/components/layout-classes";
 import { RevealController } from "@/components/reveal-controller";
@@ -40,7 +41,7 @@ const storyMilestones = [
   {
     year: "2024",
     label: "Better checks",
-    title: "The listing format moved from simple posts to inspection-led drops.",
+    title: "The listing format moved from simple posts to inspection-led listings.",
     text: "Each product started getting clearer condition notes, package details, status labels, and reservation context so buyers could compare faster.",
     proof: "Condition notes made visible",
     icon: ClipboardCheck,
@@ -66,7 +67,7 @@ const storyMilestones = [
 const checks = [
   {
     title: "iPhone checks",
-    text: "PTA or Non PTA status, battery health, storage, color, box, body, display, camera, and warranty expectations.",
+    text: "PTA or non-PTA status, battery health, storage, color, box, body, display, camera, and warranty expectations.",
     icon: BadgeCheck,
   },
   {
@@ -75,7 +76,7 @@ const checks = [
     icon: PackageCheck,
   },
   {
-    title: "PS5 checks",
+    title: "PlayStation checks",
     text: "Console edition, controller condition, cables, box, game bundle, pickup timing, and delivery options.",
     icon: ShieldCheck,
   },
@@ -131,7 +132,7 @@ export function AboutPageShell() {
             </h1>
             <p className="mx-auto mt-6 max-w-[760px] text-[20px] leading-[1.58] text-[#667085] max-[768px]:text-[18px] max-[425px]:text-[16px]">
               MacVault is a clean local buying flow for iPhones, MacBooks, iPads, Apple Watch,
-              AirPods, accessories, and PS5 stock. The point is simple: show the details before the
+              AirPods, accessories, and PlayStation stock. The point is simple: show the details before the
               buyer has to ask.
             </p>
             <div className="mt-[30px] flex flex-wrap justify-center gap-3">
@@ -149,7 +150,7 @@ export function AboutPageShell() {
           <div className={`${containerClass} grid grid-cols-[0.85fr_1.15fr] gap-[56px] max-[1024px]:grid-cols-1`}>
             <div className="reveal">
               <Tag>Our story</Tag>
-              <h2 className="mt-2 text-[58px] leading-none font-semibold max-[768px]:text-[44px] max-[425px]:text-[34px]">
+              <h2 className="section-title mt-2">
                 From listings to a <span className="animated-text">verified</span> buying flow.
               </h2>
               <p className="mt-[18px] max-w-[620px] text-[17px] leading-[1.56] text-[#667085]">
@@ -313,30 +314,32 @@ export function AboutPageShell() {
           </div>
         </section>
 
-        <section className="bg-[#050b14] py-[60px] text-white">
+        <ComparisonSection />
+
+        <section className="border-y border-[#0a84ff14] bg-[#f4f9ff] py-[60px] text-[#102a43]">
           <div className={`${containerClass} grid grid-cols-[0.9fr_1.1fr] gap-[56px] max-[940px]:grid-cols-1`}>
             <div className="reveal">
               <Tag>Buyer promise</Tag>
-              <h2 className="mt-2 text-[58px] leading-none font-semibold max-[768px]:text-[44px] max-[425px]:text-[34px]">
+              <h2 className="section-title mt-2">
                 Premium should feel <span className="animated-text">clear</span>.
               </h2>
-              <p className="mt-[18px] max-w-[620px] text-[17px] leading-[1.56] text-white/70">
+              <p className="mt-[18px] max-w-[620px] text-[17px] leading-[1.56] text-[#667085]">
                 The site is designed to reduce repeated questions and make each serious buyer easier
                 to support.
               </p>
             </div>
 
-            <div className="border-t border-white/20">
+            <div className="border-t border-[#102a431a]">
               {buyerPromises.map((promise, index) => (
                 <div
-                  className="reveal flex items-start gap-4 border-b border-white/20 py-5"
+                  className="reveal flex items-start gap-4 border-b border-[#102a431a] py-5"
                   style={{ transitionDelay: `${index * 60}ms` }}
                   key={promise}
                 >
                   <span className="mt-1 grid size-7 shrink-0 place-items-center rounded-full bg-white text-[#0a84ff]">
                     <Sparkles className="size-4" />
                   </span>
-                  <p className="text-[17px] leading-normal text-white/75">{promise}</p>
+                  <p className="text-[17px] leading-normal text-[#667085]">{promise}</p>
                 </div>
               ))}
             </div>
@@ -346,7 +349,7 @@ export function AboutPageShell() {
         <section className="bg-white py-[60px] text-center">
           <div className={`reveal ${containerClass}`}>
             <Tag>Talk to MacVault</Tag>
-            <h2 className="mx-auto mt-2 max-w-[820px] text-[54px] leading-none font-semibold max-[768px]:text-[42px] max-[425px]:text-[34px]">
+            <h2 className="section-title mx-auto mt-2 max-w-[820px]">
               Ask for the exact unit before you <span className="animated-text">move</span>.
             </h2>
             <p className="mx-auto mt-[18px] max-w-2xl text-[17px] leading-[1.56] text-[#667085]">

@@ -7,6 +7,19 @@ export type ProductGalleryItem = {
   imageUrl: string;
   imageAlt: string;
   sourceUrl: string;
+  usage: "reference" | "exact-unit";
+};
+
+export type ProductProperty = {
+  id: string;
+  label: string;
+  value: string;
+};
+
+export type ProductOption = {
+  id: string;
+  label: string;
+  values: string[];
 };
 
 export type Product = {
@@ -16,20 +29,23 @@ export type Product = {
   shortTitle: string;
   status: string;
   condition: string;
-  price: string;
+  price?: string;
   badge: string;
   accent: string;
   summary: string;
   description: string;
   specs: string[];
   details: { label: string; value: string }[];
+  technicalSpecs: ProductProperty[];
+  listingOptions: ProductOption[];
   highlights: string[];
   packageItems: string[];
   gallery: ProductGalleryItem[];
 };
 
-type RawProduct = Omit<Product, "gallery"> & {
-  gallery: Omit<ProductGalleryItem, "imageUrl" | "imageAlt" | "sourceUrl">[];
+type RawProduct = Omit<Product, "gallery" | "specs" | "technicalSpecs" | "listingOptions"> & {
+  technicalSpecs: Omit<ProductProperty, "id">[];
+  gallery: Omit<ProductGalleryItem, "imageUrl" | "imageAlt" | "sourceUrl" | "usage">[];
 };
 
 const unsplashImage = (photoId: string) =>
@@ -158,13 +174,17 @@ const rawProducts: RawProduct[] = [
     shortTitle: "15 Pro Max",
     status: "Available now",
     condition: "Sealed / PTA options",
-    price: "WhatsApp for today's price",
     badge: "Best flagship",
     accent: "#0a84ff",
     summary: "Titanium iPhone with clear PTA, storage, color, and warranty notes before reserve.",
     description:
-      "A high-demand flagship drop for buyers who want the Pro Max camera system, premium build, and clean local buying support.",
-    specs: ["A17 Pro chip", "256GB storage", "Pro camera system", "USB-C", "PTA and Non-PTA options"],
+      "A high-demand flagship listing for buyers who want the Pro Max camera system, premium build, and clear local buying support.",
+    technicalSpecs: [
+      { label: "Chip", value: "A17 Pro" },
+      { label: "Camera", value: "Pro camera system" },
+      { label: "Connectivity", value: "USB-C" },
+      { label: "Display", value: "Super Retina XDR" },
+    ],
     details: [
       { label: "Storage", value: "256GB" },
       { label: "Condition", value: "Sealed / open-box options" },
@@ -179,7 +199,7 @@ const rawProducts: RawProduct[] = [
     packageItems: ["iPhone unit", "Box and cable details", "Warranty note", "Pickup or delivery support"],
     gallery: [
       {
-        title: "Front view",
+        title: "Device image",
         caption: "Display, color, and condition confirmed before reserve.",
         kind: "phone",
       },
@@ -202,13 +222,17 @@ const rawProducts: RawProduct[] = [
     shortTitle: "14 Pro",
     status: "Low stock",
     condition: "Open-box / Non-PTA",
-    price: "WhatsApp for today's price",
     badge: "Value Pro",
     accent: "#5856d6",
     summary: "A strong Pro iPhone choice with condition, battery, PTA, and accessories explained.",
     description:
       "For buyers who want Pro cameras and premium iPhone performance without moving to the newest flagship tier.",
-    specs: ["A16 Bionic", "128GB storage", "ProMotion display", "48MP main camera", "PTA status listed"],
+    technicalSpecs: [
+      { label: "Chip", value: "A16 Bionic" },
+      { label: "Display", value: "ProMotion display" },
+      { label: "Camera", value: "48MP main camera" },
+      { label: "Battery", value: "Health shared per unit" },
+    ],
     details: [
       { label: "Storage", value: "128GB" },
       { label: "Condition", value: "Open-box / used options" },
@@ -246,13 +270,17 @@ const rawProducts: RawProduct[] = [
     shortTitle: "Air M3",
     status: "Available now",
     condition: "Sealed / open-box",
-    price: "WhatsApp for today's price",
     badge: "Daily work",
     accent: "#34c759",
     summary: "Thin, fast MacBook Air with chip, memory, storage, battery, and warranty notes.",
     description:
       "A clean everyday Mac for students, creators, business owners, and remote work buyers who need portable performance.",
-    specs: ["M3 chip", "13-inch Liquid Retina", "8GB / 16GB options", "256GB / 512GB options", "Long battery life"],
+    technicalSpecs: [
+      { label: "Chip", value: "Apple M3" },
+      { label: "Display", value: "13-inch Liquid Retina" },
+      { label: "Battery", value: "All-day battery life" },
+      { label: "Connectivity", value: "MagSafe and Thunderbolt" },
+    ],
     details: [
       { label: "Chip", value: "Apple M3" },
       { label: "Memory", value: "8GB / 16GB options" },
@@ -290,13 +318,17 @@ const rawProducts: RawProduct[] = [
     shortTitle: "Pro 14",
     status: "Arriving soon",
     condition: "Open-box / premium used",
-    price: "WhatsApp for today's price",
     badge: "Creator pick",
     accent: "#ff9f0a",
     summary: "Powerful MacBook Pro options with cycle count, chip, memory, and warranty details.",
     description:
       "Built for buyers who need stronger sustained performance for development, design, editing, and production workloads.",
-    specs: ["M3 Pro chip", "14-inch Liquid Retina XDR", "18GB memory options", "512GB storage options", "Pro ports"],
+    technicalSpecs: [
+      { label: "Chip", value: "Apple M3 Pro" },
+      { label: "Display", value: "14-inch Liquid Retina XDR" },
+      { label: "Battery", value: "Cycle count shared per unit" },
+      { label: "Connectivity", value: "HDMI, SDXC and Thunderbolt" },
+    ],
     details: [
       { label: "Chip", value: "M3 Pro" },
       { label: "Memory", value: "18GB options" },
@@ -334,13 +366,17 @@ const rawProducts: RawProduct[] = [
     shortTitle: "iPad Pro",
     status: "Available now",
     condition: "Sealed / open-box",
-    price: "WhatsApp for today's price",
     badge: "Creative tablet",
     accent: "#af52de",
     summary: "Premium iPad Pro variants with storage, accessories, box state, and warranty notes.",
     description:
       "A slim, high-performance iPad for media, design, notes, travel, and serious portable workflows.",
-    specs: ["M4 chip", "11-inch Ultra Retina XDR", "256GB options", "Apple Pencil support", "Magic Keyboard support"],
+    technicalSpecs: [
+      { label: "Chip", value: "Apple M4" },
+      { label: "Display", value: "11-inch Ultra Retina XDR" },
+      { label: "Camera", value: "12MP wide camera" },
+      { label: "Connectivity", value: "USB-C and Thunderbolt" },
+    ],
     details: [
       { label: "Storage", value: "256GB options" },
       { label: "Condition", value: "Sealed / open-box" },
@@ -378,13 +414,17 @@ const rawProducts: RawProduct[] = [
     shortTitle: "Watch S9",
     status: "Limited units",
     condition: "Open-box",
-    price: "WhatsApp for today's price",
     badge: "Daily wearable",
     accent: "#ff375f",
     summary: "Apple Watch options with size, band, battery, and box condition shared upfront.",
     description:
       "A clean wearable upgrade for fitness, calls, notifications, and Apple ecosystem convenience.",
-    specs: ["Series 9", "41mm / 45mm options", "GPS options", "Band condition listed", "Battery health checked"],
+    technicalSpecs: [
+      { label: "Chip", value: "S9 SiP" },
+      { label: "Display", value: "Always-On Retina" },
+      { label: "Battery", value: "Health shared per unit" },
+      { label: "Connectivity", value: "GPS connectivity" },
+    ],
     details: [
       { label: "Size", value: "41mm / 45mm options" },
       { label: "Condition", value: "Open-box / used options" },
@@ -422,13 +462,17 @@ const rawProducts: RawProduct[] = [
     shortTitle: "AirPods Pro",
     status: "Available now",
     condition: "Sealed",
-    price: "WhatsApp for today's price",
-    badge: "Accessory drop",
+    badge: "Apple accessories",
     accent: "#00c7be",
-    summary: "AirPods Pro drops with sealed condition, USB-C case, and warranty expectations.",
+    summary: "AirPods Pro stock with sealed condition, USB-C case, and warranty expectations.",
     description:
-      "A premium Apple accessory drop for buyers who want active noise cancellation and easy pairing.",
-    specs: ["USB-C case", "Active Noise Cancellation", "Transparency mode", "MagSafe charging", "Warranty note"],
+      "A premium Apple accessory for buyers who want active noise cancellation and easy pairing.",
+    technicalSpecs: [
+      { label: "Audio", value: "Active Noise Cancellation" },
+      { label: "Listening", value: "Transparency mode" },
+      { label: "Charging", value: "USB-C and MagSafe" },
+      { label: "Controls", value: "Touch controls" },
+    ],
     details: [
       { label: "Case", value: "USB-C" },
       { label: "Condition", value: "Sealed" },
@@ -461,18 +505,22 @@ const rawProducts: RawProduct[] = [
   },
   {
     slug: "ps5-slim-disc-bundle",
-    category: "PS5",
+    category: "PlayStation",
     title: "PlayStation 5 Slim Disc Bundle",
     shortTitle: "PS5 Slim",
     status: "Low stock",
     condition: "Bundle options",
-    price: "WhatsApp for today's price",
     badge: "Gaming bundle",
     accent: "#1d4ed8",
     summary: "PS5 Slim bundle availability with controller, game, warranty, and box notes.",
     description:
-      "A clean console drop for buyers who want a ready gaming bundle with clear availability before visiting.",
-    specs: ["PS5 Slim Disc Edition", "Controller options", "Game bundle options", "Warranty notes", "Reservation support"],
+      "A ready console bundle with clear availability and package details before you visit.",
+    technicalSpecs: [
+      { label: "Console", value: "PlayStation 5 Slim" },
+      { label: "Drive", value: "Disc edition" },
+      { label: "Video", value: "4K gaming support" },
+      { label: "Connectivity", value: "HDMI, USB and Wi-Fi" },
+    ],
     details: [
       { label: "Edition", value: "Slim Disc" },
       { label: "Bundle", value: "Controller/game options" },
@@ -505,40 +553,83 @@ const rawProducts: RawProduct[] = [
   },
 ];
 
+const optionLabels = new Set([
+  "Storage",
+  "Condition",
+  "PTA",
+  "Memory",
+  "Size",
+  "Color",
+  "Bundle",
+  "Band",
+  "Edition",
+]);
+
+function optionValues(value: string) {
+  return value
+    .replace(/\s+options?$/i, "")
+    .split("/")
+    .map((part) => part.trim())
+    .filter(Boolean);
+}
+
 export const products: Product[] = rawProducts.map((product) => {
   const photos = productPhotoSets[product.slug];
 
   return {
     ...product,
+    specs: product.technicalSpecs.map((spec) => spec.value),
+    technicalSpecs: product.technicalSpecs.map((spec, index) => ({
+      id: `${product.slug}-spec-${index}`,
+      ...spec,
+    })),
+    listingOptions: product.details
+      .filter((detail) => optionLabels.has(detail.label))
+      .map((detail, index) => ({
+        id: `${product.slug}-option-${index}`,
+        label: detail.label,
+        values: optionValues(detail.value),
+      })),
     gallery: product.gallery.map((item, index) => {
       const photo = photos[index % photos.length];
 
       return {
         ...item,
-        imageUrl: photo.imageUrl,
+        imageUrl: `/images/products/${product.slug}-${index + 1}.jpg`,
         imageAlt: `${product.title} ${item.title}`,
         sourceUrl: photo.sourceUrl,
+        usage: "reference",
       };
     }),
   };
 });
 
-export const productCategories = ["All", "iPhone", "Mac", "iPad", "Watch", "Accessories", "PS5"];
+export const categoryDefinitions = [
+  { category: "iPhone", label: "iPhone", pluralLabel: "iPhones", slug: "iphone" },
+  { category: "Mac", label: "MacBook", pluralLabel: "MacBooks", slug: "mac" },
+  { category: "iPad", label: "iPad", pluralLabel: "iPads", slug: "ipad" },
+  { category: "Watch", label: "Apple Watch", pluralLabel: "Apple Watch", slug: "watch" },
+  {
+    category: "Accessories",
+    label: "AirPods & Accessories",
+    pluralLabel: "AirPods & Accessories",
+    slug: "accessories",
+  },
+  {
+    category: "PlayStation",
+    label: "PlayStation",
+    pluralLabel: "PlayStation",
+    slug: "playstation",
+  },
+] as const;
 
-export const categorySlugMap = {
-  iPhone: "iphone",
-  Mac: "mac",
-  iPad: "ipad",
-  Watch: "watch",
-  Accessories: "accessories",
-  PS5: "ps5",
-} as const;
+export type ProductCategory = (typeof categoryDefinitions)[number]["category"];
+export type ProductCategorySlug = (typeof categoryDefinitions)[number]["slug"];
 
-export type ProductCategory = keyof typeof categorySlugMap;
-export type ProductCategorySlug = (typeof categorySlugMap)[ProductCategory];
+export const productCategories = ["All", ...categoryDefinitions.map((item) => item.category)];
 
-export const categoryRoutes = Object.entries(categorySlugMap).map(([category, slug]) => ({
-  category: category as ProductCategory,
+export const categoryRoutes = categoryDefinitions.map(({ category, slug }) => ({
+  category,
   slug,
   href: `/products/category/${slug}`,
 }));
@@ -547,16 +638,33 @@ export const featuredProducts = products.filter((product) =>
   ["iphone-15-pro-max-256", "macbook-air-m3-13", "ps5-slim-disc-bundle"].includes(product.slug),
 );
 
+const categoryBadgeMap: Record<string, string> = {
+  iPhone: "iPhone stock",
+  Mac: "MacBook stock",
+  iPad: "iPad stock",
+  Watch: "Apple Watch stock",
+  Accessories: "Apple accessories",
+  PlayStation: "PlayStation stock",
+};
+
+export function getProductBadge(category: string) {
+  return categoryBadgeMap[category] ?? "Current stock";
+}
+
 export function getProduct(slug: string) {
   return products.find((product) => product.slug === slug);
 }
 
 export function getCategorySlug(category: string) {
-  return categorySlugMap[category as ProductCategory] ?? category.toLowerCase();
+  return categoryDefinitions.find((item) => item.category === category)?.slug ?? category.toLowerCase();
 }
 
 export function getCategoryBySlug(slug: string) {
   return categoryRoutes.find((route) => route.slug === slug)?.category;
+}
+
+export function getCategoryLabel(category: string) {
+  return categoryDefinitions.find((item) => item.category === category)?.label ?? category;
 }
 
 export function getProductsByCategorySlug(slug: string) {

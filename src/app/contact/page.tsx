@@ -5,7 +5,7 @@ import { buildMetadata } from "@/lib/seo";
 export const metadata: Metadata = buildMetadata({
   title: "Contact",
   description:
-    "Contact MacVault on WhatsApp, phone, or email for current iPhone, MacBook, iPad, Watch, AirPods, accessories, and PS5 stock.",
+    "Contact MacVault on WhatsApp, phone, or email for current iPhone, MacBook, iPad, Watch, AirPods, accessories, and PlayStation stock.",
   path: "/contact",
 });
 

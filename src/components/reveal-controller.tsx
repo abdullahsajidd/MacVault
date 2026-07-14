@@ -6,7 +6,7 @@ export function RevealController() {
   useEffect(() => {
     document.documentElement.classList.add("is-ready");
 
-    const targets = document.querySelectorAll(".site-header, .reveal, .showcase");
+    const targets = document.querySelectorAll(".reveal, .showcase");
     const scrollToHashTarget = () => {
       const id = window.location.hash.slice(1);
 

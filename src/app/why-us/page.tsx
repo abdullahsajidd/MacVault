@@ -11,6 +11,7 @@ import {
   Sparkles,
   Truck,
 } from "lucide-react";
+import { ComparisonSection } from "@/components/comparison-section";
 import { Cta } from "@/components/cta";
 import { containerClass } from "@/components/layout-classes";
 import { RevealController } from "@/components/reveal-controller";
@@ -21,7 +22,7 @@ import { buildMetadata } from "@/lib/seo";
 export const metadata: Metadata = buildMetadata({
   title: "Why Us",
   description:
-    "MacVault's USP: verified local Apple and PS5 stock, clear condition details, WhatsApp-first support, and reservation confidence.",
+    "Why buyers choose MacVault: verified local Apple and PlayStation stock, clear condition details, direct WhatsApp support, and confident reservations.",
   path: "/why-us",
 });
 
@@ -33,41 +34,18 @@ const uspCards = [
   },
   {
     title: "Product truth first",
-    text: "PTA, battery health, cycle count, warranty expectations, and package notes are placed before the WhatsApp CTA.",
+    text: "PTA, battery health, cycle count, warranty expectations, and package notes are shown clearly on the product page.",
     icon: ClipboardCheck,
   },
   {
     title: "Direct WhatsApp support",
-    text: `Buyers can confirm exact details on ${phoneDisplay} instead of filling dead-end forms or starting a blind chat.`,
+    text: `Buyers can confirm exact details on ${phoneDisplay} with the product context already included.`,
     icon: MessageCircle,
   },
   {
     title: "Category-specific checks",
-    text: "iPhone, MacBook, iPad, Watch, AirPods, accessories, and PS5 stock each get the checks that matter for that product.",
+    text: "iPhone, MacBook, iPad, Watch, AirPods, accessories, and PlayStation stock each get the checks that matter for that product.",
     icon: PackageCheck,
-  },
-];
-
-const comparisonRows = [
-  {
-    label: "Stock",
-    typical: "Listings stay online after a unit is sold.",
-    macvault: "Current stock and reservation timing are confirmed before the buyer commits.",
-  },
-  {
-    label: "Condition",
-    typical: "Important details are scattered across chat messages.",
-    macvault: "Condition, PTA, warranty, battery, cycle count, and package notes are visible earlier.",
-  },
-  {
-    label: "Support",
-    typical: "The buyer has to explain everything from zero.",
-    macvault: "The product page gives the conversation context before WhatsApp opens.",
-  },
-  {
-    label: "Trust",
-    typical: "The buying process feels anonymous.",
-    macvault: `MacVault keeps contact clear through ${phoneDisplay} and ${emailAddress}.`,
   },
 ];
 
@@ -99,7 +77,7 @@ const processSteps = [
 ];
 
 const policyItems = [
-  "PTA or Non PTA status is made clear for phone buyers.",
+  "PTA or non-PTA status is made clear for phone buyers.",
   "Battery health and cycle count are shared where they affect the decision.",
   "Sealed, open-box, and used status are not treated like the same product.",
   "Package contents and warranty expectations are confirmed before payment.",
@@ -117,12 +95,11 @@ export default function WhyUsPage() {
           <div className="reveal">
             <Tag>Why MacVault</Tag>
             <h1 className="mx-auto mt-5 max-w-[980px] text-[72px] leading-[0.96] font-semibold max-[768px]:text-[56px] max-[425px]:text-[42px] max-[375px]:text-[40px]">
-              Our USP is simple: <span className="animated-text">verified</span> local stock before
-              the buyer commits.
+              Know what you&apos;re buying <span className="animated-text">before</span> you commit.
             </h1>
             <p className="mx-auto mt-6 max-w-[760px] text-[20px] leading-[1.58] text-[#667085] max-[768px]:text-[18px] max-[425px]:text-[16px]">
-              MacVault is not trying to feel like a generic marketplace. The site exists to show the
-              details serious buyers need before they call, message, reserve, or visit.
+              See the condition, specifications, available options, package details, and buying
+              support before you call, message, reserve, or visit.
             </p>
             <div className="mt-[30px] flex flex-wrap justify-center gap-3">
               <Cta href="/products#inventory" icon={Search}>
@@ -138,9 +115,9 @@ export default function WhyUsPage() {
         <section className="border-y border-[#050b141f] bg-white py-[60px]">
           <div className={containerClass}>
             <SectionHead
-              kicker="USP"
-              title="What MacVault does differently."
-              accent="differently"
+              kicker="How we help"
+              title="Clear details. Direct answers. Local support."
+              accent="Clear"
               text="The buying flow is built around confidence: fewer vague claims, clearer checks, and a direct local support path."
             />
 
@@ -169,43 +146,7 @@ export default function WhyUsPage() {
           </div>
         </section>
 
-        <section className={`${containerClass} py-[60px]`}>
-          <div className="reveal mb-10 max-w-[780px]">
-            <Tag>Comparison</Tag>
-            <h2 className="mt-2 text-[58px] leading-none font-semibold max-[768px]:text-[44px] max-[425px]:text-[34px]">
-              Not another anonymous <span className="animated-text">listing</span>.
-            </h2>
-            <p className="mt-[18px] text-[17px] leading-[1.56] text-[#667085]">
-              MacVault pages are designed to answer the same questions buyers usually repeat in
-              chat, then let the team confirm the exact unit directly.
-            </p>
-          </div>
-
-          <div className="overflow-hidden rounded-[8px] border border-[#050b141f] bg-white">
-            <div className="grid grid-cols-[160px_1fr_1fr] border-b border-[#050b141f] bg-[#f8fbff] text-sm font-semibold text-[#667085] max-[768px]:hidden">
-              <div className="border-r border-[#050b141f] p-5">Point</div>
-              <div className="border-r border-[#050b141f] p-5">Typical listing</div>
-              <div className="p-5">MacVault flow</div>
-            </div>
-            {comparisonRows.map((row, index) => (
-              <div
-                className="reveal grid grid-cols-[160px_1fr_1fr] border-b border-[#050b141f] last:border-b-0 max-[768px]:grid-cols-1"
-                style={{ transitionDelay: `${index * 60}ms` }}
-                key={row.label}
-              >
-                <div className="border-r border-[#050b141f] p-5 text-sm font-bold text-[#0057d8] max-[768px]:border-r-0 max-[768px]:border-b max-[768px]:bg-[#f8fbff]">
-                  {row.label}
-                </div>
-                <div className="border-r border-[#050b141f] p-5 text-[15px] leading-normal text-[#667085] max-[768px]:border-r-0 max-[768px]:border-b">
-                  {row.typical}
-                </div>
-                <div className="p-5 text-[15px] leading-normal font-medium text-[#050b14]">
-                  {row.macvault}
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+        <ComparisonSection />
 
         <section className="bg-[#f4f9ff] py-[60px]">
           <div className={containerClass}>
@@ -239,30 +180,30 @@ export default function WhyUsPage() {
           </div>
         </section>
 
-        <section className="bg-[#050b14] py-[60px] text-white">
+        <section className="border-y border-[#0a84ff14] bg-[#f4f9ff] py-[60px] text-[#102a43]">
           <div className={`${containerClass} grid grid-cols-[0.9fr_1.1fr] gap-[56px] max-[940px]:grid-cols-1`}>
             <div className="reveal">
               <Tag>Buyer policy</Tag>
-              <h2 className="mt-2 text-[58px] leading-none font-semibold max-[768px]:text-[44px] max-[425px]:text-[34px]">
+              <h2 className="section-title mt-2">
                 Clear expectations before the <span className="animated-text">purchase</span>.
               </h2>
-              <p className="mt-[18px] max-w-[620px] text-[17px] leading-[1.56] text-white/70">
+              <p className="mt-[18px] max-w-[620px] text-[17px] leading-[1.56] text-[#667085]">
                 The goal is not to add noise. The goal is to make important information visible
                 before money or travel is involved.
               </p>
             </div>
 
-            <div className="border-t border-white/20">
+            <div className="border-t border-[#102a431a]">
               {policyItems.map((item, index) => (
                 <div
-                  className="reveal flex items-start gap-4 border-b border-white/20 py-5"
+                  className="reveal flex items-start gap-4 border-b border-[#102a431a] py-5"
                   style={{ transitionDelay: `${index * 60}ms` }}
                   key={item}
                 >
                   <span className="mt-1 grid size-7 shrink-0 place-items-center rounded-full bg-white text-[#0a84ff]">
                     <ShieldCheck className="size-4" />
                   </span>
-                  <p className="text-[17px] leading-normal text-white/75">{item}</p>
+                  <p className="text-[17px] leading-normal text-[#667085]">{item}</p>
                 </div>
               ))}
             </div>
@@ -272,7 +213,7 @@ export default function WhyUsPage() {
         <section className="bg-white py-[60px] text-center">
           <div className={`reveal ${containerClass}`}>
             <Tag>Ready when you are</Tag>
-            <h2 className="mx-auto mt-2 max-w-[820px] text-[54px] leading-none font-semibold max-[768px]:text-[42px] max-[425px]:text-[34px]">
+            <h2 className="section-title mx-auto mt-2 max-w-[820px]">
               Start with the page, then <span className="animated-text">confirm</span> the unit.
             </h2>
             <p className="mx-auto mt-[18px] max-w-2xl text-[17px] leading-[1.56] text-[#667085]">

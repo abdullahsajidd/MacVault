@@ -1,27 +1,20 @@
 import type { Metadata, Viewport } from "next";
-import { Geist } from "next/font/google";
 import { buildMetadata, metadataBase } from "@/lib/seo";
-import { Analytics } from '@vercel/analytics/next';
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
-const geist = Geist({
-  subsets: ["latin"],
-  variable: "--font-tech-sans",
-  display: "swap",
-});
-
 const homeDescription =
-  "MacVault curates verified iPhones, MacBooks, iPads, Apple Watch, AirPods, accessories, and PS5 stock in Lahore with WhatsApp-first confirmation.";
+  "MacVault curates verified iPhones, MacBooks, iPads, Apple Watch, AirPods, accessories, and PlayStation stock in Lahore with WhatsApp-first confirmation.";
 
 export const metadata: Metadata = {
   ...buildMetadata({
-    title: "MacVault | Verified Apple and PS5 Stock in Lahore",
+    title: "MacVault | Verified Apple and PlayStation Stock in Lahore",
     description: homeDescription,
     path: "/",
   }),
   metadataBase,
   title: {
-    default: "MacVault | Verified Apple and PS5 Stock in Lahore",
+    default: "MacVault | Verified Apple and PlayStation Stock in Lahore",
     template: "%s | MacVault",
   },
   applicationName: "MacVault",
@@ -29,7 +22,7 @@ export const metadata: Metadata = {
     "MacVault",
     "iPhone Lahore",
     "MacBook Lahore",
-    "PS5 Lahore",
+    "PlayStation Lahore",
     "PTA iPhone",
     "Apple accessories Pakistan",
     "verified Apple stock",
@@ -88,8 +81,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${geist.variable} h-full`}>
-      <body className={`${geist.className} min-h-full`}>
+    <html lang="en" className="h-full">
+      <body className="min-h-full">
+        <a className="skip-link" href="#main-content">
+          Skip to main content
+        </a>
         {children}
         <Analytics />
       </body>

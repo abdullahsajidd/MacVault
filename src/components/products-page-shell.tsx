@@ -7,9 +7,12 @@ import { containerClass } from "@/components/layout-classes";
 import { ProductVisual } from "@/components/product-visual";
 import { RevealController } from "@/components/reveal-controller";
 import { Footer, Header, SectionHead, Tag } from "@/components/site";
+import { createWhatsappHref } from "@/data/contact";
 import {
   categoryRoutes,
+  getCategoryLabel,
   getCategorySlug,
+  getProductBadge,
   type Product,
   productCategories,
   products,
@@ -17,23 +20,23 @@ import {
 
 const buyingModes = [
   {
-    title: "Ask first",
-    text: "Message with a product page already selected.",
-    icon: MessageCircle,
-  },
-  {
-    title: "Check details",
-    text: "Confirm condition, PTA, warranty, and package contents.",
+    title: "Browse clearly",
+    text: "Open a listing with its key condition and specification notes.",
     icon: Search,
   },
   {
-    title: "Reserve stock",
-    text: "Hold serious units for pickup or delivery.",
+    title: "Check details",
+    text: "Review options, PTA, warranty, and expected package contents.",
     icon: BadgeCheck,
   },
   {
+    title: "Confirm the unit",
+    text: "Message MacVault for exact stock, price, and unit-specific details.",
+    icon: MessageCircle,
+  },
+  {
     title: "Local handoff",
-    text: "Arrange delivery, pickup, and after-sale support.",
+    text: "Agree the pickup, delivery, inspection, and payment steps.",
     icon: Truck,
   },
 ];
@@ -47,7 +50,7 @@ function hrefForCategory(category: string) {
 }
 
 function categoryLabel(category: string) {
-  return category === "Mac" ? "MacBook" : category;
+  return category === allCategory ? allCategory : getCategoryLabel(category);
 }
 
 function categoryFromPathname(pathname: string, fallback: string) {
@@ -80,10 +83,10 @@ export function ProductsPageShell({
     () => (selectedCategory === activeCategory ? items : productsForCategory(selectedCategory)),
     [activeCategory, items, selectedCategory],
   );
-  const title = isCategory
-    ? `${selectedCategoryLabel} drops with verified details before chat.`
-    : "Browse drops with details before the chat.";
-  const resultLabel = `${visibleItems.length} ${visibleItems.length === 1 ? "drop" : "drops"}`;
+  const inventoryTitle = isCategory
+    ? `Current ${selectedCategoryLabel} listings.`
+    : "What’s available right now.";
+  const resultLabel = `${visibleItems.length} ${visibleItems.length === 1 ? "listing" : "listings"}`;
 
   useEffect(() => {
     const syncCategoryFromUrl = () => {
@@ -125,19 +128,19 @@ export function ProductsPageShell({
             <h1 className="mx-auto mt-5 max-w-[920px] text-[clamp(48px,8vw,96px)] leading-[0.96] font-semibold tracking-normal">
               {isCategory ? (
                 <>
-                  {selectedCategoryLabel} drops with <span className="animated-text">verified</span>{" "}
+                  {selectedCategoryLabel} listings with <span className="animated-text">verified</span>{" "}
                   details.
                 </>
               ) : (
                 <>
-                  Browse drops with <span className="animated-text">details</span> before the
+                  Browse products with <span className="animated-text">details</span> before the
                   chat.
                 </>
               )}
             </h1>
             <p className="mx-auto mt-6 max-w-[720px] text-[clamp(17px,2vw,21px)] leading-[1.58] text-[#667085]">
-              Every product page is designed for quick local buying: condition, variant, warranty,
-              package contents, and reservation context are shown before the CTA.
+              Each listing covers condition, variant, warranty, package contents, and reservation
+              context, then lets you confirm the exact unit directly.
             </p>
             <div className="mt-[30px] flex flex-wrap justify-center gap-3">
               <Cta href="#inventory" icon={Search}>
@@ -151,6 +154,7 @@ export function ProductsPageShell({
         </section>
 
         <section className="border-y border-[#050b141f] bg-white">
+          <h2 className="sr-only">How buying from MacVault works</h2>
           <div className={`${containerClass} grid grid-cols-4 max-[940px]:grid-cols-2 max-sm:grid-cols-1`}>
             {buyingModes.map((mode, index) => {
               const Icon = mode.icon;
@@ -172,9 +176,9 @@ export function ProductsPageShell({
 
         <section id="inventory" className={`${containerClass} inventory-anchor py-[60px]`}>
           <SectionHead
-            kicker="Available drops"
-            title={title}
-            accent={isCategory ? "verified" : "details"}
+            kicker="Available listings"
+            title={inventoryTitle}
+            accent={isCategory ? selectedCategoryLabel : "available"}
             text={`${resultLabel} shown with gallery, condition, details, and package notes available before chat.`}
           />
           <p className="sr-only" aria-live="polite">
@@ -209,10 +213,9 @@ export function ProductsPageShell({
           </div>
 
           <div className="product-list-grid" id="product-grid">
-            {visibleItems.map((product, index) => (
+            {visibleItems.map((product) => (
               <article
-                className="listing-card reveal"
-                style={{ transitionDelay: `${Math.min(index, 4) * 40}ms` }}
+                className="listing-card"
                 key={product.slug}
               >
                 <ProductVisual
@@ -221,6 +224,7 @@ export function ProductsPageShell({
                   label={product.shortTitle}
                   imageUrl={product.gallery[0].imageUrl}
                   imageAlt={product.gallery[0].imageAlt}
+                  imageUsage={product.gallery[0].usage}
                   size="compact"
                   className="w-full"
                 />
@@ -233,7 +237,7 @@ export function ProductsPageShell({
                       type="button"
                       onClick={() => selectCategory(product.category)}
                     >
-                      {categoryLabel(product.category)}
+                      {getProductBadge(product.category)}
                     </button>
                     <span className="rounded-full bg-[#23c87918] px-2.5 py-1.5 text-[#14773d]">
                       {product.status}
@@ -243,20 +247,32 @@ export function ProductsPageShell({
                   <p className="mt-3 text-[15px] leading-[1.55] text-[#667085]">
                     {product.summary}
                   </p>
-                  <div className="mt-5 flex flex-wrap gap-2">
-                    {product.specs.slice(0, 3).map((spec) => (
-                      <span
-                        className="rounded-full border border-[#050b1414] bg-[#f5f5f7] px-3 py-1.5 text-xs font-medium text-[#667085]"
-                        key={spec}
-                      >
-                        {spec}
-                      </span>
-                    ))}
+                  <div className="mt-5 grid gap-3">
+                    <div className="flex flex-wrap gap-2" aria-label="Technical specifications">
+                      {product.technicalSpecs.slice(0, 3).map((spec) => (
+                        <span className="product-property" key={spec.id} title={spec.label}>
+                          <strong>{spec.label}:</strong> {spec.value}
+                        </span>
+                      ))}
+                    </div>
+                    <div className="flex flex-wrap gap-2" aria-label="Available options">
+                      {product.listingOptions.slice(0, 2).map((option) => (
+                        <span className="product-option" key={option.id}>
+                          <strong>{option.label}:</strong> {option.values.join(" · ")}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                  <div className="mt-auto pt-6">
-                    <p className="mb-3 text-sm font-semibold text-[#050b14]">{product.price}</p>
+                  <div className="mt-auto flex flex-wrap justify-start gap-2 pt-6">
                     <Cta href={`/products/${product.slug}`} icon={ArrowRight}>
-                      View details
+                      View more
+                    </Cta>
+                    <Cta
+                      href={createWhatsappHref(`Hi MacVault, I want to check ${product.title}.`)}
+                      icon={MessageCircle}
+                      variant="secondary"
+                    >
+                      Chat now
                     </Cta>
                   </div>
                 </div>
@@ -265,7 +281,7 @@ export function ProductsPageShell({
           </div>
 
           {visibleItems.length === 0 ? (
-            <div className="reveal rounded-[8px] bg-white p-8 text-center shadow-[inset_0_0_0_1px_rgba(5,20,44,0.10)]">
+            <div className="rounded-[8px] bg-white p-8 text-center shadow-[inset_0_0_0_1px_rgba(5,20,44,0.10)]">
               <p className="text-lg font-semibold">No products are available in this category yet.</p>
               <div className="mt-5">
                 <Cta

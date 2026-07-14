@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowRight, BadgeCheck, MessageCircle, PackageCheck, ShieldCheck } from "lucide-react";
+import { ArrowLeft, BadgeCheck, PackageCheck, ShieldCheck } from "lucide-react";
 import { Cta } from "@/components/cta";
 import { containerClass } from "@/components/layout-classes";
 import { ProductSlider } from "@/components/product-slider";
@@ -9,7 +9,7 @@ import { ProductVisual } from "@/components/product-visual";
 import { RevealController } from "@/components/reveal-controller";
 import { Footer, Header, Tag } from "@/components/site";
 import { createWhatsappHref } from "@/data/contact";
-import { getCategorySlug, getProduct, products } from "@/data/products";
+import { getCategoryLabel, getCategorySlug, getProduct, getProductBadge, products } from "@/data/products";
 import { buildMetadata } from "@/lib/seo";
 
 type ProductPageProps = {
@@ -19,7 +19,7 @@ type ProductPageProps = {
 };
 
 function categoryLabel(category: string) {
-  return category === "Mac" ? "MacBook" : category;
+  return getCategoryLabel(category);
 }
 
 export function generateStaticParams() {
@@ -91,11 +91,15 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
 
           <div className="grid grid-cols-[1.05fr_0.95fr] gap-[58px] max-[1020px]:grid-cols-1">
             <div className="max-[1020px]:order-2">
-              <ProductSlider gallery={product.gallery} accent={product.accent} title={product.title} />
+              <ProductSlider
+                gallery={product.gallery}
+                accent={product.accent}
+                title={product.title}
+              />
             </div>
 
             <div className="reveal self-start max-[1020px]:order-1">
-              <Tag>{product.badge}</Tag>
+              <Tag>{getProductBadge(product.category)}</Tag>
               <h1 className="mt-4 text-[clamp(42px,7vw,78px)] leading-[0.98] font-semibold tracking-normal">
                 {product.title} <span className="animated-text">details</span>
               </h1>
@@ -104,8 +108,8 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
               <div id="reserve" className="reserve-card mt-7 rounded-lg border border-[#050b141f] bg-white p-5 shadow-[0_18px_54px_rgba(5,20,44,0.06)]">
                 <div className="flex items-start justify-between gap-4 max-sm:flex-col">
                   <div>
-                    <p className="text-xs font-semibold tracking-[0.12em] text-[#667085] uppercase">Price and availability</p>
-                    <p className="mt-1 text-2xl font-semibold text-[#050b14]">{product.price}</p>
+                    <p className="text-xs font-semibold tracking-[0.12em] text-[#667085] uppercase">Availability</p>
+                    <p className="mt-1 text-2xl font-semibold text-[#050b14]">Confirm the current unit</p>
                     <p className="mt-2 text-sm leading-normal text-[#667085]">
                       Confirm today&apos;s unit, condition, package, and hold timing before you move.
                     </p>
@@ -114,13 +118,9 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                     {product.status}
                   </span>
                 </div>
-                <div className="mt-5 flex flex-wrap gap-3">
-                  <Cta href={whatsappHref} icon={MessageCircle}>
-                    Check on WhatsApp
-                  </Cta>
-                  <Cta href="/why-us" icon={BadgeCheck} variant="secondary">
-                    Why Us
-                  </Cta>
+                <div className="mt-5 flex flex-wrap justify-start gap-3">
+                  <Cta href={whatsappHref}>Chat now</Cta>
+                  <Cta href="/why-us" variant="secondary">Why MacVault</Cta>
                 </div>
               </div>
 
@@ -143,7 +143,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
           <div className={`${containerClass} grid grid-cols-[0.8fr_1.2fr] gap-[56px] max-[940px]:grid-cols-1`}>
             <div className="reveal">
               <Tag>PRODUCT DETAILS</Tag>
-              <h2 className="mt-2 text-[clamp(34px,5vw,64px)] leading-none font-semibold tracking-normal">
+              <h2 className="section-title mt-2">
                 Everything important before you <span className="animated-text">reserve</span>.
               </h2>
               <p className="mt-[18px] max-w-xl text-[17px] leading-[1.56] text-[#667085]">
@@ -152,6 +152,28 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
             </div>
 
             <div className="grid grid-cols-2 gap-8 max-sm:grid-cols-1">
+              <div className="reveal border-t border-[#050b141f] pt-5">
+                <h3 className="text-2xl font-semibold">Specifications</h3>
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {product.technicalSpecs.map((spec) => (
+                    <span className="product-property" key={spec.id}>
+                      <strong>{spec.label}:</strong> {spec.value}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="reveal border-t border-[#050b141f] pt-5 delay-75">
+                <h3 className="text-2xl font-semibold">Available options</h3>
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {product.listingOptions.map((option) => (
+                    <span className="product-option" key={option.id}>
+                      <strong>{option.label}:</strong> {option.values.join(" · ")}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
               <div className="reveal border-t border-[#050b141f] pt-5">
                 <BadgeCheck className="mb-5 size-6 text-[#0a84ff]" strokeWidth={2} />
                 <h3 className="text-2xl font-semibold">Highlights</h3>
@@ -184,14 +206,12 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
         <section className={`${containerClass} py-[60px]`}>
           <div className="reveal mb-8 flex items-end justify-between gap-6 max-sm:flex-col max-sm:items-start">
             <div>
-              <Tag>RELATED DROPS</Tag>
-              <h2 className="mt-2 text-[clamp(34px,5vw,58px)] leading-none font-semibold tracking-normal">
+              <Tag>RELATED PRODUCTS</Tag>
+              <h2 className="section-title mt-2">
                 Keep <span className="animated-text">comparing</span> before you message.
               </h2>
             </div>
-            <Cta href="/products" icon={ArrowRight} variant="secondary">
-              All products
-            </Cta>
+            <Cta href="/products" variant="secondary">All products</Cta>
           </div>
 
           <div className="grid grid-cols-3 gap-[18px] max-[940px]:grid-cols-2 max-sm:grid-cols-1">
@@ -207,6 +227,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                   label={item.shortTitle}
                   imageUrl={item.gallery[0].imageUrl}
                   imageAlt={item.gallery[0].imageAlt}
+                  imageUsage={item.gallery[0].usage}
                   size="compact"
                 />
                 <div className="p-[22px]">
@@ -218,26 +239,24 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                   </Link>
                   <h3 className="mt-2 text-2xl font-semibold">{item.title}</h3>
                   <p className="mt-2 text-sm leading-normal text-[#667085]">{item.summary}</p>
-                  <Cta className="mt-5 min-h-11 px-4" href={`/products/${item.slug}`} icon={ArrowRight} variant="secondary">
-                    View product
-                  </Cta>
+                  <div className="mt-5 flex justify-start"><Cta href={`/products/${item.slug}`} variant="secondary">View product</Cta></div>
                 </div>
               </article>
             ))}
           </div>
         </section>
 
-        <section className="bg-[#050b14] py-[60px] text-white">
+        <section className="border-y border-[#0a84ff14] bg-[#f4f9ff] py-[60px] text-[#102a43]">
           <div className={`${containerClass} grid grid-cols-[0.9fr_1.1fr] gap-[54px] max-[940px]:grid-cols-1`}>
             <div className="reveal">
               <Tag>CONFIDENCE CHECK</Tag>
-              <h2 className="mt-2 text-[clamp(34px,5vw,64px)] leading-none font-semibold tracking-normal">
+              <h2 className="section-title mt-2">
                 Buy with the <span className="animated-text">details</span> in front of you.
               </h2>
             </div>
-            <div className="reveal border-t border-white/20 pt-6">
+            <div className="reveal border-t border-[#102a431a] pt-6">
               <ShieldCheck className="mb-5 size-7 text-[#0a84ff]" strokeWidth={2} />
-              <p className="text-[20px] leading-[1.55] text-white/75">
+              <p className="text-[20px] leading-[1.55] text-[#667085]">
                 MacVault pages are built to reduce uncertainty: condition, price timing, warranty
                 expectations, and package contents are checked before a buyer commits.
               </p>

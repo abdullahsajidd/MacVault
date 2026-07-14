@@ -1,5 +1,5 @@
-export const phoneRaw = "923189400448";
-export const phoneDisplay = "+92 318 9400448";
+export const phoneRaw = "923394004289";
+export const phoneDisplay = "+92 339 4004289";
 export const phoneHref = `tel:+${phoneRaw}`;
 export const emailAddress = "abdullahsajid228@gmail.com";
 export const emailHref = `mailto:${emailAddress}`;

@@ -5,6 +5,7 @@ import {
   ArrowRight,
   BadgeCheck,
   Clock3,
+  ChevronDown,
   Mail,
   MapPin,
   MessageCircle,
@@ -26,11 +27,12 @@ import {
   phoneHref,
   whatsappStockHref,
 } from "@/data/contact";
+import { categoryDefinitions } from "@/data/products";
 
 const responseNotes = [
   {
     title: "Current stock",
-    text: "Ask for exact iPhone, MacBook, iPad, Watch, AirPods, accessory, or PS5 availability.",
+    text: "Ask for exact iPhone, MacBook, iPad, Watch, AirPods, accessory, or PlayStation availability.",
     icon: PackageSearch,
   },
   {
@@ -45,7 +47,7 @@ const responseNotes = [
   },
 ];
 
-const productOptions = ["iPhone", "MacBook", "iPad", "Apple Watch", "AirPods", "Accessories", "PS5"];
+const productOptions = categoryDefinitions.map((category) => category.label);
 
 function fieldValue(formData: FormData, field: string) {
   return formData.get(field)?.toString().trim() || "Not shared";
@@ -120,7 +122,7 @@ export function ContactPageShell() {
           <div className={`${containerClass} grid grid-cols-[0.78fr_1.22fr] gap-[56px] max-[1024px]:grid-cols-1`}>
             <div className="reveal">
               <Tag>Direct line</Tag>
-              <h2 className="mt-2 text-[58px] leading-none font-semibold max-[768px]:text-[44px] max-[425px]:text-[34px]">
+              <h2 className="section-title mt-2">
                 Choose the fastest way to <span className="animated-text">confirm</span>.
               </h2>
               <p className="mt-[18px] max-w-[620px] text-[17px] leading-[1.56] text-[#667085]">
@@ -161,9 +163,9 @@ export function ContactPageShell() {
                     <span className="text-xs font-bold tracking-[0.12em] text-[#0057d8] uppercase">
                       {selectedContact.label}
                     </span>
-                    <h3 className="mt-3 break-words text-[36px] leading-tight font-semibold max-[425px]:text-[28px]">
+                    <p className="mt-3 break-words text-[36px] leading-tight font-semibold max-[425px]:text-[28px]">
                       {selectedContact.value}
-                    </h3>
+                    </p>
                     <p className="mt-3 max-w-[640px] text-[16px] leading-[1.6] text-[#667085]">
                       {selectedContact.text}
                     </p>
@@ -172,7 +174,7 @@ export function ContactPageShell() {
                     <SelectedIcon className="size-7" />
                   </span>
                 </div>
-                <div className="mt-7">
+                <div className="mt-7 flex justify-center">
                   <Cta href={selectedContact.href} icon={SelectedIcon}>
                     {`Open ${selectedContact.label}`}
                   </Cta>
@@ -229,14 +231,13 @@ export function ContactPageShell() {
               <div className="grid grid-cols-3 gap-4 max-[940px]:grid-cols-1">
                 <label className="grid gap-2 text-sm font-semibold text-[#102a43]">
                   Product
-                  <select className="form-field" name="product" defaultValue="">
-                    <option value="" disabled>
-                      Select category
-                    </option>
-                    {productOptions.map((option) => (
-                      <option key={option}>{option}</option>
-                    ))}
-                  </select>
+                  <span className="relative block">
+                    <select className="form-field form-select" name="product" defaultValue="">
+                      <option value="" disabled>Select category</option>
+                      {productOptions.map((option) => <option key={option}>{option}</option>)}
+                    </select>
+                    <ChevronDown className="form-select-icon" aria-hidden="true" />
+                  </span>
                 </label>
                 <label className="grid gap-2 text-sm font-semibold text-[#102a43]">
                   Budget
@@ -244,11 +245,14 @@ export function ContactPageShell() {
                 </label>
                 <label className="grid gap-2 text-sm font-semibold text-[#102a43]">
                   Timing
-                  <select className="form-field" name="timing" defaultValue="Today">
-                    <option>Today</option>
-                    <option>This week</option>
-                    <option>Just comparing</option>
-                  </select>
+                  <span className="relative block">
+                    <select className="form-field form-select" name="timing" defaultValue="Today">
+                      <option>Today</option>
+                      <option>This week</option>
+                      <option>Just comparing</option>
+                    </select>
+                    <ChevronDown className="form-select-icon" aria-hidden="true" />
+                  </span>
                 </label>
               </div>
 
@@ -261,7 +265,7 @@ export function ContactPageShell() {
                 />
               </label>
 
-              <div className="flex items-center justify-between gap-4 pt-1 max-[640px]:flex-col max-[640px]:items-stretch">
+              <div className="flex flex-col items-center justify-center gap-4 pt-1 text-center">
                 <p className="text-sm leading-[1.5] text-[#667085]" aria-live="polite">
                   {submitted
                     ? "WhatsApp opened with your request. Send it there to confirm stock."
@@ -308,6 +312,12 @@ export function ContactPageShell() {
 
         <section className="bg-[#f4f9ff] py-[60px]">
           <div className={containerClass}>
+            <SectionHead
+              kicker="What happens next"
+              title="A clear reply, without the back-and-forth."
+              accent="clear"
+              text="Share the product and timing once, and we’ll reply with the stock and condition information that matters."
+            />
             <div className="grid grid-cols-3 gap-4 max-[940px]:grid-cols-1">
               {responseNotes.map((item, index) => {
                 const Icon = item.icon;
@@ -333,7 +343,7 @@ export function ContactPageShell() {
         <section className="bg-white py-[60px] text-center">
           <div className={`reveal ${containerClass}`}>
             <Tag>Keep browsing</Tag>
-            <h2 className="mx-auto mt-2 max-w-[820px] text-[54px] leading-none font-semibold max-[768px]:text-[42px] max-[425px]:text-[34px]">
+            <h2 className="section-title mx-auto mt-2 max-w-[820px]">
               Pick a listing, then ask for the <span className="animated-text">exact</span> unit.
             </h2>
             <div className="mt-[30px] flex flex-wrap justify-center gap-3">

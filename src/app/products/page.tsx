@@ -6,7 +6,7 @@ import { buildMetadata } from "@/lib/seo";
 export const metadata: Metadata = buildMetadata({
   title: "Products",
   description:
-    "Browse MacVault iPhone, MacBook, iPad, Apple Watch, AirPods, accessories, and PS5 drops with clear condition and reservation details.",
+    "Browse MacVault iPhone, MacBook, iPad, Apple Watch, AirPods, accessories, and PlayStation listings with clear condition and reservation details.",
   path: "/products",
 });
 

@@ -4,26 +4,22 @@ import type { ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   BadgeCheck,
-  Gamepad2,
-  Headphones,
-  Laptop,
   Mail,
   Menu,
   MessageCircle,
   PackageSearch,
   PhoneCall,
-  Smartphone,
   X,
 } from "lucide-react";
 import { Cta } from "@/components/cta";
 import { containerClass } from "@/components/layout-classes";
 import { QuoteButton } from "@/components/quote-modal";
 import { emailAddress, emailHref, phoneDisplay, phoneHref, whatsappStockHref } from "@/data/contact";
+import { categoryDefinitions } from "@/data/products";
 
-export { Cta } from "@/components/cta";
 export { containerClass };
 
 const navigationLinks = [
@@ -65,6 +61,9 @@ export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRootRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const pathname = usePathname();
+  const isActive = (href: string) =>
+    href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
 
   useEffect(() => {
     if (!menuOpen) {
@@ -102,14 +101,19 @@ export function Header() {
       className="site-header site-container fixed inset-x-0 top-5 z-50 w-full max-sm:top-3"
       ref={menuRootRef}
     >
-      <header className="relative z-10 mx-auto flex min-h-[72px] items-center justify-between rounded-[18px] border border-white/70 bg-white/92 p-2.5 pl-5 text-[#102a43] shadow-[0_18px_60px_rgba(5,20,44,0.10)] backdrop-blur-xl max-sm:min-h-[64px] max-sm:p-2 max-sm:pl-4">
+      <header className="relative z-10 mx-auto flex min-h-[72px] items-center justify-between rounded-[18px] border border-[#102a4314] bg-white p-2.5 pl-5 text-[#102a43] shadow-[0_18px_60px_rgba(5,20,44,0.10)] max-sm:min-h-[64px] max-sm:p-2 max-sm:pl-4">
         <Brand />
 
         <nav className="flex items-center gap-1 max-[940px]:hidden" aria-label="Main navigation">
           {navigationLinks.map((link) => (
             <Link
-              className="rounded-full px-3 py-2.5 text-sm font-medium text-[#475467] transition-[background-color,color,transform] duration-300 hover:-translate-y-0.5 hover:bg-[#eef7ff] hover:text-[#0057d8]"
+              className={`rounded-full border px-3 py-2.5 text-sm font-medium transition-colors duration-300 ${
+                isActive(link.href)
+                  ? "border-[#0a84ff38] bg-[#eef7ff] text-[#0057d8]"
+                  : "border-transparent text-[#475467] hover:border-[#0a84ff24] hover:bg-[#f4f9ff] hover:text-[#0057d8]"
+              }`}
               href={link.href}
+              aria-current={isActive(link.href) ? "page" : undefined}
               key={link.label}
             >
               {link.label}
@@ -145,8 +149,13 @@ export function Header() {
         <nav className="grid gap-1" aria-label="Mobile navigation">
           {navigationLinks.map((link) => (
             <Link
-              className="flex min-h-12 items-center justify-between rounded-[6px] px-4 text-[15px] font-semibold text-[#102a43] transition-colors hover:bg-[#eef7ff] hover:text-[#0057d8]"
+              className={`flex min-h-12 items-center justify-between rounded-[6px] border px-4 text-[15px] font-semibold transition-colors ${
+                isActive(link.href)
+                  ? "border-[#0a84ff38] bg-[#eef7ff] text-[#0057d8]"
+                  : "border-transparent text-[#102a43] hover:border-[#0a84ff24] hover:bg-[#f4f9ff] hover:text-[#0057d8]"
+              }`}
               href={link.href}
+              aria-current={isActive(link.href) ? "page" : undefined}
               onClick={() => setMenuOpen(false)}
               tabIndex={menuOpen ? 0 : -1}
               key={link.label}
@@ -207,7 +216,7 @@ export function SectionHead({
       } max-sm:mb-8`}
     >
       <Tag>{kicker}</Tag>
-      <h2 className="mt-2 text-[clamp(32px,5vw,64px)] leading-none font-semibold tracking-normal max-sm:text-[34px]">
+      <h2 className="section-title mt-2">
         {before}
         <AnimatedText>{highlighted}</AnimatedText>
         {after}
@@ -237,21 +246,14 @@ export function Footer() {
       ],
     },
     {
-      title: "Categories",
-      icon: Smartphone,
+      title: "Policies",
+      icon: BadgeCheck,
       links: [
-        { label: "iPhones", href: "/products/category/iphone#product-grid" },
-        { label: "MacBooks", href: "/products/category/mac#product-grid" },
-        { label: "PS5", href: "/products/category/ps5#product-grid" },
-      ],
-    },
-    {
-      title: "Contact",
-      icon: MessageCircle,
-      links: [
-        { label: `WhatsApp ${phoneDisplay}`, href: whatsappStockHref },
-        { label: phoneDisplay, href: phoneHref },
-        { label: emailAddress, href: emailHref },
+        { label: "Pickup & delivery", href: "/delivery" },
+        { label: "Returns & refunds", href: "/returns" },
+        { label: "Warranty", href: "/warranty" },
+        { label: "Privacy", href: "/privacy" },
+        { label: "Terms", href: "/terms" },
       ],
     },
   ];
@@ -270,7 +272,7 @@ export function Footer() {
 
               <div className="mt-5 flex flex-wrap gap-2 text-sm font-semibold text-[#102a43]">
                 <a
-                  className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#0a84ff1f] bg-white px-3 transition-colors hover:border-[#0a84ff66] hover:text-[#0057d8]"
+                  className="inline-flex min-h-10 max-w-full min-w-0 items-center gap-2 break-all rounded-full border border-[#0a84ff1f] bg-white px-3 transition-colors hover:border-[#0a84ff66] hover:text-[#0057d8]"
                   href={phoneHref}
                 >
                   <PhoneCall className="size-4 text-[#0a84ff]" />
@@ -285,20 +287,23 @@ export function Footer() {
                 </a>
               </div>
 
-              <div className="mt-7 flex flex-wrap gap-3 text-sm font-semibold text-[#102a43]">
-                <span className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#0a84ff1f] bg-white px-3">
-                  <BadgeCheck className="size-4 text-[#0a84ff]" /> Checked stock
-                </span>
-                <span className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#0a84ff1f] bg-white px-3">
-                  <Laptop className="size-4 text-[#0a84ff]" /> Apple specialists
-                </span>
-                <span className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#0a84ff1f] bg-white px-3">
-                  <Gamepad2 className="size-4 text-[#0a84ff]" /> Console bundles
-                </span>
-                <span className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#0a84ff1f] bg-white px-3">
-                  <Headphones className="size-4 text-[#0a84ff]" /> Accessories
-                </span>
+              <div className="mt-6 border-t border-[#102a4314] pt-5">
+                <h3 className="text-xs font-bold tracking-[0.12em] text-[#667085] uppercase">
+                  Categories
+                </h3>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {categoryDefinitions.map((category) => (
+                    <Link
+                      className="inline-flex min-h-10 items-center rounded-full border border-[#0a84ff1f] bg-white px-3 text-sm font-semibold text-[#102a43] transition-colors hover:border-[#0a84ff66] hover:text-[#0057d8]"
+                      href={`/products/category/${category.slug}#product-grid`}
+                      key={category.category}
+                    >
+                      {category.label}
+                    </Link>
+                  ))}
+                </div>
               </div>
+
             </div>
 
             <div className="grid content-between rounded-[18px] border border-[#0a84ff14] bg-white p-8 max-[425px]:p-6">
@@ -306,11 +311,11 @@ export function Footer() {
                 <span className="inline-flex min-h-9 items-center rounded-full bg-[#eef7ff] px-3 text-xs font-bold tracking-[0.12em] text-[#0057d8] uppercase">
                   Current stock
                 </span>
-                <h2 className="mt-4 text-[clamp(30px,4vw,48px)] leading-[1.02] font-semibold tracking-[-0.04em] text-[#102a43]">
+                <h2 className="section-title mt-4 text-[#102a43]">
                   Confirm availability before you move.
                 </h2>
                 <p className="mt-4 text-[16px] leading-[1.65] text-[#667085]">
-                  Ask for today&apos;s iPhone, MacBook, iPad, Watch, accessories, or PS5 stock and
+                  Ask for today&apos;s iPhone, MacBook, iPad, Watch, accessories, or PlayStation stock and
                   get the exact condition and package details on {phoneDisplay}.
                 </p>
               </div>
@@ -331,16 +336,14 @@ export function Footer() {
 
           <div className="grid grid-cols-[minmax(240px,0.7fr)_1fr] gap-8 rounded-[18px] border border-[#102a4310] p-8 max-[900px]:grid-cols-1 max-[425px]:p-6">
             <div>
-              <h3 className="text-sm font-semibold tracking-[0.12em] text-[#102a43] uppercase">
-                MacVault
-              </h3>
+              <Brand />
               <p className="mt-4 max-w-[360px] text-sm leading-[1.7]">
-                A cleaner local buying flow for high-intent buyers who want product truth before a
-                visit, payment, or reservation.
+                Clear product details and a direct local buying flow before a visit, payment, or
+                reservation.
               </p>
             </div>
 
-            <div className="grid grid-cols-3 gap-8 max-[768px]:grid-cols-2 max-[425px]:grid-cols-1">
+            <div className="grid grid-cols-2 gap-8 max-[640px]:grid-cols-1">
               {columns.map((column) => {
                 const Icon = column.icon;
                 return (
@@ -378,7 +381,7 @@ export function Footer() {
 
           <div className="flex items-center justify-between gap-5 px-3 pb-1 text-sm text-[#667085] max-sm:flex-col max-sm:items-start">
             <span>© MacVault</span>
-            <span>Verified local Apple and PlayStation buying flow.</span>
+            <span>Apple and PlayStation tech with clear condition details.</span>
           </div>
         </div>
       </div>

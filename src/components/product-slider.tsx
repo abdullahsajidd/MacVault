@@ -38,6 +38,7 @@ export function ProductSlider({
           label={current.title}
           imageUrl={current.imageUrl}
           imageAlt={current.imageAlt}
+          imageUsage={current.usage}
         />
       </div>
 
