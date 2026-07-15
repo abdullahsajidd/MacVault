@@ -9,6 +9,8 @@ import "./globals.css";
 const homeDescription =
   "MacVault curates verified iPhones, MacBooks, iPads, Apple Watch, AirPods, accessories, and PlayStation stock in Lahore with WhatsApp-first confirmation.";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   ...buildMetadata({
     title: "MacVault | Verified Apple and PlayStation Stock in Lahore",

@@ -1,5 +1,4 @@
 import { client } from "@/sanity/lib/client";
-import { sanityFetch } from "@/sanity/lib/live";
 import {
   CATEGORIES_QUERY,
   CATEGORY_SLUGS_QUERY,
@@ -10,40 +9,37 @@ import {
 } from "@/sanity/lib/queries";
 import type { SanityCategory, SanityProduct } from "@/sanity/types";
 
+const freshFetchOptions = {
+  cache: "no-store" as const,
+  perspective: "published" as const,
+};
+
 export async function getCategories() {
-  const { data } = await sanityFetch({ query: CATEGORIES_QUERY, stega: false });
-  return data as SanityCategory[];
+  return client.fetch<SanityCategory[]>(CATEGORIES_QUERY, {}, freshFetchOptions);
 }
 
 export async function getProducts() {
-  const { data } = await sanityFetch({ query: PRODUCTS_QUERY, stega: false });
-  return data as SanityProduct[];
+  return client.fetch<SanityProduct[]>(PRODUCTS_QUERY, {}, freshFetchOptions);
 }
 
 export async function getProductsByCategorySlug(slug: string) {
-  const { data } = await sanityFetch({
-    query: PRODUCTS_BY_CATEGORY_QUERY,
-    params: { slug },
-    stega: false,
-  });
-  return data as SanityProduct[];
+  return client.fetch<SanityProduct[]>(
+    PRODUCTS_BY_CATEGORY_QUERY,
+    { slug },
+    freshFetchOptions,
+  );
 }
 
 export async function getProduct(slug: string) {
-  const { data } = await sanityFetch({
-    query: PRODUCT_QUERY,
-    params: { slug },
-    stega: false,
-  });
-  return data as SanityProduct | null;
+  return client.fetch<SanityProduct | null>(PRODUCT_QUERY, { slug }, freshFetchOptions);
 }
 
 export async function getPublishedProductSlugs() {
-  return client.withConfig({ useCdn: false }).fetch<{ slug: string }[]>(PRODUCT_SLUGS_QUERY);
+  return client.fetch<{ slug: string }[]>(PRODUCT_SLUGS_QUERY, {}, freshFetchOptions);
 }
 
 export async function getPublishedCategorySlugs() {
-  return client.withConfig({ useCdn: false }).fetch<{ slug: string }[]>(CATEGORY_SLUGS_QUERY);
+  return client.fetch<{ slug: string }[]>(CATEGORY_SLUGS_QUERY, {}, freshFetchOptions);
 }
 
 export function findCategoryBySlug(categories: SanityCategory[], slug: string) {
