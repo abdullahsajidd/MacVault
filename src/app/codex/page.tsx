@@ -15,8 +15,9 @@ import {
 import { Cta } from "@/components/cta";
 import { containerClass } from "@/components/layout-classes";
 import { createWhatsappHref, phoneDisplay, phoneHref, whatsappStockHref } from "@/data/contact";
-import { featuredProducts, type Product, type ProductVisualKind } from "@/data/products";
+import type { Product, ProductVisualKind } from "@/data/products";
 import { buildMetadata } from "@/lib/seo";
+import { getProducts } from "@/sanity/lib/catalog";
 import styles from "./codex.module.css";
 
 export const metadata: Metadata = buildMetadata({
@@ -79,6 +80,12 @@ const processSteps = [
     title: "Message with context.",
     text: "WhatsApp opens a focused conversation to confirm the exact unit, timing, and handoff.",
   },
+];
+
+const featuredProductSlugs = [
+  "iphone-15-pro-max-256",
+  "macbook-air-m3-13",
+  "ps5-slim-disc-bundle",
 ];
 
 function deviceKind(product: Product): ProductVisualKind {
@@ -163,7 +170,12 @@ function ProductRow({ product, index }: { product: Product; index: number }) {
   );
 }
 
-export default function CodexPage() {
+export default async function CodexPage() {
+  const products = await getProducts();
+  const featuredProducts = featuredProductSlugs
+    .map((slug) => products.find((product) => product.slug === slug))
+    .filter((product) => product !== undefined);
+
   return (
     <div className={styles.page}>
       <header className={`${containerClass} ${styles.header}`}>

@@ -16,6 +16,7 @@ import {
   Smartphone,
 } from "lucide-react";
 import { Cta } from "@/components/cta";
+import { useCatalog } from "@/components/catalog-provider";
 import { containerClass } from "@/components/layout-classes";
 import { RevealController } from "@/components/reveal-controller";
 import { Footer, Header, SectionHead, Tag } from "@/components/site";
@@ -27,7 +28,6 @@ import {
   phoneHref,
   whatsappStockHref,
 } from "@/data/contact";
-import { categoryDefinitions } from "@/data/products";
 
 const responseNotes = [
   {
@@ -47,13 +47,13 @@ const responseNotes = [
   },
 ];
 
-const productOptions = categoryDefinitions.map((category) => category.label);
-
 function fieldValue(formData: FormData, field: string) {
   return formData.get(field)?.toString().trim() || "Not shared";
 }
 
 export function ContactPageShell() {
+  const { categories } = useCatalog();
+  const productOptions = categories.map((category) => category.label);
   const [selectedMethod, setSelectedMethod] = useState("whatsapp");
   const [submitted, setSubmitted] = useState(false);
   const contactMethods = useMemo(

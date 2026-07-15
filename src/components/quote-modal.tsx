@@ -2,9 +2,9 @@
 
 import { useCallback, useEffect, useId, useRef, useState, type RefObject } from "react";
 import { FileText, Send, X } from "lucide-react";
+import { useCatalog } from "@/components/catalog-provider";
 import { Cta } from "@/components/cta";
 import { createWhatsappHref, phoneDisplay } from "@/data/contact";
-import { categoryDefinitions } from "@/data/products";
 
 function QuoteTag({ children }: { children: string }) {
   return (
@@ -22,6 +22,7 @@ function QuoteModal({
   onClose: () => void;
   triggerRef: RefObject<HTMLButtonElement | null>;
 }) {
+  const { categories } = useCatalog();
   const titleId = useId();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -146,8 +147,8 @@ function QuoteModal({
                   <option value="" disabled>
                     Select category
                   </option>
-                  {categoryDefinitions.map((category) => (
-                    <option value={category.label} key={category.category}>
+                  {categories.map((category) => (
+                    <option value={category.label} key={category._id}>
                       {category.label}
                     </option>
                   ))}

@@ -15,10 +15,10 @@ import {
   X,
 } from "lucide-react";
 import { Cta } from "@/components/cta";
+import { useCatalog } from "@/components/catalog-provider";
 import { containerClass } from "@/components/layout-classes";
 import { QuoteButton } from "@/components/quote-modal";
 import { emailAddress, emailHref, phoneDisplay, phoneHref, whatsappStockHref } from "@/data/contact";
-import { categoryDefinitions } from "@/data/products";
 
 export { containerClass };
 
@@ -233,6 +233,7 @@ export function SectionHead({
 }
 
 export function Footer() {
+  const { categories } = useCatalog();
   const columns = [
     {
       title: "Explore",
@@ -292,11 +293,11 @@ export function Footer() {
                   Categories
                 </h3>
                 <div className="mt-3 flex flex-wrap gap-2">
-                  {categoryDefinitions.map((category) => (
+                  {categories.map((category) => (
                     <Link
                       className="inline-flex min-h-10 items-center rounded-full border border-[#0a84ff1f] bg-white px-3 text-sm font-semibold text-[#102a43] transition-colors hover:border-[#0a84ff66] hover:text-[#0057d8]"
-                      href={`/products/category/${category.slug}#product-grid`}
-                      key={category.category}
+                      href={`${category.href}#product-grid`}
+                      key={category._id}
                     >
                       {category.label}
                     </Link>

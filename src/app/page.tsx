@@ -13,6 +13,7 @@ import {
   type LucideIcon,
   MessageCircle,
   PackageCheck,
+  PackageSearch,
   Search,
   Smartphone,
   Store,
@@ -20,19 +21,14 @@ import {
   Watch as WatchIcon,
 } from "lucide-react";
 import { ComparisonSection } from "@/components/comparison-section";
+import { useCatalog } from "@/components/catalog-provider";
 import { ProductVisual } from "@/components/product-visual";
 import { RevealController } from "@/components/reveal-controller";
 import { Cta } from "@/components/cta";
 import { Footer, Header, SectionHead, Tag, containerClass } from "@/components/site";
 import { createWhatsappHref, whatsappStockHref } from "@/data/contact";
-import {
-  categoryDefinitions,
-  getCategorySlug,
-  type ProductCategory,
-  products,
-} from "@/data/products";
 
-const categoryIcons: Record<ProductCategory, LucideIcon> = {
+const categoryIcons: Record<string, LucideIcon> = {
   iPhone: Smartphone,
   Mac: Laptop,
   iPad: Tablet,
@@ -40,11 +36,6 @@ const categoryIcons: Record<ProductCategory, LucideIcon> = {
   Accessories: Headphones,
   PlayStation: Gamepad2,
 };
-
-const categories = categoryDefinitions.map((category) => ({
-  ...category,
-  icon: categoryIcons[category.category],
-}));
 
 const checks = [
   {
@@ -175,7 +166,24 @@ function HeroVisual() {
 }
 
 function FeaturedStock() {
-  const [selectedCategory, setSelectedCategory] = useState(categories[0].category);
+  const { categories: sanityCategories, products } = useCatalog();
+  const categories = sanityCategories.map((category) => ({
+    ...category,
+    icon: categoryIcons[category.category] ?? PackageSearch,
+  }));
+  const [requestedCategory, setRequestedCategory] = useState(
+    sanityCategories[0]?.category ?? "",
+  );
+
+  if (categories.length === 0) {
+    return null;
+  }
+
+  const selectedCategory = categories.some(
+    (category) => category.category === requestedCategory,
+  )
+    ? requestedCategory
+    : categories[0].category;
   const selected = categories.find((item) => item.category === selectedCategory) ?? categories[0];
   const categoryProducts = products.filter((product) => product.category === selectedCategory);
   const visibleProducts = categoryProducts.slice(0, 6);
@@ -199,7 +207,7 @@ function FeaturedStock() {
               icon={Icon}
               count={count}
               aria-pressed={selectedCategory === category.category}
-              onClick={() => setSelectedCategory(category.category)}
+              onClick={() => setRequestedCategory(category.category)}
               key={category.category}
             >
               {category.label}
@@ -244,7 +252,7 @@ function FeaturedStock() {
         ))}
       </div>
       <div className="reveal mt-8 text-center">
-        <Cta href={`/products/category/${getCategorySlug(selectedCategory)}#product-grid`} variant="secondary" icon={Search}>
+        <Cta href={`${selected.href}#product-grid`} variant="secondary" icon={Search}>
           {`View all ${selected.label}`}
         </Cta>
       </div>
@@ -253,6 +261,8 @@ function FeaturedStock() {
 }
 
 function CategoryRail() {
+  const { categories } = useCatalog();
+
   return (
     <section className="border-y border-[#102a4314] bg-white py-[60px]">
       <div className={containerClass}>
@@ -262,12 +272,16 @@ function CategoryRail() {
             <h2 className="section-title mt-5 max-w-[520px]">Find the tech you came for.</h2>
           </div>
           <div className="home-category-list">
-            {categories.map(({ label, category, icon: Icon }) => (
-              <Link href={`/products/category/${getCategorySlug(category)}#product-grid`} key={label}>
+            {categories.map(({ _id, label, category, href }) => {
+              const Icon = categoryIcons[category] ?? PackageSearch;
+
+              return (
+              <Link href={`${href}#product-grid`} key={_id}>
                 <span><Icon aria-hidden="true" />{label}</span>
                 <ArrowRight aria-hidden="true" />
               </Link>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

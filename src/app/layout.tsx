@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { buildMetadata, metadataBase } from "@/lib/seo";
 import { Analytics } from "@vercel/analytics/next";
+import { CatalogProvider } from "@/components/catalog-provider";
+import { getCategories, getProducts } from "@/sanity/lib/catalog";
 import { SanityLive } from "@/sanity/lib/live";
 import "./globals.css";
 
@@ -76,18 +78,22 @@ export const viewport: Viewport = {
   themeColor: "#f6fbff",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const [products, categories] = await Promise.all([getProducts(), getCategories()]);
+
   return (
     <html lang="en" className="h-full">
       <body className="min-h-full">
         <a className="skip-link" href="#main-content">
           Skip to main content
         </a>
-        {children}
+        <CatalogProvider products={products} categories={categories}>
+          {children}
+        </CatalogProvider>
         <SanityLive />
         <Analytics />
       </body>
