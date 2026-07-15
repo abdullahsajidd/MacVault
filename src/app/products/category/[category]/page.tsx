@@ -2,19 +2,17 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ProductsPageShell } from "@/components/products-page-shell";
 import {
-  categoryRoutes,
-  getCategoryBySlug,
-  getCategoryLabel,
+  findCategoryBySlug,
+  getCategories,
+  getProducts,
   getProductsByCategorySlug,
-} from "@/data/products";
+  getPublishedCategorySlugs,
+} from "@/sanity/lib/catalog";
 import { buildMetadata } from "@/lib/seo";
 
-function categoryLabel(category: string) {
-  return getCategoryLabel(category);
-}
-
-export function generateStaticParams() {
-  return categoryRoutes.map((route) => ({ category: route.slug }));
+export async function generateStaticParams() {
+  const categories = await getPublishedCategorySlugs();
+  return categories.map(({ slug }) => ({ category: slug }));
 }
 
 export async function generateMetadata({
@@ -23,7 +21,7 @@ export async function generateMetadata({
   params: Promise<{ category: string }>;
 }): Promise<Metadata> {
   const { category: slug } = await params;
-  const category = getCategoryBySlug(slug);
+  const category = findCategoryBySlug(await getCategories(), slug);
 
   if (!category) {
     return buildMetadata({
@@ -34,7 +32,7 @@ export async function generateMetadata({
     });
   }
 
-  const label = categoryLabel(category);
+  const label = category.label;
 
   return buildMetadata({
     title: `${label} Products`,
@@ -45,7 +43,12 @@ export async function generateMetadata({
 
 export default async function CategoryPage({ params }: { params: Promise<{ category: string }> }) {
   const { category: slug } = await params;
-  const category = getCategoryBySlug(slug);
+  const [categories, products, allProducts] = await Promise.all([
+    getCategories(),
+    getProductsByCategorySlug(slug),
+    getProducts(),
+  ]);
+  const category = findCategoryBySlug(categories, slug);
 
   if (!category) {
     notFound();
@@ -53,9 +56,11 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
 
   return (
     <ProductsPageShell
-      items={getProductsByCategorySlug(slug)}
-      activeCategory={category}
-      key={category}
+      items={products}
+      allProducts={allProducts}
+      categories={categories}
+      activeCategory={category.category}
+      key={category.category}
     />
   );
 }

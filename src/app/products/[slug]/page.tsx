@@ -9,8 +9,16 @@ import { ProductVisual } from "@/components/product-visual";
 import { RevealController } from "@/components/reveal-controller";
 import { Footer, Header, Tag } from "@/components/site";
 import { createWhatsappHref } from "@/data/contact";
-import { getCategoryLabel, getCategorySlug, getProduct, getProductBadge, products } from "@/data/products";
+import { getProductBadge } from "@/data/products";
 import { buildMetadata } from "@/lib/seo";
+import {
+  findCategoryByName,
+  getCategories,
+  getProduct,
+  getProducts,
+  getPublishedProductSlugs,
+} from "@/sanity/lib/catalog";
+import type { SanityCategory } from "@/sanity/types";
 
 type ProductPageProps = {
   params: Promise<{
@@ -18,19 +26,17 @@ type ProductPageProps = {
   }>;
 };
 
-function categoryLabel(category: string) {
-  return getCategoryLabel(category);
+function categoryLabel(categories: SanityCategory[], category: string) {
+  return findCategoryByName(categories, category)?.label ?? category;
 }
 
-export function generateStaticParams() {
-  return products.map((product) => ({
-    slug: product.slug,
-  }));
+export async function generateStaticParams() {
+  return getPublishedProductSlugs();
 }
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const product = getProduct(slug);
+  const product = await getProduct(slug);
 
   if (!product) {
     return buildMetadata({
@@ -60,7 +66,11 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 
 export default async function ProductDetailPage({ params }: ProductPageProps) {
   const { slug } = await params;
-  const product = getProduct(slug);
+  const [product, products, categories] = await Promise.all([
+    getProduct(slug),
+    getProducts(),
+    getCategories(),
+  ]);
 
   if (!product) {
     notFound();
@@ -233,9 +243,9 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                 <div className="p-[22px]">
                   <Link
                     className="text-xs font-semibold text-[#0a84ff] transition-colors duration-300 ease-out hover:text-[#0057d8]"
-                    href={`/products/category/${getCategorySlug(item.category)}#product-grid`}
+                    href={`${findCategoryByName(categories, item.category)?.href ?? "/products"}#product-grid`}
                   >
-                    {categoryLabel(item.category)}
+                    {categoryLabel(categories, item.category)}
                   </Link>
                   <h3 className="mt-2 text-2xl font-semibold">{item.title}</h3>
                   <p className="mt-2 text-sm leading-normal text-[#667085]">{item.summary}</p>

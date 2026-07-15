@@ -8,15 +8,8 @@ import { ProductVisual } from "@/components/product-visual";
 import { RevealController } from "@/components/reveal-controller";
 import { Footer, Header, SectionHead, Tag } from "@/components/site";
 import { createWhatsappHref } from "@/data/contact";
-import {
-  categoryRoutes,
-  getCategoryLabel,
-  getCategorySlug,
-  getProductBadge,
-  type Product,
-  productCategories,
-  products,
-} from "@/data/products";
+import { getProductBadge, type Product } from "@/data/products";
+import type { SanityCategory } from "@/sanity/types";
 
 const buyingModes = [
   {
@@ -43,45 +36,55 @@ const buyingModes = [
 
 const allCategory = "All";
 
-function hrefForCategory(category: string) {
+function hrefForCategory(category: string, categories: SanityCategory[]) {
   return category === allCategory
     ? "/products#product-grid"
-    : `/products/category/${getCategorySlug(category)}#product-grid`;
+    : `${categories.find((item) => item.category === category)?.href ?? "/products"}#product-grid`;
 }
 
-function categoryLabel(category: string) {
-  return category === allCategory ? allCategory : getCategoryLabel(category);
+function categoryLabel(category: string, categories: SanityCategory[]) {
+  return category === allCategory
+    ? allCategory
+    : categories.find((item) => item.category === category)?.label ?? category;
 }
 
-function categoryFromPathname(pathname: string, fallback: string) {
+function categoryFromPathname(pathname: string, fallback: string, categories: SanityCategory[]) {
   if (pathname === "/products") {
     return allCategory;
   }
 
-  const categoryRoute = categoryRoutes.find((route) => pathname === route.href);
+  const categoryRoute = categories.find((route) => pathname === route.href);
 
   return categoryRoute?.category ?? fallback;
 }
 
-function productsForCategory(category: string) {
+function productsForCategory(category: string, allProducts: Product[]) {
   return category === allCategory
-    ? products
-    : products.filter((product) => product.category === category);
+    ? allProducts
+    : allProducts.filter((product) => product.category === category);
 }
 
 export function ProductsPageShell({
   items,
+  allProducts,
+  categories,
   activeCategory = allCategory,
 }: {
   items: Product[];
+  allProducts: Product[];
+  categories: SanityCategory[];
   activeCategory?: string;
 }) {
   const [selectedCategory, setSelectedCategory] = useState(activeCategory);
   const isCategory = selectedCategory !== allCategory;
-  const selectedCategoryLabel = categoryLabel(selectedCategory);
+  const selectedCategoryLabel = categoryLabel(selectedCategory, categories);
+  const productCategories = [allCategory, ...categories.map((category) => category.category)];
   const visibleItems = useMemo(
-    () => (selectedCategory === activeCategory ? items : productsForCategory(selectedCategory)),
-    [activeCategory, items, selectedCategory],
+    () =>
+      selectedCategory === activeCategory
+        ? items
+        : productsForCategory(selectedCategory, allProducts),
+    [activeCategory, allProducts, items, selectedCategory],
   );
   const inventoryTitle = isCategory
     ? `Current ${selectedCategoryLabel} listings.`
@@ -91,7 +94,7 @@ export function ProductsPageShell({
   useEffect(() => {
     const syncCategoryFromUrl = () => {
       setSelectedCategory((currentCategory) =>
-        categoryFromPathname(window.location.pathname, currentCategory),
+        categoryFromPathname(window.location.pathname, currentCategory, categories),
       );
     };
 
@@ -100,12 +103,12 @@ export function ProductsPageShell({
     return () => {
       window.removeEventListener("popstate", syncCategoryFromUrl);
     };
-  }, []);
+  }, [categories]);
 
   const selectCategory = (category: string) => {
     setSelectedCategory(category);
 
-    const nextHref = hrefForCategory(category);
+    const nextHref = hrefForCategory(category, categories);
 
     if (`${window.location.pathname}${window.location.hash}` !== nextHref) {
       window.history.pushState({ category }, "", nextHref);
@@ -189,8 +192,8 @@ export function ProductsPageShell({
             {productCategories.map((category) => {
               const count =
                 category === allCategory
-                  ? products.length
-                  : products.filter((product) => product.category === category).length;
+                  ? allProducts.length
+                  : allProducts.filter((product) => product.category === category).length;
               const isActive = category === selectedCategory;
 
               return (
@@ -206,7 +209,7 @@ export function ProductsPageShell({
                   onClick={() => selectCategory(category)}
                   key={category}
                 >
-                  {categoryLabel(category)}
+                  {categoryLabel(category, categories)}
                 </Cta>
               );
             })}
@@ -303,5 +306,3 @@ export function ProductsPageShell({
     </div>
   );
 }
-
-export { categoryRoutes };
