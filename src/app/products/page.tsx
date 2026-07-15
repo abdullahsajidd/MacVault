@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ProductsPageShell } from "@/components/products-page-shell";
-import { products } from "@/data/products";
 import { buildMetadata } from "@/lib/seo";
+import { getCategories, getProducts } from "@/sanity/lib/catalog";
 
 export const metadata: Metadata = buildMetadata({
   title: "Products",
@@ -10,6 +10,15 @@ export const metadata: Metadata = buildMetadata({
   path: "/products",
 });
 
-export default function ProductsPage() {
-  return <ProductsPageShell items={products} key="All" />;
+export default async function ProductsPage() {
+  const [products, categories] = await Promise.all([getProducts(), getCategories()]);
+
+  return (
+    <ProductsPageShell
+      items={products}
+      allProducts={products}
+      categories={categories}
+      key="All"
+    />
+  );
 }

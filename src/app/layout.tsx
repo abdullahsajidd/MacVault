@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { buildMetadata, metadataBase } from "@/lib/seo";
 import { Analytics } from "@vercel/analytics/next";
+import { SanityLive } from "@/sanity/lib/live";
 import "./globals.css";
 
 const homeDescription =
@@ -87,6 +88,7 @@ export default function RootLayout({
           Skip to main content
         </a>
         {children}
+        <SanityLive />
         <Analytics />
       </body>
     </html>

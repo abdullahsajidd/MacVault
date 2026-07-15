@@ -1,0 +1,21 @@
+{
+  "name": "macvault-studio",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "sanity dev",
+    "start": "sanity start",
+    "build": "sanity build",
+    "deploy": "sanity deploy",
+    "schema:deploy": "sanity schema deploy"
+  },
+  "dependencies": {
+    "@sanity/icons": "^5.1.0",
+    "@sanity/vision": "^6.5.0",
+    "sanity": "^6.5.0",
+    "styled-components": "^6.4.3"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.3"
+  }
+}
