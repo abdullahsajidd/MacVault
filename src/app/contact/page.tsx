@@ -3,9 +3,9 @@ import { ContactPageShell } from "@/components/contact-page-shell";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Contact",
+  title: "Contact MacVault Lahore",
   description:
-    "Contact MacVault on WhatsApp, phone, or email for current iPhone, MacBook, iPad, Watch, AirPods, accessories, and PlayStation stock.",
+    "Contact MacVault in Lahore by WhatsApp, phone, or email about current iPhone, MacBook, iPad, Apple Watch, AirPods, accessories, and PlayStation products.",
   path: "/contact",
 });
 

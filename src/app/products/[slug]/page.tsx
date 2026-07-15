@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, BadgeCheck, PackageCheck, ShieldCheck } from "lucide-react";
 import { Cta } from "@/components/cta";
+import { JsonLd } from "@/components/json-ld";
 import { containerClass } from "@/components/layout-classes";
 import { ProductSlider } from "@/components/product-slider";
 import { ProductVisual } from "@/components/product-visual";
@@ -10,7 +11,7 @@ import { RevealController } from "@/components/reveal-controller";
 import { Footer, Header, Tag } from "@/components/site";
 import { createWhatsappHref } from "@/data/contact";
 import { getProductBadge } from "@/data/products";
-import { buildMetadata } from "@/lib/seo";
+import { buildMetadata, metadataBase } from "@/lib/seo";
 import {
   findCategoryByName,
   getCategories,
@@ -28,6 +29,41 @@ type ProductPageProps = {
 
 function categoryLabel(categories: SanityCategory[], category: string) {
   return findCategoryByName(categories, category)?.label ?? category;
+}
+
+function schemaAvailability(status: string) {
+  if (status === "Sold" || status === "Reserved") {
+    return "https://schema.org/OutOfStock";
+  }
+
+  if (status === "Arriving soon") {
+    return "https://schema.org/PreOrder";
+  }
+
+  return "https://schema.org/InStock";
+}
+
+function schemaCondition(condition: string) {
+  const normalized = condition.toLowerCase();
+
+  if (normalized.includes("used")) {
+    return "https://schema.org/UsedCondition";
+  }
+
+  if (normalized.includes("refurbished")) {
+    return "https://schema.org/RefurbishedCondition";
+  }
+
+  return "https://schema.org/NewCondition";
+}
+
+function numericPrice(price?: string) {
+  if (!price) {
+    return null;
+  }
+
+  const value = Number(price.replace(/[^0-9.]/g, ""));
+  return Number.isFinite(value) && value > 0 ? value : null;
 }
 
 export async function generateStaticParams() {
@@ -50,8 +86,8 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   const productImage = product.gallery[0]?.imageUrl;
 
   return buildMetadata({
-    title: product.title,
-    description: product.summary,
+    title: `${product.title} in Lahore`,
+    description: `Shop ${product.title} in Lahore. Check current stock, price, condition, specifications, included items, warranty, and exact unit details with MacVault.`,
     path: `/products/${product.slug}`,
     images: productImage
       ? [
@@ -81,11 +117,73 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
     .concat(products.filter((item) => item.category !== product.category))
     .slice(0, 3);
   const whatsappHref = createWhatsappHref(
-    `Hi MacVault, I want to check availability for ${product.title}.`,
+    `Hi MacVault, I want to ask about ${product.title}. Please share today’s price, exact condition, current photos, warranty, and included items.`,
   );
+  const productCategory = findCategoryByName(categories, product.category);
+  const productUrl = new URL(`/products/${product.slug}`, metadataBase).toString();
+  const price = numericPrice(product.price);
+  const itemCondition = schemaCondition(product.condition);
+  const availability = schemaAvailability(product.status);
+  const productSchema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "@id": `${productUrl}#product`,
+    name: product.title,
+    description: product.description,
+    image: product.gallery.map((item) => item.imageUrl),
+    sku: product.slug,
+    category: categoryLabel(categories, product.category),
+    brand: {
+      "@type": "Brand",
+      name: product.category === "PlayStation" ? "Sony" : "Apple",
+    },
+    itemCondition,
+    ...(price
+      ? {
+          offers: {
+            "@type": "Offer",
+            url: productUrl,
+            priceCurrency: "PKR",
+            price,
+            availability,
+            itemCondition,
+            seller: { "@id": new URL("/#organization", metadataBase).toString() },
+          },
+        }
+      : {}),
+  };
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Products",
+        item: new URL("/products", metadataBase).toString(),
+      },
+      ...(productCategory
+        ? [
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: productCategory.label,
+              item: new URL(productCategory.href, metadataBase).toString(),
+            },
+          ]
+        : []),
+      {
+        "@type": "ListItem",
+        position: productCategory ? 3 : 2,
+        name: product.title,
+        item: productUrl,
+      },
+    ],
+  };
 
   return (
     <div className="overflow-hidden bg-[linear-gradient(180deg,#ffffff_0%,#f4f9ff_62%,#ffffff_100%)] text-[#050b14]">
+      <JsonLd data={price ? [productSchema, breadcrumbSchema] : breadcrumbSchema} />
       <RevealController />
       <Header />
 
@@ -111,17 +209,18 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
             <div className="reveal self-start max-[1020px]:order-1">
               <Tag>{getProductBadge(product.category)}</Tag>
               <h1 className="mt-4 text-[clamp(42px,7vw,78px)] leading-[0.98] font-semibold tracking-normal">
-                {product.title} <span className="animated-text">details</span>
+                {product.title} in Lahore
               </h1>
               <p className="mt-5 text-[18px] leading-[1.58] text-[#667085]">{product.description}</p>
 
               <div id="reserve" className="reserve-card mt-7 rounded-lg border border-[#050b141f] bg-white p-5 shadow-[0_18px_54px_rgba(5,20,44,0.06)]">
                 <div className="flex items-start justify-between gap-4 max-sm:flex-col">
                   <div>
-                    <p className="text-xs font-semibold tracking-[0.12em] text-[#667085] uppercase">Availability</p>
-                    <p className="mt-1 text-2xl font-semibold text-[#050b14]">Confirm the current unit</p>
+                    <p className="text-xs font-semibold tracking-[0.12em] text-[#667085] uppercase">Current price</p>
+                    <p className="mt-1 text-2xl font-semibold text-[#050b14]">{product.price ?? "Ask for today’s price"}</p>
                     <p className="mt-2 text-sm leading-normal text-[#667085]">
-                      Confirm today&apos;s unit, condition, package, and hold timing before you move.
+                      Before payment, ask for current photos and confirm the exact condition,
+                      warranty, included items, and availability.
                     </p>
                   </div>
                   <span className="rounded-full bg-[#23c87918] px-3 py-1.5 text-xs font-semibold text-[#14773d]">
@@ -129,8 +228,8 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                   </span>
                 </div>
                 <div className="mt-5 flex flex-wrap justify-start gap-3">
-                  <Cta href={whatsappHref}>Chat now</Cta>
-                  <Cta href="/why-us" variant="secondary">Why MacVault</Cta>
+                  <Cta href={whatsappHref}>Ask about this product</Cta>
+                  <Cta href="/why-us" variant="secondary">How buying works</Cta>
                 </div>
               </div>
 
@@ -152,18 +251,19 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
         <section className="border-y border-[#050b141f] bg-white py-[60px]">
           <div className={`${containerClass} grid grid-cols-[0.8fr_1.2fr] gap-[56px] max-[940px]:grid-cols-1`}>
             <div className="reveal">
-              <Tag>PRODUCT DETAILS</Tag>
+              <Tag>Product facts</Tag>
               <h2 className="section-title mt-2">
-                Everything important before you <span className="animated-text">reserve</span>.
+                Check the details that affect your decision.
               </h2>
               <p className="mt-[18px] max-w-xl text-[17px] leading-[1.56] text-[#667085]">
-                The page is structured to answer the questions buyers usually repeat in chat.
+                Start with the model specifications and listed options. Then confirm anything that
+                can change from one unit to another, including condition, battery, warranty, and box contents.
               </p>
             </div>
 
             <div className="grid grid-cols-2 gap-8 max-sm:grid-cols-1">
               <div className="reveal border-t border-[#050b141f] pt-5">
-                <h3 className="text-2xl font-semibold">Specifications</h3>
+                <h3 className="text-2xl font-semibold">Model specifications</h3>
                 <div className="mt-5 flex flex-wrap gap-2">
                   {product.technicalSpecs.map((spec) => (
                     <span className="product-property" key={spec.id}>
@@ -174,7 +274,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
               </div>
 
               <div className="reveal border-t border-[#050b141f] pt-5 delay-75">
-                <h3 className="text-2xl font-semibold">Available options</h3>
+                <h3 className="text-2xl font-semibold">Options shown</h3>
                 <div className="mt-5 flex flex-wrap gap-2">
                   {product.listingOptions.map((option) => (
                     <span className="product-option" key={option.id}>
@@ -186,7 +286,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
 
               <div className="reveal border-t border-[#050b141f] pt-5">
                 <BadgeCheck className="mb-5 size-6 text-[#0a84ff]" strokeWidth={2} />
-                <h3 className="text-2xl font-semibold">Highlights</h3>
+                <h3 className="text-2xl font-semibold">Why it may suit you</h3>
                 <ul className="mt-5 space-y-3 text-[15px] leading-normal text-[#667085]">
                   {product.highlights.map((highlight) => (
                     <li className="flex gap-3" key={highlight}>
@@ -199,7 +299,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
 
               <div className="reveal border-t border-[#050b141f] pt-5 delay-100">
                 <PackageCheck className="mb-5 size-6 text-[#0a84ff]" strokeWidth={2} />
-                <h3 className="text-2xl font-semibold">Package</h3>
+                <h3 className="text-2xl font-semibold">What to check in the box</h3>
                 <ul className="mt-5 space-y-3 text-[15px] leading-normal text-[#667085]">
                   {product.packageItems.map((item) => (
                     <li className="flex gap-3" key={item}>
@@ -216,9 +316,9 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
         <section className={`${containerClass} py-[60px]`}>
           <div className="reveal mb-8 flex items-end justify-between gap-6 max-sm:flex-col max-sm:items-start">
             <div>
-              <Tag>RELATED PRODUCTS</Tag>
+              <Tag>Compare other products</Tag>
               <h2 className="section-title mt-2">
-                Keep <span className="animated-text">comparing</span> before you message.
+                Check another option before you decide.
               </h2>
             </div>
             <Cta href="/products" variant="secondary">All products</Cta>
@@ -259,16 +359,17 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
         <section className="border-y border-[#0a84ff14] bg-[#f4f9ff] py-[60px] text-[#102a43]">
           <div className={`${containerClass} grid grid-cols-[0.9fr_1.1fr] gap-[54px] max-[940px]:grid-cols-1`}>
             <div className="reveal">
-              <Tag>CONFIDENCE CHECK</Tag>
+              <Tag>Before you pay</Tag>
               <h2 className="section-title mt-2">
-                Buy with the <span className="animated-text">details</span> in front of you.
+                Make sure the exact unit matches the page.
               </h2>
             </div>
             <div className="reveal border-t border-[#102a431a] pt-6">
               <ShieldCheck className="mb-5 size-7 text-[#0a84ff]" strokeWidth={2} />
               <p className="text-[20px] leading-[1.55] text-[#667085]">
-                MacVault pages are built to reduce uncertainty: condition, price timing, warranty
-                expectations, and package contents are checked before a buyer commits.
+                Compare the final price, condition, PTA status where relevant, battery or cycle
+                details, warranty, and included items with the exact unit. If anything is different,
+                ask before you pay.
               </p>
             </div>
           </div>

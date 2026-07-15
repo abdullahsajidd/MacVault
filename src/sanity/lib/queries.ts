@@ -2,6 +2,8 @@ import { defineQuery } from "next-sanity";
 
 const productProjection = `{
   _id,
+  "lastUpdated": _updatedAt,
+  editorialVersion,
   "slug": slug.current,
   "category": category->name,
   title,

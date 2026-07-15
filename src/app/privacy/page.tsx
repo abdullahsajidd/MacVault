@@ -1,9 +1,43 @@
 import { PolicyPage } from "@/components/policy-page";
 import { buildMetadata } from "@/lib/seo";
-export const metadata = buildMetadata({ title: "Privacy Policy", description: "How MacVault handles information shared through its website and contact channels.", path: "/privacy" });
-export default function PrivacyPage() { return <PolicyPage title="Privacy Policy" intro="This policy explains the limited information MacVault receives when you browse the website or contact us about a product." sections={[
-  { title: "Information you share", paragraphs: ["When you contact us by WhatsApp, phone, email or a website form, we may receive your name, contact details, city and the product information included in your message."] },
-  { title: "How we use it", paragraphs: ["We use this information to answer stock questions, prepare a quote, arrange pickup or delivery, provide order support and keep appropriate business records. We do not sell your personal information."] },
-  { title: "Third-party services", paragraphs: ["WhatsApp, phone, email, hosting and delivery providers process information under their own policies. Avoid sending passwords, one-time codes or unnecessary payment information through chat."] },
-  { title: "Retention and choices", paragraphs: ["We keep inquiry and transaction information only as long as reasonably needed for support, legal or record-keeping purposes. You may ask us to correct or delete contact information where applicable."] },
-]} />; }
+
+export const metadata = buildMetadata({
+  title: "Privacy Policy",
+  description: "Read how MacVault handles information shared through WhatsApp, phone, email, and website forms.",
+  path: "/privacy",
+});
+
+export default function PrivacyPage() {
+  return (
+    <PolicyPage
+      title="Privacy Policy"
+      intro="This policy explains what information MacVault receives when you browse the site or contact us about a product, and how that information is used."
+      sections={[
+        {
+          title: "Information you may share",
+          paragraphs: [
+            "When you contact us by WhatsApp, phone, email, or a website form, we may receive your name, phone number, email, city, budget, timing, and the product details in your message.",
+          ],
+        },
+        {
+          title: "Why we use it",
+          paragraphs: [
+            "We use the information to answer product questions, prepare a price response, arrange pickup or delivery, provide support, and keep necessary business records. MacVault does not sell your personal information.",
+          ],
+        },
+        {
+          title: "Other services involved",
+          paragraphs: [
+            "WhatsApp, phone, email, website hosting, analytics, and delivery providers may process information under their own policies. Never send a password, one-time code, or unnecessary payment information through chat.",
+          ],
+        },
+        {
+          title: "Your choices",
+          paragraphs: [
+            "You may ask MacVault to correct or delete contact information where applicable. Inquiry and transaction records are kept only as long as reasonably needed for support, legal duties, and business records.",
+          ],
+        },
+      ]}
+    />
+  );
+}

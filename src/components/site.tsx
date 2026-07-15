@@ -267,8 +267,8 @@ export function Footer() {
             <div className="rounded-[18px] bg-[#f4f9ff] p-8 max-[425px]:p-6">
               <Brand />
               <p className="mt-6 max-w-[620px] text-[17px] leading-[1.65] text-[#475467]">
-                Premium Apple and PlayStation stock with clear condition notes, direct WhatsApp
-                confirmation, and local buying support before you visit or reserve.
+                Apple and PlayStation products in Lahore with model, condition, specifications,
+                package, warranty, and stock information in plain language.
               </p>
 
               <div className="mt-5 flex flex-wrap gap-2 text-sm font-semibold text-[#102a43]">
@@ -310,14 +310,14 @@ export function Footer() {
             <div className="grid content-between rounded-[18px] border border-[#0a84ff14] bg-white p-8 max-[425px]:p-6">
               <div>
                 <span className="inline-flex min-h-9 items-center rounded-full bg-[#eef7ff] px-3 text-xs font-bold tracking-[0.12em] text-[#0057d8] uppercase">
-                  Current stock
+                  Ask about a product
                 </span>
                 <h2 className="section-title mt-4 text-[#102a43]">
-                  Confirm availability before you move.
+                  Check the facts before you pay.
                 </h2>
                 <p className="mt-4 text-[16px] leading-[1.65] text-[#667085]">
-                  Ask for today&apos;s iPhone, MacBook, iPad, Watch, accessories, or PlayStation stock and
-                  get the exact condition and package details on {phoneDisplay}.
+                  Send the product name to {phoneDisplay}. Ask for today&apos;s price, exact condition,
+                  current photos, warranty, included items, and inspection or delivery options.
                 </p>
               </div>
 
@@ -326,10 +326,10 @@ export function Footer() {
                   href={whatsappStockHref}
                   icon={MessageCircle}
                 >
-                  Ask MacVault
+                  Talk to MacVault
                 </Cta>
                 <Cta href="/products#inventory" icon={PackageSearch} variant="secondary">
-                  Browse stock
+                  See current products
                 </Cta>
               </div>
             </div>
@@ -339,8 +339,7 @@ export function Footer() {
             <div>
               <Brand />
               <p className="mt-4 max-w-[360px] text-sm leading-[1.7]">
-                Clear product details and a direct local buying flow before a visit, payment, or
-                reservation.
+                Compare the product first, then speak directly with MacVault about the exact unit.
               </p>
             </div>
 
@@ -382,7 +381,7 @@ export function Footer() {
 
           <div className="flex items-center justify-between gap-5 px-3 pb-1 text-sm text-[#667085] max-sm:flex-col max-sm:items-start">
             <span>© MacVault</span>
-            <span>Apple and PlayStation tech with clear condition details.</span>
+            <span>Apple and PlayStation products in Lahore.</span>
           </div>
         </div>
       </div>

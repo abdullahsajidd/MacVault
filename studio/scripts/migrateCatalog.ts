@@ -1,7 +1,7 @@
 import {createReadStream, existsSync} from 'node:fs'
 import {resolve} from 'node:path'
 import {getCliClient} from 'sanity/cli'
-import {categoryDefinitions, products} from '../../src/data/products'
+import {catalogEditorialVersion, categoryDefinitions, products} from '../../src/data/products'
 
 const client = getCliClient({apiVersion: '2026-07-15'})
 const root = resolve(process.cwd(), '..')
@@ -103,6 +103,7 @@ async function upsertProduct(
     ),
     highlights: product.highlights,
     packageItems: product.packageItems,
+    editorialVersion: catalogEditorialVersion,
     ...(gallery ? {gallery} : {}),
     sortOrder,
     visibility: 'active',

@@ -1,8 +1,37 @@
 import { PolicyPage } from "@/components/policy-page";
 import { buildMetadata } from "@/lib/seo";
-export const metadata = buildMetadata({ title: "Returns and Refunds", description: "MacVault return and refund request guidance.", path: "/returns" });
-export default function ReturnsPage() { return <PolicyPage title="Returns and Refunds" intro="Return eligibility depends on the product condition and the terms confirmed for the exact unit. Review those terms before completing your purchase." sections={[
-  { title: "Before payment", paragraphs: ["Inspect or review the exact unit details, including condition, PTA status, battery or cycle information, accessories and warranty. Ask any questions before paying."] },
-  { title: "Requesting a return", paragraphs: ["Contact MacVault as soon as possible with your order details and a clear explanation of the issue. Do not alter, repair, reset or further damage the item while a request is being reviewed."] },
-  { title: "Eligibility", paragraphs: ["A return or refund is not automatic for change of mind, disclosed cosmetic condition, compatibility misunderstandings or a feature already described before purchase. Any applicable acceptance window and remedy are the terms confirmed in writing for that unit and are subject to applicable law."] },
-]} />; }
+
+export const metadata = buildMetadata({
+  title: "Returns and Refunds",
+  description: "Read the MacVault return request process and what to check before buying an Apple or PlayStation product in Lahore.",
+  path: "/returns",
+});
+
+export default function ReturnsPage() {
+  return (
+    <PolicyPage
+      title="Returns and Refunds"
+      intro="Return terms depend on the product, condition, and written agreement for the exact unit. Ask for any return window and available remedy before payment."
+      sections={[
+        {
+          title: "Check before payment",
+          paragraphs: [
+            "Review the exact condition, PTA status, battery or cycle information, specifications, included items, and warranty. If inspection is available, test the product and ask questions before paying.",
+          ],
+        },
+        {
+          title: "How to request a return",
+          paragraphs: [
+            "Contact MacVault as soon as you find a problem. Share the purchase details, a clear explanation, and photos or video. Do not repair, alter, reset, or further damage the product while the request is being reviewed.",
+          ],
+        },
+        {
+          title: "When a return may not apply",
+          paragraphs: [
+            "A return or refund may not apply to a change of mind, disclosed marks or wear, a compatibility issue you could check before purchase, or a feature already explained in writing. Your agreed terms and applicable law still apply.",
+          ],
+        },
+      ]}
+    />
+  );
+}

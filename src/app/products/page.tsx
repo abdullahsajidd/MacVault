@@ -4,9 +4,9 @@ import { buildMetadata } from "@/lib/seo";
 import { getCategories, getProducts } from "@/sanity/lib/catalog";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Products",
+  title: "Apple and PlayStation Products in Lahore",
   description:
-    "Browse MacVault iPhone, MacBook, iPad, Apple Watch, AirPods, accessories, and PlayStation listings with clear condition and reservation details.",
+    "Browse iPhones, MacBooks, iPads, Apple Watch, AirPods, accessories, and PlayStation products in Lahore with condition, specifications, warranty, and stock details.",
   path: "/products",
 });
 

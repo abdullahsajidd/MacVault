@@ -20,31 +20,31 @@ import { emailAddress, phoneDisplay, whatsappStockHref } from "@/data/contact";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Why Us",
+  title: "Why Buy from MacVault Lahore",
   description:
-    "Why buyers choose MacVault: verified local Apple and PlayStation stock, clear condition details, direct WhatsApp support, and confident reservations.",
+    "See how MacVault helps Lahore buyers check Apple and PlayStation product condition, PTA status, battery, warranty, package, and availability before payment.",
   path: "/why-us",
 });
 
 const uspCards = [
   {
-    title: "Verified local stock",
-    text: "Availability, variant, condition, color, box, package, and hold timing are checked before a serious buyer moves.",
+    title: "Start with current stock",
+    text: "Product pages show the current stock status and model details, so you can rule out the wrong option before contacting us.",
     icon: BadgeCheck,
   },
   {
-    title: "Product truth first",
-    text: "PTA, battery health, cycle count, warranty expectations, and package notes are shown clearly on the product page.",
+    title: "Check the facts that matter",
+    text: "Read the condition, PTA status, battery or cycle information, specifications, warranty notes, and package details that are available for the product.",
     icon: ClipboardCheck,
   },
   {
-    title: "Direct WhatsApp support",
-    text: `Buyers can confirm exact details on ${phoneDisplay} with the product context already included.`,
+    title: "Speak directly with MacVault",
+    text: `Ask about the exact unit through ${phoneDisplay}. The product name is included in the message, so the conversation starts with useful context.`,
     icon: MessageCircle,
   },
   {
-    title: "Category-specific checks",
-    text: "iPhone, MacBook, iPad, Watch, AirPods, accessories, and PlayStation stock each get the checks that matter for that product.",
+    title: "Inspect before payment",
+    text: "Where Lahore pickup is available, arrange inspection and compare the exact unit with the price, condition, package, and warranty you received in writing.",
     icon: PackageCheck,
   },
 ];
@@ -52,36 +52,36 @@ const uspCards = [
 const processSteps = [
   {
     number: "01",
-    title: "Browse",
-    text: "Open a product or category page and compare the practical details first.",
+    title: "Choose",
+    text: "Pick the model, specifications, and condition that fit your use and budget.",
     icon: Search,
   },
   {
     number: "02",
-    title: "Confirm",
-    text: "Message MacVault with the product already selected and ask for the exact unit check.",
+    title: "Check",
+    text: "Read the product page and note anything that is missing or can change by unit.",
     icon: MessageCircle,
   },
   {
     number: "03",
-    title: "Reserve",
-    text: "Arrange pickup, delivery, payment, or a short hold after stock and price are confirmed.",
+    title: "Ask",
+    text: "Get the current price, photos, condition, warranty, and included items in writing.",
     icon: CalendarCheck,
   },
   {
     number: "04",
-    title: "Handoff",
-    text: "Get the device, package, and warranty expectations clearly before closing the purchase.",
+    title: "Buy",
+    text: "Inspect the product or agree on delivery, then pay only when the details match.",
     icon: Truck,
   },
 ];
 
 const policyItems = [
-  "PTA or non-PTA status is made clear for phone buyers.",
-  "Battery health and cycle count are shared where they affect the decision.",
-  "Sealed, open-box, and used status are not treated like the same product.",
-  "Package contents and warranty expectations are confirmed before payment.",
-  "Pickup, delivery, and short reservation support are handled directly.",
+  "For an iPhone, check whether the exact unit is PTA approved or non-PTA.",
+  "For used phones and watches, check battery health. For open-box or used MacBooks, check cycle count.",
+  "Do not treat sealed, open-box, and used products as the same condition.",
+  "Get the final price, included items, and warranty duration in writing before payment.",
+  "Agree on inspection, pickup, delivery, payment, and any reservation terms before the handover.",
 ];
 
 export default function WhyUsPage() {
@@ -93,13 +93,13 @@ export default function WhyUsPage() {
       <main className="pt-[50px]">
         <section className={`${containerClass} pt-32 pb-20 text-center max-sm:pt-[106px]`}>
           <div className="reveal">
-            <Tag>Why MacVault</Tag>
+            <Tag>Why buy from MacVault</Tag>
             <h1 className="mx-auto mt-5 max-w-[980px] text-[72px] leading-[0.96] font-semibold max-[768px]:text-[56px] max-[425px]:text-[42px] max-[375px]:text-[40px]">
-              Know what you&apos;re buying <span className="animated-text">before</span> you commit.
+              A direct way to buy Apple and PlayStation products in Lahore.
             </h1>
             <p className="mx-auto mt-6 max-w-[760px] text-[20px] leading-[1.58] text-[#667085] max-[768px]:text-[18px] max-[425px]:text-[16px]">
-              See the condition, specifications, available options, package details, and buying
-              support before you call, message, reserve, or visit.
+              Compare the product first, speak directly with MacVault, inspect the exact unit when
+              available, and keep the final price and terms in writing before payment.
             </p>
             <div className="mt-[30px] flex flex-wrap justify-center gap-3">
               <Cta href="/products#inventory" icon={Search}>
@@ -115,10 +115,10 @@ export default function WhyUsPage() {
         <section className="border-y border-[#050b141f] bg-white py-[60px]">
           <div className={containerClass}>
             <SectionHead
-              kicker="How we help"
-              title="Clear details. Direct answers. Local support."
-              accent="Clear"
-              text="The buying flow is built around confidence: fewer vague claims, clearer checks, and a direct local support path."
+              kicker="What is different"
+              title="Product facts first. Direct contact next."
+              accent="facts"
+              text="The website helps you understand the product before WhatsApp. The conversation is for the exact unit, not for repeating basic model information."
             />
 
             <div className="grid grid-cols-4 gap-4 max-[1180px]:grid-cols-2 max-sm:grid-cols-1">
@@ -151,10 +151,10 @@ export default function WhyUsPage() {
         <section className="bg-[#f4f9ff] py-[60px]">
           <div className={containerClass}>
             <SectionHead
-              kicker="Buying flow"
-              title="Confidence from browsing to handoff."
-              accent="Confidence"
-              text="The site should keep the buyer moving without forcing reloads, vague pages, or repeated questions."
+              kicker="Buying steps"
+              title="Four steps from search to handover."
+              accent="steps"
+              text="A simple path for someone who may not know technical terms and does not want to make an expensive mistake."
             />
 
             <div className="grid grid-cols-4 gap-4 max-[940px]:grid-cols-2 max-sm:grid-cols-1">
@@ -183,13 +183,13 @@ export default function WhyUsPage() {
         <section className="border-y border-[#0a84ff14] bg-[#f4f9ff] py-[60px] text-[#102a43]">
           <div className={`${containerClass} grid grid-cols-[0.9fr_1.1fr] gap-[56px] max-[940px]:grid-cols-1`}>
             <div className="reveal">
-              <Tag>Buyer policy</Tag>
+              <Tag>Before you pay</Tag>
               <h2 className="section-title mt-2">
-                Clear expectations before the <span className="animated-text">purchase</span>.
+                Check these points on the exact unit.
               </h2>
               <p className="mt-[18px] max-w-[620px] text-[17px] leading-[1.56] text-[#667085]">
-                The goal is not to add noise. The goal is to make important information visible
-                before money or travel is involved.
+                The product page is the starting point. The exact unit and written terms are what
+                matter when money, travel, or delivery is involved.
               </p>
             </div>
 
@@ -212,13 +212,13 @@ export default function WhyUsPage() {
 
         <section className="bg-white py-[60px] text-center">
           <div className={`reveal ${containerClass}`}>
-            <Tag>Ready when you are</Tag>
+            <Tag>Choose your next step</Tag>
             <h2 className="section-title mx-auto mt-2 max-w-[820px]">
-              Start with the page, then <span className="animated-text">confirm</span> the unit.
+              Browse first. Ask when you are ready.
             </h2>
             <p className="mx-auto mt-[18px] max-w-2xl text-[17px] leading-[1.56] text-[#667085]">
-              Browse the product, message {phoneDisplay}, or email {emailAddress} for direct
-              confirmation.
+              Open a product page, note the facts you need, then message {phoneDisplay} or email
+              {emailAddress} about the exact unit.
             </p>
             <div className="mt-[30px] flex flex-wrap justify-center gap-3">
               <Cta href={whatsappStockHref} icon={MessageCircle}>

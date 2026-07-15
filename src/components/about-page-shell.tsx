@@ -31,35 +31,35 @@ import {
 
 const storyMilestones = [
   {
-    year: "2023",
-    label: "Local demand",
-    title: "Buyers wanted verified Apple stock without guessing.",
-    text: "The first MacVault idea came from repeated questions around PTA, battery, cycle count, charger, box, warranty, and whether the exact unit was still available.",
-    proof: "Product truth before chat",
+    year: "01",
+    label: "Start",
+    title: "Begin with the product you actually need.",
+    text: "Choose an iPhone, MacBook, iPad, Apple Watch, AirPods, accessory, or PlayStation product. Compare the model and specifications before thinking about payment.",
+    proof: "The right product for your use and budget",
     icon: Search,
   },
   {
-    year: "2024",
-    label: "Better checks",
-    title: "The listing format moved from simple posts to inspection-led listings.",
-    text: "Each product started getting clearer condition notes, package details, status labels, and reservation context so buyers could compare faster.",
-    proof: "Condition notes made visible",
+    year: "02",
+    label: "Read",
+    title: "Check the facts shown on the product page.",
+    text: "Read the listed condition, price status, specifications, PTA or battery information where relevant, package contents, and warranty notes.",
+    proof: "Useful facts in plain language",
     icon: ClipboardCheck,
   },
   {
-    year: "2025",
-    label: "Direct flow",
-    title: "WhatsApp became the main handoff, not the whole product page.",
-    text: "The site now gives buyers enough context before the conversation, then WhatsApp handles the exact unit check, hold timing, pickup, or delivery.",
-    proof: "Focused WhatsApp support",
+    year: "03",
+    label: "Verify",
+    title: "Ask about anything that changes by unit.",
+    text: "Get the current price, exact photos, condition, battery or cycle count, warranty, and included items in writing before you travel or send payment.",
+    proof: "The exact unit matches the agreed details",
     icon: MessageCircle,
   },
   {
-    year: "Now",
-    label: "MacVault",
-    title: "A cleaner local buying flow for Apple and PlayStation stock.",
-    text: `MacVault now keeps product discovery, buying confidence, and direct support connected through ${phoneDisplay} and ${emailAddress}.`,
-    proof: "Local support with real details",
+    year: "04",
+    label: "Buy",
+    title: "Inspect, collect, or receive the product.",
+    text: `Arrange the available inspection, pickup, or delivery option directly with MacVault through ${phoneDisplay}. Keep the written price, condition, package, and warranty details.`,
+    proof: "A clear handover with written terms",
     icon: Store,
   },
 ];
@@ -67,26 +67,26 @@ const storyMilestones = [
 const checks = [
   {
     title: "iPhone checks",
-    text: "PTA or non-PTA status, battery health, storage, color, box, body, display, camera, and warranty expectations.",
+    text: "Check the model, storage, colour, condition, PTA status, battery health, display, cameras, box, included cable, and written warranty.",
     icon: BadgeCheck,
   },
   {
     title: "MacBook checks",
-    text: "Chip, RAM, storage, battery cycle count, charger, keyboard, screen, body condition, and package notes.",
+    text: "Check the chip, memory, storage, battery cycle count, charger, keyboard, screen, body condition, box, and written warranty.",
     icon: PackageCheck,
   },
   {
     title: "PlayStation checks",
-    text: "Console edition, controller condition, cables, box, game bundle, pickup timing, and delivery options.",
+    text: "Check the console edition, storage, controller, cables, box, game bundle, seal or condition, and written warranty.",
     icon: ShieldCheck,
   },
 ];
 
 const buyerPromises = [
-  "No vague product names when variant, status, or condition changes the decision.",
-  "No hidden PTA, battery, warranty, package, or stock-hold information.",
-  "No forced form journey. Product pages lead straight to a real WhatsApp confirmation.",
-  "No mismatched page widths or cramped browsing flow across desktop, tablet, and mobile.",
+  "Product names include the model and important variant information when it is known.",
+  "Reference photos are labelled, so you know when an image is not the exact unit.",
+  "Final price, condition, included items, and warranty terms should be agreed in writing before payment.",
+  "You can contact MacVault directly through the phone number, WhatsApp link, or email published on this site.",
 ];
 
 export function AboutPageShell() {
@@ -127,13 +127,11 @@ export function AboutPageShell() {
           <div className="reveal">
             <Tag>About MacVault</Tag>
             <h1 className="mx-auto mt-5 max-w-[980px] text-[72px] leading-[0.96] font-semibold max-[768px]:text-[56px] max-[425px]:text-[42px] max-[375px]:text-[40px]">
-              Built for local buyers who want <span className="animated-text">product truth</span>{" "}
-              first.
+              A simpler way to buy Apple and PlayStation products in Lahore.
             </h1>
             <p className="mx-auto mt-6 max-w-[760px] text-[20px] leading-[1.58] text-[#667085] max-[768px]:text-[18px] max-[425px]:text-[16px]">
-              MacVault is a clean local buying flow for iPhones, MacBooks, iPads, Apple Watch,
-              AirPods, accessories, and PlayStation stock. The point is simple: show the details before the
-              buyer has to ask.
+              MacVault helps you compare the product, understand the important details, and speak
+              directly with the seller before you inspect, collect, or arrange delivery.
             </p>
             <div className="mt-[30px] flex flex-wrap justify-center gap-3">
               <Cta href={storyHref} icon={MessageCircle}>
@@ -149,13 +147,13 @@ export function AboutPageShell() {
         <section className="border-y border-[#050b141f] bg-white py-[60px]">
           <div className={`${containerClass} grid grid-cols-[0.85fr_1.15fr] gap-[56px] max-[1024px]:grid-cols-1`}>
             <div className="reveal">
-              <Tag>Our story</Tag>
+              <Tag>How MacVault works</Tag>
               <h2 className="section-title mt-2">
-                From listings to a <span className="animated-text">verified</span> buying flow.
+                From finding a product to receiving it.
               </h2>
               <p className="mt-[18px] max-w-[620px] text-[17px] leading-[1.56] text-[#667085]">
-                The timeline shows how MacVault moved toward a more useful experience: less
-                marketplace confusion, more product clarity before a buyer messages.
+                These four steps show how to choose a product, read the important facts, check the
+                exact unit, and complete the handover with written terms.
               </p>
               <div className="mt-7 flex flex-wrap gap-3">
                 <a
@@ -216,7 +214,7 @@ export function AboutPageShell() {
                     </p>
                     <div className="mt-6 rounded-[8px] border border-[#0a84ff24] bg-white p-4">
                       <span className="text-xs font-bold tracking-[0.12em] text-[#0057d8] uppercase">
-                        What changed
+                        What you should know
                       </span>
                       <p className="mt-2 text-lg font-semibold text-[#102a43]">
                         {activeMilestone.proof}
@@ -260,10 +258,10 @@ export function AboutPageShell() {
 
         <section className={`${containerClass} py-[60px]`}>
           <SectionHead
-            kicker="What we check"
-            title="Built around the questions buyers already ask."
-            accent="questions"
-            text="MacVault keeps the most important buying details near the product decision, not hidden at the end of a chat."
+            kicker="Check the right details"
+            title="Different products need different checks."
+            accent="checks"
+            text="An iPhone buyer, a MacBook buyer, and a PlayStation buyer should not receive the same generic checklist."
           />
 
           <div className="grid grid-cols-[0.75fr_1.25fr] gap-5 max-[940px]:grid-cols-1">
@@ -319,13 +317,13 @@ export function AboutPageShell() {
         <section className="border-y border-[#0a84ff14] bg-[#f4f9ff] py-[60px] text-[#102a43]">
           <div className={`${containerClass} grid grid-cols-[0.9fr_1.1fr] gap-[56px] max-[940px]:grid-cols-1`}>
             <div className="reveal">
-              <Tag>Buyer promise</Tag>
+              <Tag>What you can expect</Tag>
               <h2 className="section-title mt-2">
-                Premium should feel <span className="animated-text">clear</span>.
+                Clear information before payment.
               </h2>
               <p className="mt-[18px] max-w-[620px] text-[17px] leading-[1.56] text-[#667085]">
-                The site is designed to reduce repeated questions and make each serious buyer easier
-                to support.
+                The page gives you a starting point. The exact unit, final price, and written terms
+                still need to match before you complete the purchase.
               </p>
             </div>
 
@@ -348,13 +346,13 @@ export function AboutPageShell() {
 
         <section className="bg-white py-[60px] text-center">
           <div className={`reveal ${containerClass}`}>
-            <Tag>Talk to MacVault</Tag>
+            <Tag>Ask about a product</Tag>
             <h2 className="section-title mx-auto mt-2 max-w-[820px]">
-              Ask for the exact unit before you <span className="animated-text">move</span>.
+              Speak directly with MacVault before you pay.
             </h2>
             <p className="mx-auto mt-[18px] max-w-2xl text-[17px] leading-[1.56] text-[#667085]">
-              Call {phoneDisplay}, email {emailAddress}, or message on WhatsApp with the product you
-              want checked.
+              Call {phoneDisplay}, email {emailAddress}, or send the product name on WhatsApp. Ask
+              for the current price, exact condition, warranty, included items, and available handover options.
             </p>
             <div className="mt-[30px] flex flex-wrap justify-center gap-3">
               <Cta href={storyHref} icon={MessageCircle}>

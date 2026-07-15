@@ -2,24 +2,26 @@ import type { Metadata, Viewport } from "next";
 import { buildMetadata, metadataBase } from "@/lib/seo";
 import { Analytics } from "@vercel/analytics/next";
 import { CatalogProvider } from "@/components/catalog-provider";
+import { JsonLd } from "@/components/json-ld";
+import { emailAddress, phoneDisplay } from "@/data/contact";
 import { getCategories, getProducts } from "@/sanity/lib/catalog";
 import { SanityLive } from "@/sanity/lib/live";
 import "./globals.css";
 
 const homeDescription =
-  "MacVault curates verified iPhones, MacBooks, iPads, Apple Watch, AirPods, accessories, and PlayStation stock in Lahore with WhatsApp-first confirmation.";
+  "Browse iPhones, MacBooks, iPads, Apple Watch, AirPods, and PS5 products from MacVault in Lahore with clear condition, warranty, and stock details.";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   ...buildMetadata({
-    title: "MacVault | Verified Apple and PlayStation Stock in Lahore",
+    title: "MacVault | Apple and PlayStation Products in Lahore",
     description: homeDescription,
     path: "/",
   }),
   metadataBase,
   title: {
-    default: "MacVault | Verified Apple and PlayStation Stock in Lahore",
+    default: "MacVault | Apple and PlayStation Products in Lahore",
     template: "%s | MacVault",
   },
   applicationName: "MacVault",
@@ -29,8 +31,11 @@ export const metadata: Metadata = {
     "MacBook Lahore",
     "PlayStation Lahore",
     "PTA iPhone",
+    "used iPhone Lahore",
+    "Apple products Lahore",
+    "PS5 Lahore",
     "Apple accessories Pakistan",
-    "verified Apple stock",
+    "MacVault Lahore",
   ],
   authors: [{ name: "MacVault" }],
   creator: "MacVault",
@@ -90,6 +95,34 @@ export default async function RootLayout({
   return (
     <html lang="en" className="h-full">
       <body className="min-h-full">
+        <JsonLd
+          data={[
+            {
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "@id": new URL("/#organization", metadataBase).toString(),
+              name: "MacVault",
+              url: metadataBase.toString(),
+              logo: new URL("/images/brand/macvault-selected-logo.svg", metadataBase).toString(),
+              description: homeDescription,
+              telephone: phoneDisplay,
+              email: emailAddress,
+              areaServed: {
+                "@type": "City",
+                name: "Lahore",
+              },
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "@id": new URL("/#website", metadataBase).toString(),
+              name: "MacVault",
+              url: metadataBase.toString(),
+              publisher: { "@id": new URL("/#organization", metadataBase).toString() },
+              inLanguage: "en-PK",
+            },
+          ]}
+        />
         <a className="skip-link" href="#main-content">
           Skip to main content
         </a>

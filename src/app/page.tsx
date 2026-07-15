@@ -39,44 +39,44 @@ const categoryIcons: Record<string, LucideIcon> = {
 
 const checks = [
   {
-    title: "Condition shown clearly",
-    text: "You see whether a unit is sealed, open-box or used, plus the marks and accessories that matter.",
+    title: "Know the condition",
+    text: "See whether the product is sealed, open-box, or used, along with the condition notes that affect your decision.",
     icon: BadgeCheck,
   },
   {
-    title: "Device details that matter",
-    text: "PTA status and battery health for iPhones; cycle count, charger and configuration for MacBooks.",
+    title: "Check the right facts",
+    text: "For iPhones, check PTA status and battery health. For MacBooks, check the chip, memory, storage, cycle count, and charger.",
     icon: BatteryCharging,
   },
   {
-    title: "What comes with it",
-    text: "Box contents, warranty expectations and pickup or delivery details are confirmed before payment.",
+    title: "Know what is included",
+    text: "Check the box, cable, charger, controller, accessories, and written warranty terms before you pay.",
     icon: PackageCheck,
   },
 ];
 
 const steps = [
-  { number: "01", title: "Browse", text: "See the models and key details currently listed." },
-  { number: "02", title: "Confirm", text: "Message us to confirm the exact unit, price and condition." },
-  { number: "03", title: "Buy", text: "Inspect in person or arrange the available delivery option." },
+  { number: "01", title: "Choose a product", text: "Start with the model, storage, condition, and budget that suit you." },
+  { number: "02", title: "Check the facts", text: "Review the price, condition, PTA status, battery or cycle count, warranty, and included items." },
+  { number: "03", title: "Talk to MacVault", text: "Ask about the exact unit, then arrange inspection, pickup, or delivery before payment." },
 ];
 
 const faqItems = [
   {
     question: "Can I inspect a device before paying?",
-    answer: "Yes. For Lahore pickup, you can inspect the available unit and confirm its stated condition before payment.",
+    answer: "Yes. If pickup is available in Lahore, we arrange a time so you can inspect the exact unit and compare it with the details you received before paying.",
   },
   {
     question: "How do I know whether an iPhone is PTA approved?",
-    answer: "The PTA status is shown on the listing and confirmed again for the exact unit before you reserve it.",
+    answer: "Check the PTA field on the product page. Before payment, ask us to confirm whether the exact phone is PTA approved or non-PTA.",
   },
   {
     question: "Do products include a warranty?",
-    answer: "Warranty differs by product and condition. We confirm the applicable warranty for the exact unit before payment.",
+    answer: "Warranty depends on the product and condition. The exact unit should state whether it has Apple warranty, a checking warranty, or no warranty. Get the duration and coverage in writing before payment.",
   },
   {
     question: "Do you deliver outside Lahore?",
-    answer: "Share your city on WhatsApp. We will confirm whether delivery is available, along with timing, charges and payment details.",
+    answer: "Delivery depends on the product and your city. Send us the product and location, then get the delivery time, charge, payment method, and inspection limits in writing before dispatch.",
   },
 ];
 
@@ -95,7 +95,7 @@ function HeroVisual() {
             role="img"
             aria-labelledby="hero-stock-svg-title hero-stock-svg-description"
           >
-            <title id="hero-stock-svg-title">MacVault product verification</title>
+            <title id="hero-stock-svg-title">MacVault product checks</title>
             <desc id="hero-stock-svg-description">
               An animated MacBook and iPhone are checked for condition, PTA status, battery health
               and box contents.
@@ -191,10 +191,10 @@ function FeaturedStock() {
   return (
     <section id="inventory" className={`${containerClass} inventory-anchor py-[60px]`}>
       <SectionHead
-        kicker="Current listings"
-        title={`${selected.label} available now`}
-        accent="available"
-        text={`Browse up to six current ${selected.label} listings here. Open a product for its exact condition, specifications and available options.`}
+        kicker="Browse current stock"
+        title={`${selected.label} in Lahore`}
+        accent={selected.label}
+        text={`Compare current ${selected.label} products by model, condition, specifications, and availability. Open a product to see the facts that matter before you contact us.`}
       />
       <div className="category-filter-bar mb-8 flex flex-wrap justify-center gap-3" aria-label="Homepage product categories">
         {categories.map((category) => {
@@ -237,6 +237,9 @@ function FeaturedStock() {
               </div>
               <h3 className="text-[25px] leading-[1.08] font-semibold">{product.title}</h3>
               <p className="mt-3 text-[15px] leading-[1.55] text-[#667085]">{product.summary}</p>
+              <p className="mt-4 text-lg font-semibold text-[#102a43]">
+                {product.price ?? "Ask for today’s price"}
+              </p>
               <div className="mt-auto flex flex-wrap justify-start gap-2 pt-6">
                 <Cta href={`/products/${product.slug}`} icon={ArrowRight}>View more</Cta>
                 <Cta
@@ -244,7 +247,7 @@ function FeaturedStock() {
                   icon={MessageCircle}
                   variant="secondary"
                 >
-                  Chat now
+                  Ask about this unit
                 </Cta>
               </div>
             </div>
@@ -268,8 +271,8 @@ function CategoryRail() {
       <div className={containerClass}>
         <div className="reveal grid grid-cols-[minmax(240px,.7fr)_minmax(0,1.3fr)] items-stretch gap-10 max-[900px]:grid-cols-1">
           <div className="flex flex-col justify-center">
-            <Tag>Shop by type</Tag>
-            <h2 className="section-title mt-5 max-w-[520px]">Find the tech you came for.</h2>
+            <Tag>Shop by product</Tag>
+            <h2 className="section-title mt-5 max-w-[520px]">Start with what you need.</h2>
           </div>
           <div className="home-category-list">
             {categories.map(({ _id, label, category, href }) => {
@@ -294,10 +297,10 @@ function TrustSection() {
     <section className={`${containerClass} py-[60px]`}>
       <div className="home-trust-layout reveal">
         <div className="home-trust-intro">
-          <Tag>Why MacVault</Tag>
-          <h2>The details you should know, shared upfront.</h2>
-          <p>MacVault sells new, open-box and used Apple and PlayStation products in Lahore. We explain the exact unit in plain language so you can decide with fewer surprises.</p>
-          <div className="flex justify-start"><Cta href="/why-us" variant="secondary" icon={ArrowRight}>How we help</Cta></div>
+          <Tag>What to check before buying</Tag>
+          <h2>Understand the product before you spend.</h2>
+          <p>You should not need technical knowledge to buy an iPhone, MacBook, iPad, Apple Watch, AirPods, or PlayStation. We explain the important facts in plain language and tell you what still needs to be checked on the exact unit.</p>
+          <div className="flex justify-start"><Cta href="/why-us" variant="secondary" icon={ArrowRight}>How buying works</Cta></div>
         </div>
         <div className="home-check-list">
           {checks.map(({ title, text, icon: Icon }, index) => (
@@ -317,7 +320,7 @@ function BuyingFlow() {
   return (
     <section className="bg-[#f4f9ff] py-[60px]">
       <div className={containerClass}>
-        <SectionHead kicker="A simple buying flow" title="From browsing to buying" accent="buying" text="A short, human process for people who want the facts first and a quick reply when they are ready." />
+        <SectionHead kicker="Three simple steps" title="Choose, check, then buy." accent="check" text="Start with the product page. Ask about anything that is not clear. Pay only after the exact unit and terms match what you were told." />
         <div className="home-steps reveal">
           {steps.map((step) => (
             <div className="home-step" key={step.number}>
@@ -326,7 +329,7 @@ function BuyingFlow() {
           ))}
         </div>
         <div className="home-help reveal">
-          <div><Store aria-hidden="true" /><div><h3>Need help choosing?</h3><p>Tell us your budget and what you need the device for. We’ll suggest suitable in-stock options and explain the trade-offs clearly.</p><div className="mt-5 flex justify-start"><Cta href={whatsappStockHref} icon={MessageCircle}>Get a recommendation</Cta></div></div></div>
+          <div><Store aria-hidden="true" /><div><h3>Not sure which model to buy?</h3><p>Tell us your budget and what you use the device for. We will suggest suitable options and explain the difference in simple words.</p><div className="mt-5 flex justify-start"><Cta href={whatsappStockHref} icon={MessageCircle}>Ask for help choosing</Cta></div></div></div>
         </div>
       </div>
     </section>
@@ -337,7 +340,7 @@ function FaqSection() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   return (
     <section id="faq" className={`${containerClass} py-[60px]`}>
-      <SectionHead kicker="Questions, answered" title="Before you message us" accent="message" text="The practical things most buyers want to know before choosing a unit." />
+      <SectionHead kicker="Common buyer questions" title="Read this before you pay." accent="pay" text="Straight answers about inspection, PTA status, warranty, pickup, and delivery." />
       <div className="faq-list mx-auto max-w-[1100px]">
         {faqItems.map((item, index) => {
           const isOpen = openFaq === index;
@@ -361,11 +364,11 @@ export default function Home() {
       <main id="main-content">
         <section className={`${containerClass} hero-section relative pt-[154px] pb-[60px] text-center max-[768px]:pt-[126px]`}>
           <div className="hero-content mx-auto max-w-[820px]">
-            <div className="reveal"><Tag>Apple & gaming tech in Lahore</Tag></div>
-            <h1 className="reveal hero-title mx-auto mt-6 max-w-[860px] text-[clamp(44px,6vw,78px)] leading-[0.98] font-semibold tracking-[-0.045em] max-[425px]:text-[38px] max-[375px]:text-[36px]">Apple and PlayStation tech. <span className="animated-text">Checked before you buy.</span></h1>
-            <p className="reveal mx-auto mt-6 max-w-[700px] text-[clamp(17px,1.7vw,21px)] leading-[1.6] text-[#667085]">MacVault sells new, open-box and used iPhones, MacBooks, iPads, Apple Watch, AirPods and PlayStation products. See the condition and key details, then confirm the exact unit with us on WhatsApp.</p>
-            <div className="reveal mt-8 flex flex-wrap justify-center gap-3"><Cta href="/products#inventory" icon={Search}>Browse available stock</Cta><Cta href={whatsappStockHref} variant="secondary" icon={MessageCircle}>Ask on WhatsApp</Cta></div>
-            <div className="home-proof-line reveal" aria-label="Key buying information"><span>PTA status</span><span>Battery & cycle details</span><span>Pickup or delivery</span></div>
+            <div className="reveal"><Tag>Apple and PlayStation products in Lahore</Tag></div>
+            <h1 className="reveal hero-title mx-auto mt-6 max-w-[940px] text-[clamp(44px,6vw,78px)] leading-[0.98] font-semibold tracking-[-0.045em] max-[425px]:text-[38px] max-[375px]:text-[36px]">Real Apple and PlayStation stock in Lahore. <span className="animated-text">Know what you are buying.</span></h1>
+            <p className="reveal mx-auto mt-6 max-w-[760px] text-[clamp(17px,1.7vw,21px)] leading-[1.6] text-[#667085]">Browse iPhones, MacBooks, iPads, Apple Watch, AirPods, and PlayStation products with clear model, condition, PTA, battery, package, and warranty information. When you are ready, ask MacVault about the exact unit.</p>
+            <div className="reveal mt-8 flex flex-wrap justify-center gap-3"><Cta href="/products#inventory" icon={Search}>See current products</Cta><Cta href={whatsappStockHref} variant="secondary" icon={MessageCircle}>Talk to MacVault</Cta></div>
+            <div className="home-proof-line reveal" aria-label="Key buying information"><span>Current stock status</span><span>Clear condition notes</span><span>Direct local support</span></div>
           </div>
           <HeroVisual />
         </section>
@@ -375,7 +378,7 @@ export default function Home() {
         <ComparisonSection />
         <BuyingFlow />
         <FaqSection />
-        <section className="home-final-cta py-[60px] text-center"><div className={`reveal ${containerClass}`}><Tag>Talk to a person</Tag><h2>Ask about the exact unit you want.</h2><p>We’ll confirm availability, condition, price and the next step before you visit or pay.</p><div className="mt-8"><Cta href={whatsappStockHref} icon={MessageCircle}>Check today’s stock</Cta></div></div></section>
+        <section className="home-final-cta py-[60px] text-center"><div className={`reveal ${containerClass}`}><Tag>Ready to ask about a product?</Tag><h2>Talk directly to MacVault.</h2><p>Send the product name and ask for the current price, exact condition, warranty, included items, and inspection or delivery options.</p><div className="mt-8"><Cta href={whatsappStockHref} icon={MessageCircle}>Ask about current stock</Cta></div></div></section>
       </main>
       <Footer />
     </div>

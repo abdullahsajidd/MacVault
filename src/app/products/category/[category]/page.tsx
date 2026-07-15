@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { JsonLd } from "@/components/json-ld";
 import { ProductsPageShell } from "@/components/products-page-shell";
 import {
   findCategoryBySlug,
@@ -8,7 +9,7 @@ import {
   getProductsByCategorySlug,
   getPublishedCategorySlugs,
 } from "@/sanity/lib/catalog";
-import { buildMetadata } from "@/lib/seo";
+import { buildMetadata, metadataBase } from "@/lib/seo";
 
 export async function generateStaticParams() {
   const categories = await getPublishedCategorySlugs();
@@ -26,7 +27,7 @@ export async function generateMetadata({
   if (!category) {
     return buildMetadata({
       title: "Category",
-      description: "Browse verified MacVault product listings with clear condition and reservation details.",
+      description: "Browse current Apple and PlayStation products from MacVault in Lahore.",
       path: `/products/category/${slug}`,
       robots: { index: false, follow: true },
     });
@@ -35,8 +36,8 @@ export async function generateMetadata({
   const label = category.label;
 
   return buildMetadata({
-    title: `${label} Products`,
-    description: `Browse verified MacVault ${label} listings with clear condition, warranty, package, and reservation details.`,
+    title: `${label} in Lahore`,
+    description: `Browse current ${label} products in Lahore with model, condition, specifications, warranty, package, and availability details from MacVault.`,
     path: `/products/category/${slug}`,
   });
 }
@@ -55,12 +56,34 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
   }
 
   return (
-    <ProductsPageShell
-      items={products}
-      allProducts={allProducts}
-      categories={categories}
-      activeCategory={category.category}
-      key={category.category}
-    />
+    <>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            {
+              "@type": "ListItem",
+              position: 1,
+              name: "Products",
+              item: new URL("/products", metadataBase).toString(),
+            },
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: category.label,
+              item: new URL(category.href, metadataBase).toString(),
+            },
+          ],
+        }}
+      />
+      <ProductsPageShell
+        items={products}
+        allProducts={allProducts}
+        categories={categories}
+        activeCategory={category.category}
+        key={category.category}
+      />
+    </>
   );
 }

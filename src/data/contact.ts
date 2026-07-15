@@ -9,5 +9,5 @@ export function createWhatsappHref(message: string) {
 }
 
 export const whatsappStockHref = createWhatsappHref(
-  "Hi MacVault, I want to check current stock.",
+  "Hi MacVault, I want to ask about current stock. Please share today’s price, condition, warranty, and available pickup or delivery options.",
 );

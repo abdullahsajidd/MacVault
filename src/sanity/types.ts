@@ -11,4 +11,5 @@ export type SanityCategory = {
 
 export type SanityProduct = Product & {
   _id: string;
+  editorialVersion?: string;
 };

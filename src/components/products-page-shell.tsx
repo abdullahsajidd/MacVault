@@ -13,23 +13,23 @@ import type { SanityCategory } from "@/sanity/types";
 
 const buyingModes = [
   {
-    title: "Browse clearly",
-    text: "Open a listing with its key condition and specification notes.",
+    title: "Choose a model",
+    text: "Filter by iPhone, MacBook, iPad, Apple Watch, AirPods, or PlayStation.",
     icon: Search,
   },
   {
-    title: "Check details",
-    text: "Review options, PTA, warranty, and expected package contents.",
+    title: "Read the facts",
+    text: "Check the condition, specifications, price, warranty, and what comes in the box.",
     icon: BadgeCheck,
   },
   {
-    title: "Confirm the unit",
-    text: "Message MacVault for exact stock, price, and unit-specific details.",
+    title: "Ask about the exact unit",
+    text: "Get current photos and confirm any detail that can change from one unit to another.",
     icon: MessageCircle,
   },
   {
-    title: "Local handoff",
-    text: "Agree the pickup, delivery, inspection, and payment steps.",
+    title: "Inspect or receive",
+    text: "Agree on inspection, pickup or delivery, payment, and written warranty terms.",
     icon: Truck,
   },
 ];
@@ -87,9 +87,9 @@ export function ProductsPageShell({
     [activeCategory, allProducts, items, selectedCategory],
   );
   const inventoryTitle = isCategory
-    ? `Current ${selectedCategoryLabel} listings.`
-    : "What’s available right now.";
-  const resultLabel = `${visibleItems.length} ${visibleItems.length === 1 ? "listing" : "listings"}`;
+    ? `${selectedCategoryLabel} products in Lahore.`
+    : "Apple and PlayStation products in Lahore.";
+  const resultLabel = `${visibleItems.length} ${visibleItems.length === 1 ? "product" : "products"}`;
 
   useEffect(() => {
     const syncCategoryFromUrl = () => {
@@ -127,37 +127,35 @@ export function ProductsPageShell({
       <main className="pt-[50px]">
         <section className={`${containerClass} pt-32 pb-20 text-center max-sm:pt-[106px]`}>
           <div className="reveal">
-            <Tag>{isCategory ? `${selectedCategoryLabel} products` : "MacVault products"}</Tag>
+            <Tag>{isCategory ? `${selectedCategoryLabel} in Lahore` : "Current MacVault stock"}</Tag>
             <h1 className="mx-auto mt-5 max-w-[920px] text-[clamp(48px,8vw,96px)] leading-[0.96] font-semibold tracking-normal">
               {isCategory ? (
                 <>
-                  {selectedCategoryLabel} listings with <span className="animated-text">verified</span>{" "}
-                  details.
+                  Compare {selectedCategoryLabel} products before you buy.
                 </>
               ) : (
                 <>
-                  Browse products with <span className="animated-text">details</span> before the
-                  chat.
+                  Find the product you need. Check the facts first.
                 </>
               )}
             </h1>
             <p className="mx-auto mt-6 max-w-[720px] text-[clamp(17px,2vw,21px)] leading-[1.58] text-[#667085]">
-              Each listing covers condition, variant, warranty, package contents, and reservation
-              context, then lets you confirm the exact unit directly.
+              Compare models, condition, specifications, price, package contents, and warranty
+              information in one place. Then ask MacVault about the exact unit before you pay.
             </p>
             <div className="mt-[30px] flex flex-wrap justify-center gap-3">
               <Cta href="#inventory" icon={Search}>
-                View inventory
+                See current products
               </Cta>
               <Cta href="/why-us" icon={BadgeCheck} variant="secondary">
-                Why Us
+                How buying works
               </Cta>
             </div>
           </div>
         </section>
 
         <section className="border-y border-[#050b141f] bg-white">
-          <h2 className="sr-only">How buying from MacVault works</h2>
+          <h2 className="sr-only">How to buy from MacVault</h2>
           <div className={`${containerClass} grid grid-cols-4 max-[940px]:grid-cols-2 max-sm:grid-cols-1`}>
             {buyingModes.map((mode, index) => {
               const Icon = mode.icon;
@@ -179,10 +177,10 @@ export function ProductsPageShell({
 
         <section id="inventory" className={`${containerClass} inventory-anchor py-[60px]`}>
           <SectionHead
-            kicker="Available listings"
+            kicker="Current product range"
             title={inventoryTitle}
             accent={isCategory ? selectedCategoryLabel : "available"}
-            text={`${resultLabel} shown with gallery, condition, details, and package notes available before chat.`}
+            text={`${resultLabel} shown with photos, condition, specifications, price status, package details, and a direct way to ask about the exact unit.`}
           />
           <p className="sr-only" aria-live="polite">
             {`${resultLabel} shown for ${selectedCategory}.`}
@@ -250,6 +248,9 @@ export function ProductsPageShell({
                   <p className="mt-3 text-[15px] leading-[1.55] text-[#667085]">
                     {product.summary}
                   </p>
+                  <p className="mt-4 text-lg font-semibold text-[#102a43]">
+                    {product.price ?? "Ask for today’s price"}
+                  </p>
                   <div className="mt-5 grid gap-3">
                     <div className="flex flex-wrap gap-2" aria-label="Technical specifications">
                       {product.technicalSpecs.slice(0, 3).map((spec) => (
@@ -268,14 +269,14 @@ export function ProductsPageShell({
                   </div>
                   <div className="mt-auto flex flex-wrap justify-start gap-2 pt-6">
                     <Cta href={`/products/${product.slug}`} icon={ArrowRight}>
-                      View more
+                      View product details
                     </Cta>
                     <Cta
                       href={createWhatsappHref(`Hi MacVault, I want to check ${product.title}.`)}
                       icon={MessageCircle}
                       variant="secondary"
                     >
-                      Chat now
+                      Ask about this unit
                     </Cta>
                   </div>
                 </div>
@@ -285,7 +286,8 @@ export function ProductsPageShell({
 
           {visibleItems.length === 0 ? (
             <div className="rounded-[8px] bg-white p-8 text-center shadow-[inset_0_0_0_1px_rgba(5,20,44,0.10)]">
-              <p className="text-lg font-semibold">No products are available in this category yet.</p>
+              <p className="text-lg font-semibold">There are no current products in this category.</p>
+              <p className="mt-2 text-sm text-[#667085]">Browse all products or ask MacVault what is expected next.</p>
               <div className="mt-5">
                 <Cta
                   asButton

@@ -41,6 +41,7 @@ export type Product = {
   highlights: string[];
   packageItems: string[];
   gallery: ProductGalleryItem[];
+  lastUpdated?: string;
 };
 
 type RawProduct = Omit<Product, "gallery" | "specs" | "technicalSpecs" | "listingOptions"> & {
@@ -173,12 +174,12 @@ const rawProducts: RawProduct[] = [
     title: "iPhone 15 Pro Max 256GB",
     shortTitle: "15 Pro Max",
     status: "Available now",
-    condition: "Sealed / PTA options",
+    condition: "Sealed / open-box",
     badge: "Best flagship",
     accent: "#0a84ff",
-    summary: "Titanium iPhone with clear PTA, storage, color, and warranty notes before reserve.",
+    summary: "A 256GB flagship iPhone with an A17 Pro chip, USB-C, and Pro cameras. Check the exact condition, PTA status, colour, and warranty before payment.",
     description:
-      "A high-demand flagship listing for buyers who want the Pro Max camera system, premium build, and clear local buying support.",
+      "Choose this model if you want a large display, strong cameras, long software support, and 256GB storage. Sealed and open-box options may differ in price, PTA status, colour, and warranty.",
     technicalSpecs: [
       { label: "Chip", value: "A17 Pro" },
       { label: "Camera", value: "Pro camera system" },
@@ -188,29 +189,29 @@ const rawProducts: RawProduct[] = [
     details: [
       { label: "Storage", value: "256GB" },
       { label: "Condition", value: "Sealed / open-box options" },
-      { label: "PTA", value: "Confirmed before order" },
-      { label: "Warranty", value: "Shared before payment" },
+      { label: "PTA", value: "Varies by unit. Ask before payment" },
+      { label: "Warranty", value: "Varies by unit. Get the terms in writing" },
     ],
     highlights: [
-      "Color and box condition confirmed on WhatsApp",
-      "PTA status shown before visit or payment",
-      "Reservation available for serious buyers",
+      "Large 6.7-inch display for media and everyday use",
+      "Pro camera system with 5x optical zoom",
+      "Ask for current photos, PTA status, and box condition",
     ],
-    packageItems: ["iPhone unit", "Box and cable details", "Warranty note", "Pickup or delivery support"],
+    packageItems: ["iPhone unit", "Box if included", "USB-C cable if included", "Written warranty terms"],
     gallery: [
       {
         title: "Device image",
-        caption: "Display, color, and condition confirmed before reserve.",
+        caption: "Reference view of the model. Ask for current photos of the exact unit.",
         kind: "phone",
       },
       {
         title: "Box status",
-        caption: "Sealed, open-box, and accessory state are listed clearly.",
+        caption: "Check whether the exact unit is sealed or open-box and what comes with it.",
         kind: "phone",
       },
       {
         title: "PTA check",
-        caption: "Local status is verified before moving to payment.",
+        caption: "Ask whether the exact phone is PTA approved or non-PTA before payment.",
         kind: "phone",
       },
     ],
@@ -221,12 +222,12 @@ const rawProducts: RawProduct[] = [
     title: "iPhone 14 Pro 128GB",
     shortTitle: "14 Pro",
     status: "Low stock",
-    condition: "Open-box / Non-PTA",
+    condition: "Open-box / used",
     badge: "Value Pro",
     accent: "#5856d6",
-    summary: "A strong Pro iPhone choice with condition, battery, PTA, and accessories explained.",
+    summary: "A 128GB Pro iPhone with an A16 Bionic chip, ProMotion display, and 48MP main camera. Check battery health, PTA status, and body condition per unit.",
     description:
-      "For buyers who want Pro cameras and premium iPhone performance without moving to the newest flagship tier.",
+      "Choose this model if you want Pro cameras and a smooth 120Hz display at a lower price than newer Pro models. Used and open-box units should be compared by battery health, PTA status, and physical condition.",
     technicalSpecs: [
       { label: "Chip", value: "A16 Bionic" },
       { label: "Display", value: "ProMotion display" },
@@ -236,29 +237,29 @@ const rawProducts: RawProduct[] = [
     details: [
       { label: "Storage", value: "128GB" },
       { label: "Condition", value: "Open-box / used options" },
-      { label: "Battery", value: "Shared per unit" },
-      { label: "PTA", value: "Confirmed per variant" },
+      { label: "Battery", value: "Varies by unit. Ask for the percentage" },
+      { label: "PTA", value: "Non-PTA options. Confirm the exact unit" },
     ],
     highlights: [
-      "Battery health shown before reservation",
-      "Physical condition notes are not hidden",
-      "Good upgrade option from older Pro models",
+      "ProMotion display and 48MP main camera",
+      "Ask for battery health and current condition photos",
+      "Confirm PTA status, Face ID, display, cameras, and buttons",
     ],
-    packageItems: ["iPhone unit", "Cable if included", "Condition video", "Pickup or delivery support"],
+    packageItems: ["iPhone unit", "Cable if included", "Box if included", "Written condition and warranty terms"],
     gallery: [
       {
         title: "Device condition",
-        caption: "Edges, display, camera area, and battery health are checked.",
+        caption: "Ask for current photos of the display, edges, camera area, and back glass.",
         kind: "phone",
       },
       {
         title: "Variant notes",
-        caption: "Storage, color, and PTA status are shared before CTA.",
+        caption: "Confirm the storage, colour, PTA status, and battery health of the exact unit.",
         kind: "phone",
       },
       {
         title: "Ready to reserve",
-        caption: "A short hold can be arranged through WhatsApp.",
+        caption: "Ask whether inspection, pickup, delivery, or a short hold is available.",
         kind: "phone",
       },
     ],
@@ -272,9 +273,9 @@ const rawProducts: RawProduct[] = [
     condition: "Sealed / open-box",
     badge: "Daily work",
     accent: "#34c759",
-    summary: "Thin, fast MacBook Air with chip, memory, storage, battery, and warranty notes.",
+    summary: "A lightweight 13-inch MacBook Air with the Apple M3 chip. Compare memory, storage, colour, cycle count, charger, and warranty before buying.",
     description:
-      "A clean everyday Mac for students, creators, business owners, and remote work buyers who need portable performance.",
+      "Choose this MacBook for study, office work, browsing, coding, and light creative work. Memory and storage cannot be upgraded later, so check the configuration before choosing a unit.",
     technicalSpecs: [
       { label: "Chip", value: "Apple M3" },
       { label: "Display", value: "13-inch Liquid Retina" },
@@ -285,28 +286,28 @@ const rawProducts: RawProduct[] = [
       { label: "Chip", value: "Apple M3" },
       { label: "Memory", value: "8GB / 16GB options" },
       { label: "Storage", value: "256GB / 512GB options" },
-      { label: "Cycle count", value: "Shared for open-box units" },
+      { label: "Cycle count", value: "Ask for open-box or used units" },
     ],
     highlights: [
-      "Cycle count and warranty shown for every open-box unit",
-      "Best for office, school, and lightweight creative work",
-      "Color and keyboard layout confirmed before reserve",
+      "Lightweight design for study, office work, and travel",
+      "Check memory and storage because they cannot be upgraded later",
+      "Ask for cycle count, battery condition, charger, and keyboard layout",
     ],
-    packageItems: ["MacBook unit", "Charger details", "Battery/cycle note", "Warranty expectation"],
+    packageItems: ["MacBook Air unit", "Charger and cable if included", "Battery and cycle details", "Written warranty terms"],
     gallery: [
       {
         title: "Open display",
-        caption: "Screen, keyboard, and body condition are reviewed.",
+        caption: "Ask for current photos of the screen, keyboard, ports, and outer body.",
         kind: "laptop",
       },
       {
         title: "Battery note",
-        caption: "Cycle count and warranty expectations are shared clearly.",
+        caption: "Ask for the battery cycle count, maximum capacity, and written warranty terms.",
         kind: "laptop",
       },
       {
         title: "Configuration",
-        caption: "Chip, memory, storage, and color are confirmed.",
+        caption: "Confirm the chip, memory, storage, colour, and keyboard layout.",
         kind: "laptop",
       },
     ],
@@ -320,9 +321,9 @@ const rawProducts: RawProduct[] = [
     condition: "Open-box / premium used",
     badge: "Creator pick",
     accent: "#ff9f0a",
-    summary: "Powerful MacBook Pro options with cycle count, chip, memory, and warranty details.",
+    summary: "A 14-inch MacBook Pro with the M3 Pro chip for demanding work. Check memory, storage, cycle count, charger, condition, and warranty per unit.",
     description:
-      "Built for buyers who need stronger sustained performance for development, design, editing, and production workloads.",
+      "Choose this model for software development, design, video editing, music production, or other demanding work. Compare the exact memory and storage configuration before buying.",
     technicalSpecs: [
       { label: "Chip", value: "Apple M3 Pro" },
       { label: "Display", value: "14-inch Liquid Retina XDR" },
@@ -333,28 +334,28 @@ const rawProducts: RawProduct[] = [
       { label: "Chip", value: "M3 Pro" },
       { label: "Memory", value: "18GB options" },
       { label: "Storage", value: "512GB options" },
-      { label: "Condition", value: "Shared with photos/video" },
+      { label: "Condition", value: "Open-box or used. Ask for current photos" },
     ],
     highlights: [
-      "Performance-focused configurations only",
-      "Cycle count and charger condition explained",
-      "Ideal for professional work and long upgrade cycles",
+      "M3 Pro performance for demanding professional work",
+      "Liquid Retina XDR display with HDMI and SDXC ports",
+      "Ask for cycle count, charger condition, keyboard layout, and warranty",
     ],
-    packageItems: ["MacBook Pro unit", "Charger details", "Cycle count note", "Condition media"],
+    packageItems: ["MacBook Pro unit", "Charger and cable if included", "Battery and cycle details", "Written condition and warranty terms"],
     gallery: [
       {
         title: "Pro display",
-        caption: "Display, keyboard, and exterior condition are checked.",
+        caption: "Ask for current photos of the display, keyboard, ports, and outer body.",
         kind: "laptop",
       },
       {
         title: "Port check",
-        caption: "Ports, charger, and body condition are confirmed.",
+        caption: "Confirm the HDMI, SDXC, Thunderbolt ports, charger, and body condition.",
         kind: "laptop",
       },
       {
         title: "Work ready",
-        caption: "Configuration is matched to your workload before reserve.",
+        caption: "Check the chip, memory, and storage against the work you plan to do.",
         kind: "laptop",
       },
     ],
@@ -368,9 +369,9 @@ const rawProducts: RawProduct[] = [
     condition: "Sealed / open-box",
     badge: "Creative tablet",
     accent: "#af52de",
-    summary: "Premium iPad Pro variants with storage, accessories, box state, and warranty notes.",
+    summary: "An 11-inch iPad Pro with the Apple M4 chip and Ultra Retina XDR display. Check storage, condition, accessories, box, and warranty per unit.",
     description:
-      "A slim, high-performance iPad for media, design, notes, travel, and serious portable workflows.",
+      "Choose this iPad for drawing, design, notes, media, travel, and fast everyday work. Confirm whether the Apple Pencil, keyboard, cover, cable, and warranty are included or sold separately.",
     technicalSpecs: [
       { label: "Chip", value: "Apple M4" },
       { label: "Display", value: "11-inch Ultra Retina XDR" },
@@ -380,29 +381,29 @@ const rawProducts: RawProduct[] = [
     details: [
       { label: "Storage", value: "256GB options" },
       { label: "Condition", value: "Sealed / open-box" },
-      { label: "Accessories", value: "Confirmed per bundle" },
-      { label: "Warranty", value: "Shared before payment" },
+      { label: "Accessories", value: "Varies by bundle. Check what is included" },
+      { label: "Warranty", value: "Varies by unit. Get the terms in writing" },
     ],
     highlights: [
-      "Accessory bundles can be reserved together",
-      "Box and warranty status are confirmed",
-      "Recommended for creative and travel setups",
+      "M4 performance in a thin 11-inch tablet",
+      "Useful for creative work, notes, media, and travel",
+      "Ask which Pencil and keyboard models are compatible and included",
     ],
-    packageItems: ["iPad unit", "Cable details", "Accessory bundle if selected", "Warranty note"],
+    packageItems: ["iPad unit", "Cable and adapter if included", "Selected accessories if included", "Written warranty terms"],
     gallery: [
       {
         title: "Tablet view",
-        caption: "Display and body condition confirmed before purchase.",
+        caption: "Ask for current photos of the display, corners, back, and camera area.",
         kind: "tablet",
       },
       {
         title: "Accessories",
-        caption: "Pencil, keyboard, and cover options can be bundled.",
+        caption: "Confirm the Pencil, keyboard, and cover model before adding an accessory.",
         kind: "tablet",
       },
       {
         title: "Storage",
-        caption: "Storage and connectivity are verified for each unit.",
+        caption: "Confirm storage, connectivity, colour, and warranty for the exact unit.",
         kind: "tablet",
       },
     ],
@@ -416,9 +417,9 @@ const rawProducts: RawProduct[] = [
     condition: "Open-box",
     badge: "Daily wearable",
     accent: "#ff375f",
-    summary: "Apple Watch options with size, band, battery, and box condition shared upfront.",
+    summary: "An Apple Watch Series 9 with an Always-On display and S9 chip. Check size, battery health, case and band condition, charger, box, and warranty.",
     description:
-      "A clean wearable upgrade for fitness, calls, notifications, and Apple ecosystem convenience.",
+      "Choose this watch for fitness tracking, notifications, calls, and everyday Apple features. The 41mm and 45mm sizes fit differently, so check the size and exact band before buying.",
     technicalSpecs: [
       { label: "Chip", value: "S9 SiP" },
       { label: "Display", value: "Always-On Retina" },
@@ -428,29 +429,29 @@ const rawProducts: RawProduct[] = [
     details: [
       { label: "Size", value: "41mm / 45mm options" },
       { label: "Condition", value: "Open-box / used options" },
-      { label: "Band", value: "Included band listed" },
-      { label: "Battery", value: "Shared per unit" },
+      { label: "Band", value: "Varies by unit. Check size and condition" },
+      { label: "Battery", value: "Varies by unit. Ask for the percentage" },
     ],
     highlights: [
-      "Band and case condition listed clearly",
-      "Battery health shared before reserve",
-      "Good bundle with iPhone upgrades",
+      "Available in 41mm and 45mm sizes",
+      "Ask for battery health and current case and screen photos",
+      "Confirm band size, charger, box, and warranty",
     ],
-    packageItems: ["Watch unit", "Band details", "Charger if included", "Condition note"],
+    packageItems: ["Apple Watch unit", "Band if included", "Charging cable if included", "Written condition and warranty terms"],
     gallery: [
       {
         title: "Case condition",
-        caption: "Display and body condition are reviewed.",
+        caption: "Ask for current photos of the screen, case, crown, and back sensor.",
         kind: "watch",
       },
       {
         title: "Band check",
-        caption: "Band type and wear level are listed.",
+        caption: "Confirm the band type, size, colour, and wear on the exact unit.",
         kind: "watch",
       },
       {
         title: "Battery",
-        caption: "Battery health is shared where available.",
+        caption: "Ask for the current battery health percentage before payment.",
         kind: "watch",
       },
     ],
@@ -464,9 +465,9 @@ const rawProducts: RawProduct[] = [
     condition: "Sealed",
     badge: "Apple accessories",
     accent: "#00c7be",
-    summary: "AirPods Pro stock with sealed condition, USB-C case, and warranty expectations.",
+    summary: "AirPods Pro 2 with USB-C charging, active noise cancellation, and Transparency mode. Check seal, model, box, included tips, and warranty before payment.",
     description:
-      "A premium Apple accessory for buyers who want active noise cancellation and easy pairing.",
+      "Choose these AirPods if you want strong noise cancellation, simple Apple device pairing, and a USB-C charging case. Confirm the model and seal because similar AirPods versions can look alike.",
     technicalSpecs: [
       { label: "Audio", value: "Active Noise Cancellation" },
       { label: "Listening", value: "Transparency mode" },
@@ -476,29 +477,29 @@ const rawProducts: RawProduct[] = [
     details: [
       { label: "Case", value: "USB-C" },
       { label: "Condition", value: "Sealed" },
-      { label: "Warranty", value: "Shared before payment" },
+      { label: "Warranty", value: "Varies by unit. Get the terms in writing" },
       { label: "Bundle", value: "Can pair with iPhone/Mac" },
     ],
     highlights: [
-      "Sealed status confirmed before pickup",
-      "Good add-on with iPhone or Mac purchases",
-      "Warranty expectations explained clearly",
+      "USB-C and MagSafe charging case",
+      "Active Noise Cancellation and Transparency mode",
+      "Confirm the serial, seal, included tips, cable, and warranty",
     ],
-    packageItems: ["AirPods Pro unit", "Charging case", "Cable/tips as boxed", "Warranty note"],
+    packageItems: ["AirPods Pro earbuds", "USB-C charging case", "Ear tips and cable as boxed", "Written warranty terms"],
     gallery: [
       {
         title: "Case view",
-        caption: "Box and case version are confirmed.",
+        caption: "Confirm the USB-C case version and model before payment.",
         kind: "audio",
       },
       {
         title: "Sealed stock",
-        caption: "Packaging state is shown before purchase.",
+        caption: "Ask for current photos of the seal, serial label, and packaging.",
         kind: "audio",
       },
       {
         title: "Bundle ready",
-        caption: "Can be reserved alongside an iPhone or Mac.",
+        caption: "Check the exact included tips, cable, case, and warranty terms.",
         kind: "audio",
       },
     ],
@@ -512,9 +513,9 @@ const rawProducts: RawProduct[] = [
     condition: "Bundle options",
     badge: "Gaming bundle",
     accent: "#1d4ed8",
-    summary: "PS5 Slim bundle availability with controller, game, warranty, and box notes.",
+    summary: "A PlayStation 5 Slim Disc Edition bundle with a DualSense controller. Check the exact game bundle, seal, box, warranty, and included cables.",
     description:
-      "A ready console bundle with clear availability and package details before you visit.",
+      "Choose the Disc Edition if you want to use physical PS5 and supported PS4 game discs. Bundle contents can change, so compare the controller, game, stand, cables, and warranty before payment.",
     technicalSpecs: [
       { label: "Console", value: "PlayStation 5 Slim" },
       { label: "Drive", value: "Disc edition" },
@@ -525,28 +526,28 @@ const rawProducts: RawProduct[] = [
       { label: "Edition", value: "Slim Disc" },
       { label: "Bundle", value: "Controller/game options" },
       { label: "Condition", value: "Sealed / bundle options" },
-      { label: "Hold", value: "Short reservation available" },
+      { label: "Hold", value: "Ask whether a short hold is available" },
     ],
     highlights: [
-      "Bundle contents listed before reservation",
-      "Controller and game options confirmed",
-      "Pickup and delivery support available",
+      "Disc drive for physical games and Blu-ray discs",
+      "4K gaming support with a DualSense controller",
+      "Confirm the exact game, cables, stand, seal, and warranty",
     ],
-    packageItems: ["PS5 console", "Controller details", "Game bundle if selected", "Warranty note"],
+    packageItems: ["PS5 Slim Disc console", "DualSense controller", "Power, HDMI, and USB cables as boxed", "Game and stand only if listed", "Written warranty terms"],
     gallery: [
       {
         title: "Console view",
-        caption: "Edition and box condition are confirmed.",
+        caption: "Confirm the Disc Edition, seal, box, and serial label before payment.",
         kind: "console",
       },
       {
         title: "Bundle check",
-        caption: "Controller and game contents are listed clearly.",
+        caption: "Check the controller, game, cables, stand, and other bundle contents.",
         kind: "console",
       },
       {
         title: "Reserve",
-        caption: "A serious buyer can arrange a short hold.",
+        caption: "Ask whether inspection, pickup, delivery, or a short hold is available.",
         kind: "console",
       },
     ],
@@ -572,6 +573,8 @@ function optionValues(value: string) {
     .map((part) => part.trim())
     .filter(Boolean);
 }
+
+export const catalogEditorialVersion = "2026-07-15T18:00:00.000Z";
 
 export const products: Product[] = rawProducts.map((product) => {
   const photos = productPhotoSets[product.slug];

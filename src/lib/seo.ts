@@ -16,7 +16,7 @@ const defaultImage: OgImage = {
   url: "/og/macvault-og.svg",
   width: 1200,
   height: 630,
-  alt: "MacVault verified Apple and PlayStation stock",
+  alt: "MacVault Apple and PlayStation products in Lahore",
 };
 
 function fullTitle(title: string) {
@@ -49,7 +49,7 @@ export function buildMetadata({
       description,
       url: path,
       siteName,
-      locale: "en_US",
+      locale: "en_PK",
       type: "website",
       images,
     },

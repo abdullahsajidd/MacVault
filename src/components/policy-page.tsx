@@ -10,7 +10,7 @@ export function PolicyPage({ title, intro, sections }: { title: string; intro: s
       <Header />
       <main id="main-content" className={`${containerClass} pt-[154px] pb-[60px] max-[768px]:pt-[126px]`}>
         <div className="mx-auto max-w-[900px]">
-          <Tag>MacVault policy</Tag>
+          <Tag>MacVault buyer information</Tag>
           <h1 className="mt-6 text-[clamp(44px,6vw,76px)] leading-[.98] font-semibold tracking-[-.045em]">{title}</h1>
           <p className="mt-6 max-w-[760px] text-[19px] leading-[1.65] text-[#667085]">{intro}</p>
           <p className="mt-4 text-sm font-semibold text-[#0057d8]">Last updated: 15 July 2026</p>
@@ -23,7 +23,7 @@ export function PolicyPage({ title, intro, sections }: { title: string; intro: s
             ))}
           </div>
           <div className="mt-10 rounded-[18px] bg-[#f4f9ff] p-7 text-[15px] leading-[1.7] text-[#475467]">
-            Questions? Contact MacVault on <a className="font-semibold text-[#0057d8]" href={whatsappStockHref}>WhatsApp at {phoneDisplay}</a> or email <a className="font-semibold text-[#0057d8]" href={emailHref}>{emailAddress}</a>.
+            If a product page and the written order details do not match, stop before payment and ask MacVault. Contact us on <a className="font-semibold text-[#0057d8]" href={whatsappStockHref}>WhatsApp at {phoneDisplay}</a> or email <a className="font-semibold text-[#0057d8]" href={emailHref}>{emailAddress}</a>.
           </div>
         </div>
       </main>

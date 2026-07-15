@@ -94,7 +94,7 @@ function QuoteModal({
         <div className="relative max-h-[calc(100dvh-32px)] w-full max-w-[680px] overflow-y-auto rounded-[18px] bg-white text-[#102a43] shadow-[0_34px_90px_rgba(5,20,44,0.24)]">
           <div className="bg-[#f4f9ff] px-6 pt-5 pb-5 max-sm:px-5">
             <div className="flex items-start justify-between gap-4">
-              <QuoteTag>Request a quote</QuoteTag>
+              <QuoteTag>Ask for a price</QuoteTag>
               <Cta asButton type="button" icon={X} variant="secondary" onClick={requestClose}>
                 Close
               </Cta>
@@ -103,11 +103,11 @@ function QuoteModal({
               id={titleId}
               className="mt-3 max-w-[560px] text-[clamp(30px,5vw,48px)] leading-none font-semibold tracking-normal"
             >
-              Tell us what you want to <span className="animated-text">reserve</span>.
+              Tell us which product you are considering.
             </h2>
             <p className="mt-3 max-w-[560px] text-[15px] leading-[1.5] text-[#667085]">
-              Share the device, budget, and timing. MacVault can reply with current stock,
-              condition, PTA/warranty notes, and pickup or delivery options.
+              Share the product, budget, preferred condition, and timing. We will prepare a
+              WhatsApp message so you can ask about today&apos;s price and the exact unit.
             </p>
           </div>
 
@@ -117,7 +117,7 @@ function QuoteModal({
               event.preventDefault();
               const formData = new FormData(event.currentTarget);
               const message = [
-                "Hi MacVault, I want to request a quote.",
+                "Hi MacVault, I want to ask for today’s price and product details.",
                 `Name: ${fieldValue(formData, "name")}`,
                 `Phone: ${fieldValue(formData, "phone")}`,
                 `Product: ${fieldValue(formData, "product")}`,
@@ -165,15 +165,15 @@ function QuoteModal({
               <textarea
                 className="form-field min-h-[92px] resize-none py-3"
                 name="notes"
-                placeholder="Storage, color, PTA status, condition, pickup timing..."
+                placeholder="Model, storage, colour, PTA status, condition, warranty, pickup or delivery..."
               />
             </label>
 
             <div className="flex items-center justify-between gap-4 pt-1 max-sm:flex-col max-sm:items-stretch">
               <p className="text-sm leading-[1.5] text-[#667085]" aria-live="polite">
                 {sent
-                  ? "WhatsApp opened with your request. Send it there to confirm stock."
-                  : `No payment or account needed. Messages open to ${phoneDisplay}.`}
+                  ? "WhatsApp opened with your request. Review the message, then send it to MacVault."
+                  : `This form does not take payment or place an order. Messages open to ${phoneDisplay}.`}
               </p>
               <Cta asButton type="submit" icon={Send}>
                 Send on WhatsApp
@@ -201,7 +201,7 @@ export function QuoteButton() {
         variant="secondary"
         onClick={() => setModalVersion((current) => (current ?? 0) + 1)}
       >
-        Request a quote
+        Ask for a price
       </Cta>
       {modalVersion !== null ? (
         <QuoteModal

@@ -3,9 +3,9 @@ import { AboutPageShell } from "@/components/about-page-shell";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
-  title: "About",
+  title: "About MacVault Lahore",
   description:
-    "Learn the MacVault story, buying flow, and product checks for local iPhone, MacBook, iPad, Apple Watch, AirPods, accessories, and PlayStation buyers.",
+    "Learn how MacVault helps Lahore buyers compare iPhones, MacBooks, iPads, Apple Watch, AirPods, accessories, and PlayStation products before payment.",
   path: "/about",
 });
 

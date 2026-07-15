@@ -31,18 +31,18 @@ import {
 
 const responseNotes = [
   {
-    title: "Current stock",
-    text: "Ask for exact iPhone, MacBook, iPad, Watch, AirPods, accessory, or PlayStation availability.",
+    title: "We check the product",
+    text: "We check whether the model and variant you asked for are still available.",
     icon: PackageSearch,
   },
   {
-    title: "Condition proof",
-    text: "Confirm PTA status, battery health, cycle count, warranty, package, and box details.",
+    title: "We answer the missing facts",
+    text: "You can ask for the current price, exact photos, condition, PTA status, battery or cycle details, warranty, and included items.",
     icon: ShieldCheck,
   },
   {
-    title: "Reservation help",
-    text: "Arrange pickup, delivery, payment, or a short hold after availability is confirmed.",
+    title: "You choose the next step",
+    text: "If the product suits you, agree on inspection, pickup or delivery, payment, and any hold terms in writing.",
     icon: BadgeCheck,
   },
 ];
@@ -63,7 +63,7 @@ export function ContactPageShell() {
         label: "WhatsApp",
         value: phoneDisplay,
         href: whatsappStockHref,
-        text: "Fastest path for stock checks and product confirmation.",
+        text: "Best for asking about a product, sharing photos, and keeping the agreed details in writing.",
         icon: MessageCircle,
       },
       {
@@ -71,7 +71,7 @@ export function ContactPageShell() {
         label: "Call",
         value: phoneDisplay,
         href: phoneHref,
-        text: "Useful when pickup, delivery, or timing needs quick discussion.",
+        text: "Useful for a quick question about inspection, pickup, delivery, or timing.",
         icon: PhoneCall,
       },
       {
@@ -79,7 +79,7 @@ export function ContactPageShell() {
         label: "Email",
         value: emailAddress,
         href: emailHref,
-        text: "Best for detailed requirements, business requests, and written follow-up.",
+        text: "Useful for detailed requirements, business purchases, or a written follow-up.",
         icon: Mail,
       },
     ],
@@ -96,13 +96,13 @@ export function ContactPageShell() {
       <main className="pt-[50px]">
         <section className={`${containerClass} pt-32 pb-20 text-center max-sm:pt-[106px]`}>
           <div className="reveal">
-            <Tag>Contact MacVault</Tag>
+            <Tag>Contact MacVault Lahore</Tag>
             <h1 className="mx-auto mt-5 max-w-[980px] text-[72px] leading-[0.96] font-semibold max-[768px]:text-[56px] max-[425px]:text-[42px] max-[375px]:text-[40px]">
-              Ask for today&apos;s stock before you <span className="animated-text">move</span>.
+              Ask about the product before you travel or pay.
             </h1>
             <p className="mx-auto mt-6 max-w-[760px] text-[20px] leading-[1.58] text-[#667085] max-[768px]:text-[18px] max-[425px]:text-[16px]">
-              Message, call, or email MacVault for exact product availability, condition notes,
-              reservation timing, pickup, and delivery support.
+              Send the product name and the facts you need. Ask for today&apos;s price, exact
+              condition, current photos, warranty, included items, and inspection or delivery options.
             </p>
             <div className="mt-[30px] flex flex-wrap justify-center gap-3">
               <Cta href={whatsappStockHref} icon={MessageCircle}>
@@ -121,13 +121,13 @@ export function ContactPageShell() {
         <section className="border-y border-[#050b141f] bg-white py-[60px]">
           <div className={`${containerClass} grid grid-cols-[0.78fr_1.22fr] gap-[56px] max-[1024px]:grid-cols-1`}>
             <div className="reveal">
-              <Tag>Direct line</Tag>
+              <Tag>Speak directly with us</Tag>
               <h2 className="section-title mt-2">
-                Choose the fastest way to <span className="animated-text">confirm</span>.
+                Choose WhatsApp, phone, or email.
               </h2>
               <p className="mt-[18px] max-w-[620px] text-[17px] leading-[1.56] text-[#667085]">
-                Keep the conversation tied to the product you want. It helps MacVault answer stock,
-                condition, price, and reservation questions faster.
+                Include the full product name, preferred condition, budget, and city. This gives us
+                enough information to answer without asking the same basic questions again.
               </p>
             </div>
 
@@ -186,10 +186,10 @@ export function ContactPageShell() {
 
         <section className={`${containerClass} py-[60px]`}>
           <SectionHead
-            kicker="Send details"
-            title="Start with the product you want checked."
-            accent="checked"
-            text="The form prepares a WhatsApp message with the exact context MacVault needs to answer quickly."
+            kicker="Prepare your question"
+            title="Tell us what you want to buy."
+            accent="buy"
+            text="This form prepares a WhatsApp message. It does not create an account, take payment, or place an order."
           />
 
           <div className="grid grid-cols-[1.15fr_0.85fr] gap-5 max-[1024px]:grid-cols-1">
@@ -199,7 +199,7 @@ export function ContactPageShell() {
                 event.preventDefault();
                 const formData = new FormData(event.currentTarget);
                 const message = [
-                  "Hi MacVault, I want to check stock.",
+                  "Hi MacVault, I want to ask about a product.",
                   `Name: ${fieldValue(formData, "name")}`,
                   `Phone: ${fieldValue(formData, "phone")}`,
                   `Product: ${fieldValue(formData, "product")}`,
@@ -261,14 +261,14 @@ export function ContactPageShell() {
                 <textarea
                   className="form-field min-h-[116px] resize-none py-3"
                   name="notes"
-                  placeholder="Storage, color, PTA status, condition, pickup timing..."
+                  placeholder="Model, storage, colour, PTA status, condition, warranty, pickup or delivery..."
                 />
               </label>
 
               <div className="flex flex-col items-center justify-center gap-4 pt-1 text-center">
                 <p className="text-sm leading-[1.5] text-[#667085]" aria-live="polite">
                   {submitted
-                    ? "WhatsApp opened with your request. Send it there to confirm stock."
+                    ? "WhatsApp opened with your request. Review the message, then send it to MacVault."
                     : `Messages go to ${phoneDisplay}.`}
                 </p>
                 <Cta asButton type="submit" icon={Send}>
@@ -280,18 +280,18 @@ export function ContactPageShell() {
             <div className="reveal grid gap-4">
               <article className="rounded-[8px] border border-[#102a4314] bg-white p-6 shadow-[0_18px_50px_rgba(5,20,44,0.055)]">
                 <MapPin className="size-6 text-[#0a84ff]" />
-                <h3 className="mt-5 text-2xl font-semibold">Local buying support</h3>
+                <h3 className="mt-5 text-2xl font-semibold">Lahore pickup</h3>
                 <p className="mt-3 text-[15px] leading-[1.6] text-[#667085]">
-                  MacVault supports local pickup and delivery discussions once exact stock, price,
-                  and condition are confirmed.
+                  If pickup is available for the product, agree on the location and time before
+                  travelling. Ask whether inspection is available before payment.
                 </p>
               </article>
               <article className="rounded-[8px] border border-[#102a4314] bg-white p-6 shadow-[0_18px_50px_rgba(5,20,44,0.055)]">
                 <Clock3 className="size-6 text-[#0a84ff]" />
-                <h3 className="mt-5 text-2xl font-semibold">Reply context</h3>
+                <h3 className="mt-5 text-2xl font-semibold">What to include</h3>
                 <p className="mt-3 text-[15px] leading-[1.6] text-[#667085]">
-                  Product name, condition preference, budget, and timing help MacVault answer with
-                  fewer repeated questions.
+                  Send the product name, storage or variant, preferred condition, budget, city,
+                  and when you plan to buy.
                 </p>
               </article>
               <article className="rounded-[8px] border border-[#102a4314] bg-white p-6 shadow-[0_18px_50px_rgba(5,20,44,0.055)]">
@@ -314,9 +314,9 @@ export function ContactPageShell() {
           <div className={containerClass}>
             <SectionHead
               kicker="What happens next"
-              title="A clear reply, without the back-and-forth."
-              accent="clear"
-              text="Share the product and timing once, and we’ll reply with the stock and condition information that matters."
+              title="Three steps after you message."
+              accent="steps"
+              text="We identify the product, answer the unit-specific questions, and explain the available next step."
             />
             <div className="grid grid-cols-3 gap-4 max-[940px]:grid-cols-1">
               {responseNotes.map((item, index) => {
@@ -342,16 +342,16 @@ export function ContactPageShell() {
 
         <section className="bg-white py-[60px] text-center">
           <div className={`reveal ${containerClass}`}>
-            <Tag>Keep browsing</Tag>
+            <Tag>Not ready to message?</Tag>
             <h2 className="section-title mx-auto mt-2 max-w-[820px]">
-              Pick a listing, then ask for the <span className="animated-text">exact</span> unit.
+              Compare the products first.
             </h2>
             <div className="mt-[30px] flex flex-wrap justify-center gap-3">
               <Cta href="/products#inventory" icon={PackageSearch}>
                 Browse products
               </Cta>
               <Cta href="/why-us" icon={ArrowRight} variant="secondary">
-                Why us
+                How buying works
               </Cta>
             </div>
           </div>
