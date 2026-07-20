@@ -22,7 +22,7 @@ export default function TermsPage() {
         {
           title: "Photos and product information",
           paragraphs: [
-            "Reference photos are labelled and may not show the exact unit. Ask for current photos when condition matters. Read the specifications carefully and confirm any unit-specific detail before travelling or paying.",
+            "Ask for current photos or video when condition matters. Read the specifications carefully and confirm any unit-specific detail before travelling or paying.",
           ],
         },
         {

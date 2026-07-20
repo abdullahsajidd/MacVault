@@ -1,0 +1,24 @@
+export type FaqItem = { question: string; answer: string };
+
+export const faqItems: FaqItem[] = [
+  { question: "Can I inspect a device before paying?", answer: "Yes. If pickup is available in Lahore, we arrange a time so you can inspect the exact unit and compare it with the details you received before paying." },
+  { question: "How do I know whether an iPhone is PTA approved?", answer: "Check the PTA field on the product page. Before payment, ask us to confirm whether the exact phone is PTA approved or non-PTA." },
+  { question: "Do products include a warranty?", answer: "Warranty depends on the product and condition. The exact unit should state whether it has Apple warranty, a checking warranty, or no warranty. Get the duration and coverage in writing before payment." },
+  { question: "Do you deliver outside Lahore?", answer: "Delivery depends on the product and your city. Send us the product and location, then get the delivery time, charge, payment method, and inspection limits in writing before dispatch." },
+  { question: "What does the expected price range mean?", answer: "It is a practical estimate based on the product's current base price. The exact price can change with the unit's condition, battery, PTA status, storage, accessories, and market movement." },
+  { question: "How do I confirm today's final price?", answer: "Open the product and use Confirm today's price. We will confirm the current amount for the exact unit before you inspect, reserve, or pay." },
+  { question: "Is every product shown currently available?", answer: "A listed product is treated as available unless its optional status says Limited stock, Reserved, or Sold. Confirm availability before travelling or sending payment." },
+  { question: "Can I reserve a product?", answer: "A short reservation may be possible for some units. Confirm the hold time, payment requirement, refund terms, and exact unit in writing before sending money." },
+  { question: "Will I receive photos of the exact unit?", answer: "Ask for current photos or video of the exact unit whenever condition can vary. Do not assume a product image proves the exact unit unless MacVault confirms it on WhatsApp." },
+  { question: "What should I check on a used iPhone?", answer: "Confirm PTA status, battery health, Face ID, True Tone, display, cameras, speakers, microphones, buttons, charging, body condition, storage, and activation status." },
+  { question: "What should I check on a MacBook?", answer: "Confirm the chip, RAM, storage, battery cycle count and health, keyboard layout, display, keyboard, trackpad, ports, speakers, camera, charger, body condition, and warranty." },
+  { question: "Are the box and accessories always included?", answer: "No. Included items vary by unit and bundle. Check whether the original box, cable, charger, strap, controller, or other accessories are included before agreeing on the price." },
+  { question: "What payment methods are available?", answer: "Payment options depend on the handover method. Confirm the accepted method, recipient details, total amount, and written terms directly with MacVault before paying." },
+  { question: "Can I inspect a delivered product?", answer: "Inspection rules depend on the courier and delivery arrangement. Get the allowed inspection window, return steps, shipping responsibility, and condition evidence in writing before dispatch." },
+  { question: "What is the return policy?", answer: "Return eligibility depends on the product, disclosed condition, warranty, and agreed terms. Read the returns page and confirm any unit-specific exception in writing before payment." },
+  { question: "How is my personal data handled?", answer: "Share only the information needed to answer your request or arrange handover. Never send passwords, verification codes, unnecessary card details, or device account credentials through chat." },
+  { question: "What do JV, non-PTA, and factory unlocked mean?", answer: "These labels affect network use and value. Ask us to state the exact status in plain language, then verify SIM behaviour and PTA information for the exact phone before payment." },
+  { question: "How can I verify Apple warranty coverage?", answer: "Ask for the serial number when appropriate and check Apple's coverage information. Also confirm whether the seller offers any separate checking warranty and what it covers." },
+  { question: "What should I check on a PlayStation?", answer: "Confirm disc or digital edition, storage, region or version, controller count and condition, included games, ports, Wi-Fi, disc drive where relevant, seals, warranty, and bundle contents." },
+  { question: "How do I contact MacVault about a product?", answer: "Send the product name through WhatsApp or email contact@macvault.pk. Include the model, storage, preferred condition, PTA requirement where relevant, budget, and location." },
+];

@@ -19,7 +19,8 @@ import { Cta } from "@/components/cta";
 import { useCatalog } from "@/components/catalog-provider";
 import { containerClass } from "@/components/layout-classes";
 import { RevealController } from "@/components/reveal-controller";
-import { Footer, Header, SectionHead, Tag } from "@/components/site";
+import { Footer, Header } from "@/components/site";
+import { AnimatedText, SectionHead, Tag } from "@/components/site-primitives";
 import {
   createWhatsappHref,
   emailAddress,
@@ -96,12 +97,12 @@ export function ContactPageShell() {
       <main className="pt-[50px]">
         <section className={`${containerClass} pt-32 pb-20 text-center max-sm:pt-[106px]`}>
           <div className="reveal">
-            <Tag>Contact MacVault Lahore</Tag>
-            <h1 className="mx-auto mt-5 max-w-[980px] text-[72px] leading-[0.96] font-semibold max-[768px]:text-[56px] max-[425px]:text-[42px] max-[375px]:text-[40px]">
-              Ask about the product before you travel or pay.
+            <Tag>Contact MacVault</Tag>
+            <h1 className="page-title mx-auto mt-5 max-w-[1280px]">
+              Ask about the <AnimatedText>product</AnimatedText> before you travel or pay.
             </h1>
             <p className="mx-auto mt-6 max-w-[760px] text-[20px] leading-[1.58] text-[#667085] max-[768px]:text-[18px] max-[425px]:text-[16px]">
-              Send the product name and the facts you need. Ask for today&apos;s price, exact
+              Send the product name and the facts you need. Confirm today&apos;s price, exact
               condition, current photos, warranty, included items, and inspection or delivery options.
             </p>
             <div className="mt-[30px] flex flex-wrap justify-center gap-3">
@@ -121,9 +122,9 @@ export function ContactPageShell() {
         <section className="border-y border-[#050b141f] bg-white py-[60px]">
           <div className={`${containerClass} grid grid-cols-[0.78fr_1.22fr] gap-[56px] max-[1024px]:grid-cols-1`}>
             <div className="reveal">
-              <Tag>Speak directly with us</Tag>
+              <Tag>Direct contact</Tag>
               <h2 className="section-title mt-2">
-                Choose WhatsApp, phone, or email.
+                Choose <AnimatedText>WhatsApp</AnimatedText>, phone, or email.
               </h2>
               <p className="mt-[18px] max-w-[620px] text-[17px] leading-[1.56] text-[#667085]">
                 Include the full product name, preferred condition, budget, and city. This gives us
@@ -186,7 +187,7 @@ export function ContactPageShell() {
 
         <section className={`${containerClass} py-[60px]`}>
           <SectionHead
-            kicker="Prepare your question"
+            kicker="Your question"
             title="Tell us what you want to buy."
             accent="buy"
             text="This form prepares a WhatsApp message. It does not create an account, take payment, or place an order."
@@ -280,7 +281,7 @@ export function ContactPageShell() {
             <div className="reveal grid gap-4">
               <article className="rounded-[8px] border border-[#102a4314] bg-white p-6 shadow-[0_18px_50px_rgba(5,20,44,0.055)]">
                 <MapPin className="size-6 text-[#0a84ff]" />
-                <h3 className="mt-5 text-2xl font-semibold">Lahore pickup</h3>
+                <h3 className="mt-5 text-2xl font-semibold"><AnimatedText>Lahore</AnimatedText> pickup</h3>
                 <p className="mt-3 text-[15px] leading-[1.6] text-[#667085]">
                   If pickup is available for the product, agree on the location and time before
                   travelling. Ask whether inspection is available before payment.
@@ -288,7 +289,7 @@ export function ContactPageShell() {
               </article>
               <article className="rounded-[8px] border border-[#102a4314] bg-white p-6 shadow-[0_18px_50px_rgba(5,20,44,0.055)]">
                 <Clock3 className="size-6 text-[#0a84ff]" />
-                <h3 className="mt-5 text-2xl font-semibold">What to include</h3>
+                <h3 className="mt-5 text-2xl font-semibold"><AnimatedText>What</AnimatedText> to include</h3>
                 <p className="mt-3 text-[15px] leading-[1.6] text-[#667085]">
                   Send the product name, storage or variant, preferred condition, budget, city,
                   and when you plan to buy.
@@ -296,7 +297,7 @@ export function ContactPageShell() {
               </article>
               <article className="rounded-[8px] border border-[#102a4314] bg-white p-6 shadow-[0_18px_50px_rgba(5,20,44,0.055)]">
                 <Smartphone className="size-6 text-[#0a84ff]" />
-                <h3 className="mt-5 text-2xl font-semibold">Contact details</h3>
+                <h3 className="mt-5 text-2xl font-semibold"><AnimatedText>Contact</AnimatedText> details</h3>
                 <div className="mt-4 grid gap-2 text-[15px] font-semibold text-[#102a43]">
                   <a className="break-words transition-colors hover:text-[#0057d8]" href={phoneHref}>
                     {phoneDisplay}
@@ -331,7 +332,9 @@ export function ContactPageShell() {
                     <div className="inline-flex size-[42px] items-center justify-center rounded-full border border-[#0a84ff42] bg-white text-[#0a84ff]">
                       <Icon className="size-5" />
                     </div>
-                    <h3 className="mt-5 mb-2 text-2xl font-semibold">{item.title}</h3>
+                    <h3 className="mt-5 mb-2 text-2xl font-semibold">
+                      <AnimatedText>{item.title.split(" ")[0]}</AnimatedText>{item.title.includes(" ") ? ` ${item.title.split(" ").slice(1).join(" ")}` : ""}
+                    </h3>
                     <p className="text-[15px] leading-normal text-[#667085]">{item.text}</p>
                   </article>
                 );
@@ -342,9 +345,9 @@ export function ContactPageShell() {
 
         <section className="bg-white py-[60px] text-center">
           <div className={`reveal ${containerClass}`}>
-            <Tag>Not ready to message?</Tag>
+            <Tag>Compare first</Tag>
             <h2 className="section-title mx-auto mt-2 max-w-[820px]">
-              Compare the products first.
+              Compare the <AnimatedText>products</AnimatedText> first.
             </h2>
             <div className="mt-[30px] flex flex-wrap justify-center gap-3">
               <Cta href="/products#inventory" icon={PackageSearch}>

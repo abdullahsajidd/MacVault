@@ -2,6 +2,7 @@ import { Home, PackageSearch } from "lucide-react";
 import { Cta } from "@/components/cta";
 import { containerClass } from "@/components/layout-classes";
 import { Footer, Header } from "@/components/site";
+import { AnimatedText } from "@/components/site-primitives";
 
 export default function NotFound() {
   return (
@@ -13,8 +14,8 @@ export default function NotFound() {
       >
         <div>
           <span className="text-sm font-bold tracking-[.16em] text-[#0a84ff]">404</span>
-          <h1 className="mt-4 text-[clamp(44px,7vw,78px)] font-semibold tracking-[-.05em]">
-            This page isn’t in stock.
+          <h1 className="page-title mt-4">
+            This page isn’t in <AnimatedText>stock</AnimatedText>.
           </h1>
           <p className="mx-auto mt-5 max-w-[560px] text-lg leading-[1.65] text-[#667085]">
             The link may have changed. Browse the current listings or head back to the homepage.

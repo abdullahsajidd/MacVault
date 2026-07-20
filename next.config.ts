@@ -2,6 +2,12 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   devIndicators: false,
+  images: {
+    remotePatterns: [
+      { protocol: "https", hostname: "cdn.sanity.io" },
+      { protocol: "https", hostname: "images.unsplash.com" },
+    ],
+  },
   async headers() {
     return [{ source: "/(.*)", headers: [
       { key: "X-Content-Type-Options", value: "nosniff" },

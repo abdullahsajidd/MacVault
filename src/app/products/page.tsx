@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { JsonLd } from "@/components/json-ld";
 import { ProductsPageShell } from "@/components/products-page-shell";
-import { buildMetadata } from "@/lib/seo";
+import { buildMetadata, metadataBase } from "@/lib/seo";
 import { getCategories, getProducts } from "@/sanity/lib/catalog";
 
 export const metadata: Metadata = buildMetadata({
@@ -10,15 +11,37 @@ export const metadata: Metadata = buildMetadata({
   path: "/products",
 });
 
-export default async function ProductsPage() {
+export default async function ProductsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ search?: string | string[] }>;
+}) {
   const [products, categories] = await Promise.all([getProducts(), getCategories()]);
+  const { search } = await searchParams;
+  const initialSearch = Array.isArray(search) ? search[0] ?? "" : search ?? "";
+  const itemListSchema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "MacVault Apple and PlayStation products in Lahore",
+    numberOfItems: products.length,
+    itemListElement: products.map((product, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      url: new URL(`/products/${product.slug}`, metadataBase).toString(),
+      name: product.title,
+    })),
+  };
 
   return (
-    <ProductsPageShell
-      items={products}
-      allProducts={products}
-      categories={categories}
-      key="All"
-    />
+    <>
+      <JsonLd data={itemListSchema} />
+      <ProductsPageShell
+        items={products}
+        allProducts={products}
+        categories={categories}
+        initialSearch={initialSearch}
+        key="All"
+      />
+    </>
   );
 }

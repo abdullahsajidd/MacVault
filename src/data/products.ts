@@ -22,14 +22,50 @@ export type ProductOption = {
   values: string[];
 };
 
+export type ProductUnitDetails = {
+  storage?: string;
+  ram?: string;
+  colour?: string;
+  batteryHealth?: number;
+  batteryCycleCount?: number;
+  ptaStatus?: string;
+  boxStatus?: string;
+  warranty?: string;
+  keyboardLayout?: string;
+  chargerIncluded?: boolean;
+  connectivity?: string;
+  size?: string;
+  edition?: string;
+  controllerIncluded?: boolean;
+  gamesIncluded?: string[];
+  connector?: string;
+  cableLength?: string;
+  serialStatus?: string;
+  includedItems?: string[];
+  notes?: string;
+};
+
+export type ProductModel = {
+  id: string;
+  key: string;
+  name: string;
+  brand: string;
+  releaseYear?: number;
+  sourceName?: string;
+  sourceUrl?: string;
+  specs: ProductProperty[];
+};
+
 export type Product = {
   slug: string;
   category: string;
   title: string;
   shortTitle: string;
-  status: string;
+  model?: ProductModel;
+  unitDetails?: ProductUnitDetails;
+  status?: string;
   condition: string;
-  price?: string;
+  price?: number | string;
   badge: string;
   accent: string;
   summary: string;
@@ -173,8 +209,9 @@ const rawProducts: RawProduct[] = [
     category: "iPhone",
     title: "iPhone 15 Pro Max 256GB",
     shortTitle: "15 Pro Max",
-    status: "Available now",
+    status: "Available",
     condition: "Sealed / open-box",
+    price: 475000,
     badge: "Best flagship",
     accent: "#0a84ff",
     summary: "A 256GB flagship iPhone with an A17 Pro chip, USB-C, and Pro cameras. Check the exact condition, PTA status, colour, and warranty before payment.",
@@ -221,8 +258,9 @@ const rawProducts: RawProduct[] = [
     category: "iPhone",
     title: "iPhone 14 Pro 128GB",
     shortTitle: "14 Pro",
-    status: "Low stock",
+    status: "Limited stock",
     condition: "Open-box / used",
+    price: 175000,
     badge: "Value Pro",
     accent: "#5856d6",
     summary: "A 128GB Pro iPhone with an A16 Bionic chip, ProMotion display, and 48MP main camera. Check battery health, PTA status, and body condition per unit.",
@@ -269,8 +307,9 @@ const rawProducts: RawProduct[] = [
     category: "Mac",
     title: "MacBook Air M3 13-inch",
     shortTitle: "Air M3",
-    status: "Available now",
+    status: "Available",
     condition: "Sealed / open-box",
+    price: 325000,
     badge: "Daily work",
     accent: "#34c759",
     summary: "A lightweight 13-inch MacBook Air with the Apple M3 chip. Compare memory, storage, colour, cycle count, charger, and warranty before buying.",
@@ -317,8 +356,9 @@ const rawProducts: RawProduct[] = [
     category: "Mac",
     title: "MacBook Pro 14-inch M3 Pro",
     shortTitle: "Pro 14",
-    status: "Arriving soon",
+    status: "Available",
     condition: "Open-box / premium used",
+    price: 575000,
     badge: "Creator pick",
     accent: "#ff9f0a",
     summary: "A 14-inch MacBook Pro with the M3 Pro chip for demanding work. Check memory, storage, cycle count, charger, condition, and warranty per unit.",
@@ -365,8 +405,9 @@ const rawProducts: RawProduct[] = [
     category: "iPad",
     title: "iPad Pro M4 11-inch",
     shortTitle: "iPad Pro",
-    status: "Available now",
+    status: "Available",
     condition: "Sealed / open-box",
+    price: 310000,
     badge: "Creative tablet",
     accent: "#af52de",
     summary: "An 11-inch iPad Pro with the Apple M4 chip and Ultra Retina XDR display. Check storage, condition, accessories, box, and warranty per unit.",
@@ -413,8 +454,9 @@ const rawProducts: RawProduct[] = [
     category: "Watch",
     title: "Apple Watch Series 9",
     shortTitle: "Watch S9",
-    status: "Limited units",
+    status: "Limited stock",
     condition: "Open-box",
+    price: 95000,
     badge: "Daily wearable",
     accent: "#ff375f",
     summary: "An Apple Watch Series 9 with an Always-On display and S9 chip. Check size, battery health, case and band condition, charger, box, and warranty.",
@@ -461,8 +503,9 @@ const rawProducts: RawProduct[] = [
     category: "Accessories",
     title: "AirPods Pro 2 USB-C",
     shortTitle: "AirPods Pro",
-    status: "Available now",
+    status: "Available",
     condition: "Sealed",
+    price: 65000,
     badge: "Apple accessories",
     accent: "#00c7be",
     summary: "AirPods Pro 2 with USB-C charging, active noise cancellation, and Transparency mode. Check seal, model, box, included tips, and warranty before payment.",
@@ -509,8 +552,9 @@ const rawProducts: RawProduct[] = [
     category: "PlayStation",
     title: "PlayStation 5 Slim Disc Bundle",
     shortTitle: "PS5 Slim",
-    status: "Low stock",
+    status: "Limited stock",
     condition: "Bundle options",
+    price: 245000,
     badge: "Gaming bundle",
     accent: "#1d4ed8",
     summary: "A PlayStation 5 Slim Disc Edition bundle with a DualSense controller. Check the exact game bundle, seal, box, warranty, and included cables.",
@@ -624,6 +668,12 @@ export const categoryDefinitions = [
     pluralLabel: "PlayStation",
     slug: "playstation",
   },
+  {
+    category: "Cables",
+    label: "Cables",
+    pluralLabel: "Cables",
+    slug: "cables",
+  },
 ] as const;
 
 export type ProductCategory = (typeof categoryDefinitions)[number]["category"];
@@ -648,10 +698,369 @@ const categoryBadgeMap: Record<string, string> = {
   Watch: "Apple Watch stock",
   Accessories: "Apple accessories",
   PlayStation: "PlayStation stock",
+  Cables: "Cable stock",
 };
 
 export function getProductBadge(category: string) {
   return categoryBadgeMap[category] ?? "Current stock";
+}
+
+const expectedPriceRangeOffset = 5000;
+const fallbackTemplateValue = "Confirm with MacVault before payment";
+
+type DetailLike = {
+  label: string;
+  value: string;
+};
+
+type ProductTemplateFieldDefinition = {
+  label: string;
+  aliases?: string[];
+  value?: (product: Product) => string;
+};
+
+export type ProductTemplateField = {
+  label: string;
+  value: string;
+};
+
+export type ProductTemplate = {
+  title: string;
+  text: string;
+  fields: ProductTemplateField[];
+};
+
+function normalizeLabel(label: string) {
+  return label.toLowerCase().replace(/[^a-z0-9]+/g, "");
+}
+
+function formatPkr(value: number) {
+  return `Rs ${Math.round(value).toLocaleString("en-PK")}`;
+}
+
+export function parseBasePrice(price?: Product["price"] | null) {
+  if (typeof price === "number") {
+    return Number.isFinite(price) && price > 0 ? price : null;
+  }
+
+  if (typeof price !== "string") {
+    return null;
+  }
+
+  const value = Number(price.replace(/[^0-9.]/g, ""));
+
+  return Number.isFinite(value) && value > 0 ? value : null;
+}
+
+export function getExpectedPriceRange(price?: Product["price"] | null) {
+  const basePrice = parseBasePrice(price);
+
+  if (!basePrice) {
+    return null;
+  }
+
+  return {
+    min: Math.max(0, basePrice - expectedPriceRangeOffset),
+    max: basePrice + expectedPriceRangeOffset,
+  };
+}
+
+export function getExpectedPriceLabel(product: Pick<Product, "price">) {
+  const range = getExpectedPriceRange(product.price);
+
+  if (!range) {
+    return "Confirm today’s price";
+  }
+
+  return `Expected ${formatPkr(range.min)}–${formatPkr(range.max).replace("Rs ", "")}`;
+}
+
+export function getProductStockLabel(product: Pick<Product, "status">) {
+  const status = product.status?.trim().toLowerCase();
+
+  if (!status) {
+    return "Available";
+  }
+
+  if (status.includes("sold")) {
+    return "Sold";
+  }
+
+  if (status.includes("reserved")) {
+    return "Reserved";
+  }
+
+  if (status.includes("low") || status.includes("limited")) {
+    return "Limited stock";
+  }
+
+  return "Available";
+}
+
+export function getProductStockTone(product: Pick<Product, "status">) {
+  const label = getProductStockLabel(product);
+
+  if (label === "Sold") {
+    return "negative";
+  }
+
+  if (label === "Reserved" || label === "Limited stock") {
+    return "warning";
+  }
+
+  return "positive";
+}
+
+function productFacts(product: Product): DetailLike[] {
+  const unitDetails = product.unitDetails;
+  const exactUnitFacts: DetailLike[] = unitDetails
+    ? [
+        unitDetails.storage ? {label: "Storage", value: unitDetails.storage} : null,
+        unitDetails.ram ? {label: "RAM", value: unitDetails.ram} : null,
+        unitDetails.colour ? {label: "Colour", value: unitDetails.colour} : null,
+        unitDetails.batteryHealth ? {label: "Battery health", value: `${unitDetails.batteryHealth}%`} : null,
+        unitDetails.batteryCycleCount !== undefined ? {label: "Battery cycle count", value: String(unitDetails.batteryCycleCount)} : null,
+        unitDetails.ptaStatus ? {label: "PTA status", value: unitDetails.ptaStatus} : null,
+        unitDetails.boxStatus ? {label: "Box status", value: unitDetails.boxStatus} : null,
+        unitDetails.warranty ? {label: "Warranty", value: unitDetails.warranty} : null,
+        unitDetails.keyboardLayout ? {label: "Keyboard layout", value: unitDetails.keyboardLayout} : null,
+        unitDetails.chargerIncluded !== undefined ? {label: "Charger included", value: unitDetails.chargerIncluded ? "Yes" : "No"} : null,
+        unitDetails.connectivity ? {label: "Connectivity", value: unitDetails.connectivity} : null,
+        unitDetails.size ? {label: "Size", value: unitDetails.size} : null,
+        unitDetails.edition ? {label: "Edition", value: unitDetails.edition} : null,
+        unitDetails.controllerIncluded !== undefined ? {label: "Controller included", value: unitDetails.controllerIncluded ? "Yes" : "No"} : null,
+        unitDetails.gamesIncluded?.length ? {label: "Games included", value: unitDetails.gamesIncluded.join(" · ")} : null,
+        unitDetails.connector ? {label: "Connector", value: unitDetails.connector} : null,
+        unitDetails.cableLength ? {label: "Cable length", value: unitDetails.cableLength} : null,
+        unitDetails.serialStatus ? {label: "Serial status", value: unitDetails.serialStatus} : null,
+      ].filter(Boolean) as DetailLike[]
+    : [];
+
+  return [
+    ...exactUnitFacts,
+    ...product.details,
+    ...product.technicalSpecs.map(({ label, value }) => ({ label, value })),
+    ...(product.model?.specs ?? []).map(({label, value}) => ({label, value})),
+    ...product.listingOptions.map(({ label, values }) => ({
+      label,
+      value: values.join(" / "),
+    })),
+  ];
+}
+
+function findProductFact(product: Product, aliases: string[]) {
+  const aliasSet = new Set(aliases.map(normalizeLabel));
+
+  return productFacts(product).find((fact) => aliasSet.has(normalizeLabel(fact.label)))?.value;
+}
+
+function includedItems(product: Product) {
+  if (product.unitDetails?.includedItems?.length) {
+    return product.unitDetails.includedItems.join(" · ");
+  }
+
+  return product.packageItems.length > 0
+    ? product.packageItems.slice(0, 4).join(" · ")
+    : fallbackTemplateValue;
+}
+
+function conditionValue(product: Product) {
+  return findProductFact(product, ["Condition"]) ?? product.condition;
+}
+
+function templateField(
+  definition: ProductTemplateFieldDefinition,
+  product: Product,
+): ProductTemplateField {
+  return {
+    label: definition.label,
+    value:
+      definition.value?.(product) ??
+      findProductFact(product, definition.aliases ?? [definition.label]) ??
+      fallbackTemplateValue,
+  };
+}
+
+const productTemplateDefinitions: Record<
+  string,
+  {
+    title: string;
+    text: string;
+    fields: ProductTemplateFieldDefinition[];
+  }
+> = {
+  iPhone: {
+    title: "iPhone unit checklist",
+    text: "Confirm the phone-specific details that change the final decision before payment.",
+    fields: [
+      { label: "Expected price", value: getExpectedPriceLabel },
+      { label: "PTA status", aliases: ["PTA", "PTA status"] },
+      { label: "Battery health", aliases: ["Battery", "Battery health"] },
+      { label: "Storage", aliases: ["Storage"] },
+      { label: "Colour", aliases: ["Color", "Colour"] },
+      { label: "Condition", value: conditionValue },
+      { label: "Box status", aliases: ["Box", "Box status"] },
+      { label: "Warranty", aliases: ["Warranty"] },
+      { label: "Included items", value: includedItems },
+      { label: "Checks", value: () => "Face ID, True Tone, display, cameras, buttons, speakers, and charging" },
+    ],
+  },
+  Mac: {
+    title: "MacBook unit checklist",
+    text: "Confirm the MacBook details that affect value, battery confidence, and daily use.",
+    fields: [
+      { label: "Expected price", value: getExpectedPriceLabel },
+      { label: "Model/chip", aliases: ["Chip", "Model", "Processor"] },
+      { label: "RAM", aliases: ["Memory", "RAM"] },
+      { label: "Storage", aliases: ["Storage"] },
+      { label: "Battery cycle count", aliases: ["Cycle count", "Battery cycle count"] },
+      { label: "Battery health", aliases: ["Battery", "Battery health"] },
+      { label: "Keyboard layout", aliases: ["Keyboard", "Keyboard layout"] },
+      { label: "Charger included", aliases: ["Charger", "Power adapter"] },
+      { label: "Condition", value: conditionValue },
+      { label: "Warranty", aliases: ["Warranty"] },
+      { label: "Checks", value: () => "Display, keyboard, trackpad, ports, speakers, camera, charger, and battery report" },
+    ],
+  },
+  iPad: {
+    title: "iPad unit checklist",
+    text: "Confirm the iPad details that affect compatibility, accessories, and condition.",
+    fields: [
+      { label: "Expected price", value: getExpectedPriceLabel },
+      { label: "Storage", aliases: ["Storage"] },
+      { label: "Wi‑Fi or cellular", aliases: ["Connectivity", "Network", "Cellular"] },
+      { label: "Apple Pencil support", aliases: ["Pencil", "Apple Pencil", "Accessories"] },
+      { label: "Keyboard compatibility", aliases: ["Keyboard", "Accessories"] },
+      { label: "Battery/condition", aliases: ["Battery", "Condition"] },
+      { label: "Box/accessories", aliases: ["Box", "Accessories", "Bundle"] },
+      { label: "Warranty", aliases: ["Warranty"] },
+    ],
+  },
+  Watch: {
+    title: "Apple Watch unit checklist",
+    text: "Confirm the watch details that affect fit, battery life, and warranty.",
+    fields: [
+      { label: "Expected price", value: getExpectedPriceLabel },
+      { label: "Size", aliases: ["Size"] },
+      { label: "GPS or cellular", aliases: ["Connectivity", "GPS", "Cellular"] },
+      { label: "Battery health", aliases: ["Battery", "Battery health"] },
+      { label: "Strap/box status", aliases: ["Band", "Strap", "Box"] },
+      { label: "Condition", value: conditionValue },
+      { label: "Warranty", aliases: ["Warranty"] },
+    ],
+  },
+  Accessories: {
+    title: "AirPods and accessories checklist",
+    text: "Confirm the accessory details that affect originality, battery confidence, and included items.",
+    fields: [
+      { label: "Expected price", value: getExpectedPriceLabel },
+      { label: "Generation/model", aliases: ["Model", "Generation", "Audio"] },
+      { label: "Serial/box status", aliases: ["Serial", "Box", "Case"] },
+      { label: "Battery/listening condition", aliases: ["Battery", "Listening"] },
+      { label: "Warranty", aliases: ["Warranty"] },
+      { label: "Included items", value: includedItems },
+    ],
+  },
+  PlayStation: {
+    title: "PlayStation unit checklist",
+    text: "Confirm the console details that affect the bundle value and setup.",
+    fields: [
+      { label: "Expected price", value: getExpectedPriceLabel },
+      { label: "Disc or digital", aliases: ["Edition", "Drive"] },
+      { label: "Storage", aliases: ["Storage", "Console"] },
+      { label: "Region/version", aliases: ["Region", "Version", "Edition"] },
+      { label: "Controller included", aliases: ["Controller", "Bundle"] },
+      { label: "Games included", aliases: ["Games", "Bundle"] },
+      { label: "Warranty", aliases: ["Warranty"] },
+      { label: "Condition", value: conditionValue },
+    ],
+  },
+  Cables: {
+    title: "Cable unit checklist",
+    text: "Confirm the connector, length, power rating, condition, and included packaging before payment.",
+    fields: [
+      { label: "Expected price", value: getExpectedPriceLabel },
+      { label: "Connector", aliases: ["Connector"] },
+      { label: "Cable length", aliases: ["Cable length", "Length"] },
+      { label: "Power rating", aliases: ["Power", "Power rating"] },
+      { label: "Condition", value: conditionValue },
+      { label: "Box status", aliases: ["Box", "Box status"] },
+      { label: "Warranty", aliases: ["Warranty"] },
+      { label: "Included items", value: includedItems },
+    ],
+  },
+};
+
+const productListingHighlightAliases: Record<string, string[][]> = {
+  iPhone: [["PTA", "PTA status"], ["Battery", "Battery health", "Storage"]],
+  Mac: [["Cycle count", "Battery cycle count", "Battery"], ["Storage"]],
+  iPad: [["Storage"], ["Connectivity", "Accessories"]],
+  Watch: [["Battery", "Battery health"], ["Size", "Band"]],
+  Accessories: [["Condition", "Case"], ["Warranty", "Bundle"]],
+  PlayStation: [["Edition", "Drive"], ["Bundle", "Controller"]],
+  Cables: [["Connector"], ["Cable length", "Length", "Power"]],
+};
+
+export function getProductTemplate(product: Product): ProductTemplate {
+  const definition =
+    productTemplateDefinitions[product.category] ??
+    productTemplateDefinitions.Accessories;
+
+  return {
+    title: definition.title,
+    text: definition.text,
+    fields: definition.fields.map((field) => templateField(field, product)),
+  };
+}
+
+export function getProductCardHighlights(product: Product): ProductTemplateField[] {
+  const aliasGroups = productListingHighlightAliases[product.category] ?? [["Condition"], ["Warranty"]];
+  const usedLabels = new Set<string>();
+  const highlights = aliasGroups
+    .map((aliases) => {
+      const found = productFacts(product).find((fact) =>
+        aliases.map(normalizeLabel).includes(normalizeLabel(fact.label)),
+      );
+
+      if (!found) {
+        return null;
+      }
+
+      usedLabels.add(normalizeLabel(found.label));
+
+      return {
+        label: found.label,
+        value: found.value,
+      };
+    })
+    .filter(Boolean) as ProductTemplateField[];
+
+  for (const fact of product.details) {
+    if (highlights.length >= 2) {
+      break;
+    }
+
+    const normalized = normalizeLabel(fact.label);
+
+    if (!usedLabels.has(normalized)) {
+      highlights.push(fact);
+      usedLabels.add(normalized);
+    }
+  }
+
+  return highlights.slice(0, 2);
+}
+
+export function isPtaApprovedProduct(product: Product) {
+  const pta = findProductFact(product, ["PTA", "PTA status"])?.toLowerCase();
+
+  return Boolean(
+    product.category === "iPhone" &&
+      pta &&
+      pta.includes("approved") &&
+      !pta.includes("non-pta") &&
+      !pta.includes("varies"),
+  );
 }
 
 export function getProduct(slug: string) {

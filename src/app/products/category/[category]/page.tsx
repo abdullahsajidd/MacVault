@@ -42,8 +42,15 @@ export async function generateMetadata({
   });
 }
 
-export default async function CategoryPage({ params }: { params: Promise<{ category: string }> }) {
+export default async function CategoryPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ category: string }>;
+  searchParams: Promise<{ search?: string | string[] }>;
+}) {
   const { category: slug } = await params;
+  const { search } = await searchParams;
   const [categories, products, allProducts] = await Promise.all([
     getCategories(),
     getProductsByCategorySlug(slug),
@@ -55,33 +62,50 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
     notFound();
   }
 
+  const initialSearch = Array.isArray(search) ? search[0] ?? "" : search ?? "";
+
   return (
     <>
       <JsonLd
-        data={{
-          "@context": "https://schema.org",
-          "@type": "BreadcrumbList",
-          itemListElement: [
-            {
+        data={[
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              {
+                "@type": "ListItem",
+                position: 1,
+                name: "Products",
+                item: new URL("/products", metadataBase).toString(),
+              },
+              {
+                "@type": "ListItem",
+                position: 2,
+                name: category.label,
+                item: new URL(category.href, metadataBase).toString(),
+              },
+            ],
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            name: `${category.label} products in Lahore`,
+            numberOfItems: products.length,
+            itemListElement: products.map((product, index) => ({
               "@type": "ListItem",
-              position: 1,
-              name: "Products",
-              item: new URL("/products", metadataBase).toString(),
-            },
-            {
-              "@type": "ListItem",
-              position: 2,
-              name: category.label,
-              item: new URL(category.href, metadataBase).toString(),
-            },
-          ],
-        }}
+              position: index + 1,
+              url: new URL(`/products/${product.slug}`, metadataBase).toString(),
+              name: product.title,
+            })),
+          },
+        ]}
       />
       <ProductsPageShell
         items={products}
         allProducts={allProducts}
         categories={categories}
         activeCategory={category.category}
+        initialSearch={initialSearch}
         key={category.category}
       />
     </>

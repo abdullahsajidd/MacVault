@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { buildMetadata, metadataBase } from "@/lib/seo";
 import { Analytics } from "@vercel/analytics/next";
 import { CatalogProvider } from "@/components/catalog-provider";
+import { AnalyticsEvents } from "@/components/analytics-events";
 import { JsonLd } from "@/components/json-ld";
 import { emailAddress, phoneDisplay } from "@/data/contact";
 import { getCategories, getProducts } from "@/sanity/lib/catalog";
@@ -93,13 +94,13 @@ export default async function RootLayout({
   const [products, categories] = await Promise.all([getProducts(), getCategories()]);
 
   return (
-    <html lang="en" className="h-full">
+    <html lang="en-PK" className="h-full">
       <body className="min-h-full">
         <JsonLd
           data={[
             {
               "@context": "https://schema.org",
-              "@type": "Organization",
+              "@type": ["Organization", "ElectronicsStore"],
               "@id": new URL("/#organization", metadataBase).toString(),
               name: "MacVault",
               url: metadataBase.toString(),
@@ -107,6 +108,13 @@ export default async function RootLayout({
               description: homeDescription,
               telephone: phoneDisplay,
               email: emailAddress,
+              priceRange: "Expected price ranges confirmed before purchase",
+              address: {
+                "@type": "PostalAddress",
+                addressLocality: "Lahore",
+                addressRegion: "Punjab",
+                addressCountry: "PK",
+              },
               areaServed: {
                 "@type": "City",
                 name: "Lahore",
@@ -120,6 +128,17 @@ export default async function RootLayout({
               url: metadataBase.toString(),
               publisher: { "@id": new URL("/#organization", metadataBase).toString() },
               inLanguage: "en-PK",
+              potentialAction: {
+                "@type": "SearchAction",
+                target: {
+                  "@type": "EntryPoint",
+                  urlTemplate: new URL(
+                    "/products?search={search_term_string}",
+                    metadataBase,
+                  ).toString(),
+                },
+                "query-input": "required name=search_term_string",
+              },
             },
           ]}
         />
@@ -129,8 +148,9 @@ export default async function RootLayout({
         <CatalogProvider products={products} categories={categories}>
           {children}
         </CatalogProvider>
+        <AnalyticsEvents />
         <SanityLive />
-        <Analytics />
+        {process.env.VERCEL ? <Analytics /> : null}
       </body>
     </html>
   );

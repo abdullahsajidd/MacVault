@@ -15,7 +15,8 @@ import { ComparisonSection } from "@/components/comparison-section";
 import { Cta } from "@/components/cta";
 import { containerClass } from "@/components/layout-classes";
 import { RevealController } from "@/components/reveal-controller";
-import { Footer, Header, SectionHead, Tag } from "@/components/site";
+import { Footer, Header } from "@/components/site";
+import { AnimatedText, SectionHead, Tag } from "@/components/site-primitives";
 import { emailAddress, phoneDisplay, whatsappStockHref } from "@/data/contact";
 import { buildMetadata } from "@/lib/seo";
 
@@ -93,9 +94,9 @@ export default function WhyUsPage() {
       <main className="pt-[50px]">
         <section className={`${containerClass} pt-32 pb-20 text-center max-sm:pt-[106px]`}>
           <div className="reveal">
-            <Tag>Why buy from MacVault</Tag>
-            <h1 className="mx-auto mt-5 max-w-[980px] text-[72px] leading-[0.96] font-semibold max-[768px]:text-[56px] max-[425px]:text-[42px] max-[375px]:text-[40px]">
-              A direct way to buy Apple and PlayStation products in Lahore.
+            <Tag>Why MacVault</Tag>
+            <h1 className="page-title mx-auto mt-5 max-w-[1280px]">
+              A direct way to buy <AnimatedText>Apple</AnimatedText> and <AnimatedText>PlayStation</AnimatedText> products in Lahore.
             </h1>
             <p className="mx-auto mt-6 max-w-[760px] text-[20px] leading-[1.58] text-[#667085] max-[768px]:text-[18px] max-[425px]:text-[16px]">
               Compare the product first, speak directly with MacVault, inspect the exact unit when
@@ -137,7 +138,9 @@ export default function WhyUsPage() {
                       </span>
                       <Sparkles className="size-4 text-[#0a84ff]" />
                     </div>
-                    <h3 className="mb-3 text-[24px] leading-tight font-semibold">{card.title}</h3>
+                    <h3 className="mb-3 text-[24px] leading-tight font-semibold">
+                      <AnimatedText>{card.title.split(" ")[0]}</AnimatedText>{card.title.includes(" ") ? ` ${card.title.split(" ").slice(1).join(" ")}` : ""}
+                    </h3>
                     <p className="text-base leading-[1.55] text-[#667085]">{card.text}</p>
                   </article>
                 );
@@ -171,7 +174,9 @@ export default function WhyUsPage() {
                       <Icon className="size-5" />
                     </div>
                     <div className="mt-5 text-[13px] font-bold text-[#0a84ff]">{step.number}</div>
-                    <h3 className="mt-2 mb-2 text-2xl font-semibold">{step.title}</h3>
+                    <h3 className="mt-2 mb-2 text-2xl font-semibold">
+                      <AnimatedText>{step.title}</AnimatedText>
+                    </h3>
                     <p className="text-[15px] leading-normal text-[#667085]">{step.text}</p>
                   </article>
                 );
@@ -185,7 +190,7 @@ export default function WhyUsPage() {
             <div className="reveal">
               <Tag>Before you pay</Tag>
               <h2 className="section-title mt-2">
-                Check these points on the exact unit.
+                Check these points on the <AnimatedText>exact</AnimatedText> unit.
               </h2>
               <p className="mt-[18px] max-w-[620px] text-[17px] leading-[1.56] text-[#667085]">
                 The product page is the starting point. The exact unit and written terms are what
@@ -212,9 +217,9 @@ export default function WhyUsPage() {
 
         <section className="bg-white py-[60px] text-center">
           <div className={`reveal ${containerClass}`}>
-            <Tag>Choose your next step</Tag>
+            <Tag>Next step</Tag>
             <h2 className="section-title mx-auto mt-2 max-w-[820px]">
-              Browse first. Ask when you are ready.
+              Browse first. <AnimatedText>Ask</AnimatedText> when you are ready.
             </h2>
             <p className="mx-auto mt-[18px] max-w-2xl text-[17px] leading-[1.56] text-[#667085]">
               Open a product page, note the facts you need, then message {phoneDisplay} or email

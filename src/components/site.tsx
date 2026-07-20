@@ -1,6 +1,5 @@
 "use client";
 
-import type { ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -18,9 +17,8 @@ import { Cta } from "@/components/cta";
 import { useCatalog } from "@/components/catalog-provider";
 import { containerClass } from "@/components/layout-classes";
 import { QuoteButton } from "@/components/quote-modal";
+import { AnimatedText } from "@/components/site-primitives";
 import { emailAddress, emailHref, phoneDisplay, phoneHref, whatsappStockHref } from "@/data/contact";
-
-export { containerClass };
 
 const navigationLinks = [
   { label: "Home", href: "/" },
@@ -29,10 +27,6 @@ const navigationLinks = [
   { label: "Why Us", href: "/why-us" },
   { label: "Contact", href: "/contact" },
 ];
-export function AnimatedText({ children }: { children: ReactNode }) {
-  return <span className="animated-text">{children}</span>;
-}
-
 export function Brand() {
   return (
     <Link className="inline-flex min-h-12 min-w-max items-center" href="/" aria-label="MacVault home">
@@ -45,15 +39,6 @@ export function Brand() {
         priority
       />
     </Link>
-  );
-}
-
-export function Tag({ children }: { children: ReactNode }) {
-  return (
-    <span className="tag-pill inline-flex min-h-9 w-fit max-w-full items-center justify-start gap-3 rounded-full border border-[#0a84ff26] bg-white/90 px-3.5 text-[13px] font-semibold tracking-[0.12em] text-[#0057d8] uppercase shadow-[0_10px_30px_rgba(5,20,44,0.05)] max-[425px]:text-[11px] max-[425px]:tracking-[0.1em]">
-      <span className="tag-dot size-2 shrink-0 rounded-full bg-[#0a84ff]" />
-      {children}
-    </span>
   );
 }
 
@@ -191,47 +176,6 @@ export function Header() {
   );
 }
 
-export function SectionHead({
-  kicker,
-  title,
-  accent,
-  text,
-  align = "center",
-}: {
-  kicker: string;
-  title: string;
-  accent: string;
-  text: string;
-  align?: "center" | "left";
-}) {
-  const accentIndex = title.toLowerCase().indexOf(accent.toLowerCase());
-  const before = accentIndex >= 0 ? title.slice(0, accentIndex) : `${title} `;
-  const highlighted = accentIndex >= 0 ? title.slice(accentIndex, accentIndex + accent.length) : accent;
-  const after = accentIndex >= 0 ? title.slice(accentIndex + accent.length) : "";
-
-  return (
-    <div
-      className={`reveal mb-11 max-w-[760px] ${
-        align === "center" ? "mx-auto text-center" : "text-left"
-      } max-sm:mb-8`}
-    >
-      <Tag>{kicker}</Tag>
-      <h2 className="section-title mt-2">
-        {before}
-        <AnimatedText>{highlighted}</AnimatedText>
-        {after}
-      </h2>
-      <p
-        className={`mt-[18px] max-w-2xl text-[17px] leading-[1.56] text-[#667085] max-sm:text-base ${
-          align === "center" ? "mx-auto" : ""
-        }`}
-      >
-        {text}
-      </p>
-    </div>
-  );
-}
-
 export function Footer() {
   const { categories } = useCatalog();
   const columns = [
@@ -290,7 +234,7 @@ export function Footer() {
 
               <div className="mt-6 border-t border-[#102a4314] pt-5">
                 <h3 className="text-xs font-bold tracking-[0.12em] text-[#667085] uppercase">
-                  Categories
+                  <AnimatedText>Categories</AnimatedText>
                 </h3>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {categories.map((category) => (
@@ -310,13 +254,13 @@ export function Footer() {
             <div className="grid content-between rounded-[18px] border border-[#0a84ff14] bg-white p-8 max-[425px]:p-6">
               <div>
                 <span className="inline-flex min-h-9 items-center rounded-full bg-[#eef7ff] px-3 text-xs font-bold tracking-[0.12em] text-[#0057d8] uppercase">
-                  Ask about a product
+                  Confirm a product
                 </span>
                 <h2 className="section-title mt-4 text-[#102a43]">
-                  Check the facts before you pay.
+                  Check the <AnimatedText>facts</AnimatedText> before you pay.
                 </h2>
                 <p className="mt-4 text-[16px] leading-[1.65] text-[#667085]">
-                  Send the product name to {phoneDisplay}. Ask for today&apos;s price, exact condition,
+                  Send the product name to {phoneDisplay}. Confirm today&apos;s price, exact condition,
                   current photos, warranty, included items, and inspection or delivery options.
                 </p>
               </div>
@@ -350,7 +294,9 @@ export function Footer() {
                   <div key={column.title}>
                     <div className="mb-4 flex items-center gap-2 text-[#102a43]">
                       <Icon className="size-4 text-[#0a84ff]" />
-                      <h3 className="text-sm font-semibold">{column.title}</h3>
+                      <h3 className="text-sm font-semibold">
+                        <AnimatedText>{column.title}</AnimatedText>
+                      </h3>
                     </div>
                     <div className="flex flex-col gap-1">
                       {column.links.map((link) => (

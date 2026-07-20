@@ -5,15 +5,49 @@ const productProjection = `{
   "lastUpdated": _updatedAt,
   editorialVersion,
   "slug": slug.current,
-  "category": category->name,
-  title,
-  shortTitle,
+  "category": coalesce(category->name, model->category->name),
+  "categoryKey": coalesce(categoryKey, model->category->name),
+  "title": coalesce(title, model->name),
+  "shortTitle": coalesce(shortTitle, model->name),
+  "model": model->{
+    "id": _id,
+    "key": slug.current,
+    name,
+    brand,
+    releaseYear,
+    "specs": specs[]{
+      "id": _key,
+      label,
+      value
+    }
+  },
+  unitDetails{
+    storage,
+    ram,
+    colour,
+    batteryHealth,
+    batteryCycleCount,
+    ptaStatus,
+    boxStatus,
+    warranty,
+    keyboardLayout,
+    chargerIncluded,
+    connectivity,
+    size,
+    edition,
+    controllerIncluded,
+    gamesIncluded,
+    connector,
+    cableLength,
+    serialStatus,
+    includedItems,
+    notes
+  },
   status,
   condition,
   price,
-  badge,
   accent,
-  summary,
+  "summary": coalesce(summary, description),
   description,
   specs,
   details[]{
@@ -57,17 +91,17 @@ export const CATEGORIES_QUERY = defineQuery(`
 `);
 
 export const PRODUCTS_QUERY = defineQuery(`
-  *[_type == "product" && visibility == "active" && defined(slug.current) && category->active == "active"]
+  *[_type == "product" && visibility == "active" && defined(slug.current) && (category->active == "active" || model->category->active == "active")]
   | order(sortOrder asc, _createdAt desc) ${productProjection}
 `);
 
 export const PRODUCTS_BY_CATEGORY_QUERY = defineQuery(`
-  *[_type == "product" && visibility == "active" && defined(slug.current) && category->slug.current == $slug && category->active == "active"]
+  *[_type == "product" && visibility == "active" && defined(slug.current) && coalesce(category->slug.current, model->category->slug.current) == $slug && (category->active == "active" || model->category->active == "active")]
   | order(sortOrder asc, _createdAt desc) ${productProjection}
 `);
 
 export const PRODUCT_QUERY = defineQuery(`
-  *[_type == "product" && visibility == "active" && slug.current == $slug && category->active == "active"][0]
+  *[_type == "product" && visibility == "active" && slug.current == $slug && (category->active == "active" || model->category->active == "active")][0]
   ${productProjection}
 `);
 

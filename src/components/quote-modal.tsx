@@ -94,7 +94,7 @@ function QuoteModal({
         <div className="relative max-h-[calc(100dvh-32px)] w-full max-w-[680px] overflow-y-auto rounded-[18px] bg-white text-[#102a43] shadow-[0_34px_90px_rgba(5,20,44,0.24)]">
           <div className="bg-[#f4f9ff] px-6 pt-5 pb-5 max-sm:px-5">
             <div className="flex items-start justify-between gap-4">
-              <QuoteTag>Ask for a price</QuoteTag>
+              <QuoteTag>Confirm the price</QuoteTag>
               <Cta asButton type="button" icon={X} variant="secondary" onClick={requestClose}>
                 Close
               </Cta>
@@ -103,11 +103,11 @@ function QuoteModal({
               id={titleId}
               className="mt-3 max-w-[560px] text-[clamp(30px,5vw,48px)] leading-none font-semibold tracking-normal"
             >
-              Tell us which product you are considering.
+              Tell us which <span className="animated-text">product</span> you are considering.
             </h2>
             <p className="mt-3 max-w-[560px] text-[15px] leading-[1.5] text-[#667085]">
               Share the product, budget, preferred condition, and timing. We will prepare a
-              WhatsApp message so you can ask about today&apos;s price and the exact unit.
+              WhatsApp message so you can confirm today&apos;s price and the exact unit.
             </p>
           </div>
 
@@ -117,7 +117,7 @@ function QuoteModal({
               event.preventDefault();
               const formData = new FormData(event.currentTarget);
               const message = [
-                "Hi MacVault, I want to ask for today’s price and product details.",
+                "Hi MacVault, I want to confirm today’s price and product details.",
                 `Name: ${fieldValue(formData, "name")}`,
                 `Phone: ${fieldValue(formData, "phone")}`,
                 `Product: ${fieldValue(formData, "product")}`,
@@ -201,7 +201,7 @@ export function QuoteButton() {
         variant="secondary"
         onClick={() => setModalVersion((current) => (current ?? 0) + 1)}
       >
-        Ask for a price
+        Confirm today&apos;s price
       </Cta>
       {modalVersion !== null ? (
         <QuoteModal

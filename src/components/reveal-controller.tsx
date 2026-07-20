@@ -31,19 +31,6 @@ export function RevealController() {
       });
     };
 
-    const markIfVisible = (target: Element) => {
-      const rect = target.getBoundingClientRect();
-      const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-
-      if (rect.top < viewportHeight * 0.92 && rect.bottom > 0) {
-        target.classList.add("in-view");
-        target.setAttribute("data-in-view", "true");
-        return true;
-      }
-
-      return false;
-    };
-
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -57,11 +44,7 @@ export function RevealController() {
       { threshold: 0.18 },
     );
 
-    targets.forEach((target) => {
-      if (!markIfVisible(target)) {
-        observer.observe(target);
-      }
-    });
+    targets.forEach((target) => observer.observe(target));
 
     const hashTimeouts = [80, 260, 600].map((delay) =>
       window.setTimeout(scrollToHashTarget, delay),

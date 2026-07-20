@@ -20,7 +20,8 @@ import { ComparisonSection } from "@/components/comparison-section";
 import { Cta } from "@/components/cta";
 import { containerClass } from "@/components/layout-classes";
 import { RevealController } from "@/components/reveal-controller";
-import { Footer, Header, SectionHead, Tag } from "@/components/site";
+import { Footer, Header } from "@/components/site";
+import { AnimatedText, SectionHead, Tag } from "@/components/site-primitives";
 import {
   createWhatsappHref,
   emailAddress,
@@ -84,7 +85,7 @@ const checks = [
 
 const buyerPromises = [
   "Product names include the model and important variant information when it is known.",
-  "Reference photos are labelled, so you know when an image is not the exact unit.",
+  "Ask for current photos or video when the exact unit condition matters.",
   "Final price, condition, included items, and warranty terms should be agreed in writing before payment.",
   "You can contact MacVault directly through the phone number, WhatsApp link, or email published on this site.",
 ];
@@ -126,8 +127,8 @@ export function AboutPageShell() {
         <section className={`${containerClass} pt-32 pb-20 text-center max-sm:pt-[106px]`}>
           <div className="reveal">
             <Tag>About MacVault</Tag>
-            <h1 className="mx-auto mt-5 max-w-[980px] text-[72px] leading-[0.96] font-semibold max-[768px]:text-[56px] max-[425px]:text-[42px] max-[375px]:text-[40px]">
-              A simpler way to buy Apple and PlayStation products in Lahore.
+            <h1 className="page-title mx-auto mt-5 max-w-[1280px]">
+              A simpler way to buy <AnimatedText>Apple</AnimatedText> and <AnimatedText>PlayStation</AnimatedText> products in Lahore.
             </h1>
             <p className="mx-auto mt-6 max-w-[760px] text-[20px] leading-[1.58] text-[#667085] max-[768px]:text-[18px] max-[425px]:text-[16px]">
               MacVault helps you compare the product, understand the important details, and speak
@@ -147,9 +148,9 @@ export function AboutPageShell() {
         <section className="border-y border-[#050b141f] bg-white py-[60px]">
           <div className={`${containerClass} grid grid-cols-[0.85fr_1.15fr] gap-[56px] max-[1024px]:grid-cols-1`}>
             <div className="reveal">
-              <Tag>How MacVault works</Tag>
+              <Tag>How it works</Tag>
               <h2 className="section-title mt-2">
-                From finding a product to receiving it.
+                From finding a <AnimatedText>product</AnimatedText> to receiving it.
               </h2>
               <p className="mt-[18px] max-w-[620px] text-[17px] leading-[1.56] text-[#667085]">
                 These four steps show how to choose a product, read the important facts, check the
@@ -181,7 +182,7 @@ export function AboutPageShell() {
                       {activeMilestone.year} / {activeMilestone.label}
                     </span>
                     <h3 className="mt-3 text-[34px] leading-tight font-semibold max-[425px]:text-[28px]">
-                      {activeMilestone.title}
+                      <AnimatedText>{activeMilestone.title.split(" ")[0]}</AnimatedText>{activeMilestone.title.includes(" ") ? ` ${activeMilestone.title.split(" ").slice(1).join(" ")}` : ""}
                     </h3>
                   </div>
                   <div className="flex items-start gap-2">
@@ -258,7 +259,7 @@ export function AboutPageShell() {
 
         <section className={`${containerClass} py-[60px]`}>
           <SectionHead
-            kicker="Check the right details"
+            kicker="Right details"
             title="Different products need different checks."
             accent="checks"
             text="An iPhone buyer, a MacBook buyer, and a PlayStation buyer should not receive the same generic checklist."
@@ -298,7 +299,7 @@ export function AboutPageShell() {
                 <ActiveCheckIcon className="size-7" />
               </div>
               <h3 className="mt-6 text-[38px] leading-none font-semibold max-[425px]:text-[30px]">
-                {activeCheckItem.title}
+                <AnimatedText>{activeCheckItem.title.split(" ")[0]}</AnimatedText>{activeCheckItem.title.includes(" ") ? ` ${activeCheckItem.title.split(" ").slice(1).join(" ")}` : ""}
               </h3>
               <p className="mt-4 max-w-[760px] text-[17px] leading-[1.65] text-[#667085]">
                 {activeCheckItem.text}
@@ -317,9 +318,9 @@ export function AboutPageShell() {
         <section className="border-y border-[#0a84ff14] bg-[#f4f9ff] py-[60px] text-[#102a43]">
           <div className={`${containerClass} grid grid-cols-[0.9fr_1.1fr] gap-[56px] max-[940px]:grid-cols-1`}>
             <div className="reveal">
-              <Tag>What you can expect</Tag>
+              <Tag>What to expect</Tag>
               <h2 className="section-title mt-2">
-                Clear information before payment.
+                Clear <AnimatedText>information</AnimatedText> before payment.
               </h2>
               <p className="mt-[18px] max-w-[620px] text-[17px] leading-[1.56] text-[#667085]">
                 The page gives you a starting point. The exact unit, final price, and written terms
@@ -346,9 +347,9 @@ export function AboutPageShell() {
 
         <section className="bg-white py-[60px] text-center">
           <div className={`reveal ${containerClass}`}>
-            <Tag>Ask about a product</Tag>
+            <Tag>Ask MacVault</Tag>
             <h2 className="section-title mx-auto mt-2 max-w-[820px]">
-              Speak directly with MacVault before you pay.
+              Speak directly with <AnimatedText>MacVault</AnimatedText> before you pay.
             </h2>
             <p className="mx-auto mt-[18px] max-w-2xl text-[17px] leading-[1.56] text-[#667085]">
               Call {phoneDisplay}, email {emailAddress}, or send the product name on WhatsApp. Ask

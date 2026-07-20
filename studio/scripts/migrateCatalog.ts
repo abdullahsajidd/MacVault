@@ -1,7 +1,12 @@
 import {createReadStream, existsSync} from 'node:fs'
 import {resolve} from 'node:path'
 import {getCliClient} from 'sanity/cli'
-import {catalogEditorialVersion, categoryDefinitions, products} from '../../src/data/products'
+import {catalogEditorialVersion, categoryDefinitions, parseBasePrice, products} from '../../src/data/products'
+import {
+  catalogModels,
+  productModelKeyBySlug,
+  productUnitDetailsBySlug,
+} from '../../src/data/catalog-models'
 
 const client = getCliClient({apiVersion: '2026-07-15'})
 const root = resolve(process.cwd(), '..')
@@ -25,6 +30,38 @@ async function upsertCategory(category: (typeof categoryDefinitions)[number], so
     slug: {_type: 'slug', current: category.slug},
     sortOrder,
     active: 'active',
+  }
+
+  if (existing?._id) {
+    await client.patch(existing._id).set(value).commit()
+    return existing._id
+  }
+
+  return (await client.create(value))._id
+}
+
+async function upsertCatalogModel(
+  model: (typeof catalogModels)[number],
+  categoryId: string,
+) {
+  const sourceKey = `catalog-model:${model.key}`
+  const existing = await client.fetch<{_id: string} | null>(
+    `*[_type == "catalogModel" && sourceKey == $sourceKey][0]{_id}`,
+    {sourceKey},
+  )
+  const value = {
+    _type: 'catalogModel',
+    sourceKey,
+    name: model.name,
+    slug: {_type: 'slug', current: model.key},
+    category: {_type: 'reference', _ref: categoryId},
+    brand: model.brand,
+    releaseYear: model.releaseYear,
+    specs: keyed(model.specs, 'spec'),
+    sourceName: model.sourceName,
+    sourceUrl: model.sourceUrl,
+    sourceUpdatedAt: new Date().toISOString(),
+    active: true,
   }
 
   if (existing?._id) {
@@ -69,6 +106,7 @@ async function uploadGallery(product: (typeof products)[number]) {
 async function upsertProduct(
   product: (typeof products)[number],
   categoryId: string,
+  modelId: string,
   sortOrder: number,
 ) {
   const sourceKey = `product:${product.slug}`
@@ -77,6 +115,7 @@ async function upsertProduct(
     {sourceKey},
   )
   const gallery = existing?.galleryCount ? undefined : await uploadGallery(product)
+  const basePrice = parseBasePrice(product.price)
   const value = {
     _type: 'product',
     sourceKey,
@@ -84,25 +123,14 @@ async function upsertProduct(
     shortTitle: product.shortTitle,
     slug: {_type: 'slug', current: product.slug},
     category: {_type: 'reference', _ref: categoryId},
+    categoryKey: product.category,
+    model: {_type: 'reference', _ref: modelId},
+    unitDetails: productUnitDetailsBySlug[product.slug],
     status: product.status,
     condition: product.condition,
-    ...(product.price ? {price: product.price} : {}),
-    badge: product.badge,
+    ...(basePrice ? {price: basePrice} : {}),
     accent: product.accent,
-    summary: product.summary,
     description: product.description,
-    specs: product.specs,
-    details: keyed(product.details, 'detail'),
-    technicalSpecs: keyed(
-      product.technicalSpecs.map(({label, value}) => ({label, value})),
-      'spec',
-    ),
-    listingOptions: keyed(
-      product.listingOptions.map(({label, values}) => ({label, values})),
-      'option',
-    ),
-    highlights: product.highlights,
-    packageItems: product.packageItems,
     editorialVersion: catalogEditorialVersion,
     ...(gallery ? {gallery} : {}),
     sortOrder,
@@ -118,6 +146,14 @@ async function upsertProduct(
 }
 
 async function main() {
+  const missingPrices = products
+    .filter((product) => !parseBasePrice(product.price))
+    .map((product) => product.title)
+
+  if (missingPrices.length) {
+    throw new Error(`Cannot migrate; missing base prices:\n${missingPrices.join('\n')}`)
+  }
+
   const missingImages = products.flatMap((product) =>
     product.gallery
       .map((item) => resolve(root, 'public', item.imageUrl.replace(/^\//, '')))
@@ -130,21 +166,36 @@ async function main() {
 
   const categoryIds = new Map<string, string>()
   for (const [index, category] of categoryDefinitions.entries()) {
-    categoryIds.set(category.category, await upsertCategory(category, index))
+    const id = await upsertCategory(category, index)
+    categoryIds.set(category.category, id)
+    console.log(`Migrated category ${category.label} (${id})`)
+  }
+
+  const modelIds = new Map<string, string>()
+  for (const model of catalogModels) {
+    const categoryId = categoryIds.get(model.category)
+    if (!categoryId) throw new Error(`Missing category for model ${model.name}`)
+    const id = await upsertCatalogModel(model, categoryId)
+    modelIds.set(model.key, id)
+    console.log(`Migrated model ${model.name} (${id})`)
   }
 
   for (const [index, product] of products.entries()) {
     const categoryId = categoryIds.get(product.category)
     if (!categoryId) throw new Error(`Missing category for ${product.title}`)
-    const id = await upsertProduct(product, categoryId, index)
+    const modelKey = productModelKeyBySlug[product.slug]
+    const modelId = modelIds.get(modelKey)
+    if (!modelId) throw new Error(`Missing catalog model for ${product.title}`)
+    const id = await upsertProduct(product, categoryId, modelId, index)
     console.log(`Migrated ${product.title} (${id})`)
   }
 
-  const counts = await client.fetch<{categories: number; products: number}>(`{
+  const counts = await client.fetch<{categories: number; products: number; models: number}>(`{
     "categories": count(*[_type == "category" && active == "active"]),
-    "products": count(*[_type == "product" && visibility == "active"])
+    "products": count(*[_type == "product" && visibility == "active"]),
+    "models": count(*[_type == "catalogModel" && active == true])
   }`)
-  console.log(`Catalog migration complete: ${counts.categories} categories, ${counts.products} products`)
+  console.log(`Catalog migration complete: ${counts.categories} categories, ${counts.products} products, ${counts.models} models`)
 }
 
 main().catch((error) => {

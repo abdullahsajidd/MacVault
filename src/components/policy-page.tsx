@@ -1,5 +1,6 @@
 import { containerClass } from "@/components/layout-classes";
-import { Footer, Header, Tag } from "@/components/site";
+import { Footer, Header } from "@/components/site";
+import { AnimatedText, Tag } from "@/components/site-primitives";
 import { emailAddress, emailHref, phoneDisplay, whatsappStockHref } from "@/data/contact";
 
 export type PolicySection = { title: string; paragraphs: string[] };
@@ -10,14 +11,18 @@ export function PolicyPage({ title, intro, sections }: { title: string; intro: s
       <Header />
       <main id="main-content" className={`${containerClass} pt-[154px] pb-[60px] max-[768px]:pt-[126px]`}>
         <div className="mx-auto max-w-[900px]">
-          <Tag>MacVault buyer information</Tag>
-          <h1 className="mt-6 text-[clamp(44px,6vw,76px)] leading-[.98] font-semibold tracking-[-.045em]">{title}</h1>
+          <Tag>Buyer info</Tag>
+          <h1 className="page-title mt-6">
+            <AnimatedText>{title.split(" ")[0]}</AnimatedText>{title.includes(" ") ? ` ${title.split(" ").slice(1).join(" ")}` : ""}
+          </h1>
           <p className="mt-6 max-w-[760px] text-[19px] leading-[1.65] text-[#667085]">{intro}</p>
           <p className="mt-4 text-sm font-semibold text-[#0057d8]">Last updated: 15 July 2026</p>
           <div className="mt-12 divide-y divide-[#102a4314] border-y border-[#102a4314]">
             {sections.map((section) => (
               <section className="py-8" key={section.title}>
-                <h2 className="text-[28px] font-semibold tracking-[-.025em]">{section.title}</h2>
+                <h2 className="text-[28px] font-semibold tracking-normal">
+                  <AnimatedText>{section.title.split(" ")[0]}</AnimatedText>{section.title.includes(" ") ? ` ${section.title.split(" ").slice(1).join(" ")}` : ""}
+                </h2>
                 {section.paragraphs.map((paragraph) => <p className="mt-4 text-[16px] leading-[1.75] text-[#667085]" key={paragraph}>{paragraph}</p>)}
               </section>
             ))}

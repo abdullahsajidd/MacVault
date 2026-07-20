@@ -6,9 +6,18 @@ import { Cta } from "@/components/cta";
 import { containerClass } from "@/components/layout-classes";
 import { ProductVisual } from "@/components/product-visual";
 import { RevealController } from "@/components/reveal-controller";
-import { Footer, Header, SectionHead, Tag } from "@/components/site";
+import { Footer, Header } from "@/components/site";
+import { AnimatedText, SectionHead, Tag } from "@/components/site-primitives";
 import { createWhatsappHref } from "@/data/contact";
-import { getProductBadge, type Product } from "@/data/products";
+import {
+  getExpectedPriceLabel,
+  getProductBadge,
+  getProductCardHighlights,
+  getProductStockLabel,
+  getProductStockTone,
+  isPtaApprovedProduct,
+  type Product,
+} from "@/data/products";
 import type { SanityCategory } from "@/sanity/types";
 
 const buyingModes = [
@@ -35,6 +44,7 @@ const buyingModes = [
 ];
 
 const allCategory = "All";
+type PtaFilter = "all" | "approved" | "rest";
 
 function hrefForCategory(category: string, categories: SanityCategory[]) {
   return category === allCategory
@@ -64,31 +74,71 @@ function productsForCategory(category: string, allProducts: Product[]) {
     : allProducts.filter((product) => product.category === category);
 }
 
+function productSearchText(product: Product) {
+  return [
+    product.title,
+    product.shortTitle,
+    product.category,
+    product.summary,
+    product.description,
+    product.condition,
+    product.status,
+    getExpectedPriceLabel(product),
+    ...product.details.flatMap((detail) => [detail.label, detail.value]),
+    ...product.technicalSpecs.flatMap((spec) => [spec.label, spec.value]),
+    ...product.listingOptions.flatMap((option) => [option.label, ...option.values]),
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+}
+
+function matchesPtaFilter(product: Product, ptaFilter: PtaFilter) {
+  if (ptaFilter === "all") {
+    return true;
+  }
+
+  const isApproved = isPtaApprovedProduct(product);
+
+  return ptaFilter === "approved" ? isApproved : !isApproved;
+}
+
 export function ProductsPageShell({
   items,
   allProducts,
   categories,
   activeCategory = allCategory,
+  initialSearch = "",
 }: {
   items: Product[];
   allProducts: Product[];
   categories: SanityCategory[];
   activeCategory?: string;
+  initialSearch?: string;
 }) {
   const [selectedCategory, setSelectedCategory] = useState(activeCategory);
+  const [searchQuery, setSearchQuery] = useState(initialSearch);
+  const [ptaFilter, setPtaFilter] = useState<PtaFilter>("all");
   const isCategory = selectedCategory !== allCategory;
+  const showPtaFilter = selectedCategory === allCategory || selectedCategory === "iPhone";
   const selectedCategoryLabel = categoryLabel(selectedCategory, categories);
   const productCategories = [allCategory, ...categories.map((category) => category.category)];
-  const visibleItems = useMemo(
-    () =>
+  const visibleItems = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    const categoryItems =
       selectedCategory === activeCategory
         ? items
-        : productsForCategory(selectedCategory, allProducts),
-    [activeCategory, allProducts, items, selectedCategory],
-  );
+        : productsForCategory(selectedCategory, allProducts);
+
+    return categoryItems.filter((product) => {
+      const matchesSearch = !query || productSearchText(product).includes(query);
+
+      return matchesSearch && matchesPtaFilter(product, ptaFilter);
+    });
+  }, [activeCategory, allProducts, items, ptaFilter, searchQuery, selectedCategory]);
   const inventoryTitle = isCategory
     ? `${selectedCategoryLabel} products in Lahore.`
-    : "Apple and PlayStation products in Lahore.";
+    : "Available Apple and PlayStation products in Lahore.";
   const resultLabel = `${visibleItems.length} ${visibleItems.length === 1 ? "product" : "products"}`;
 
   useEffect(() => {
@@ -108,7 +158,17 @@ export function ProductsPageShell({
   const selectCategory = (category: string) => {
     setSelectedCategory(category);
 
-    const nextHref = hrefForCategory(category, categories);
+    if (category !== allCategory && category !== "iPhone") {
+      setPtaFilter("all");
+    }
+
+    const nextUrl = new URL(hrefForCategory(category, categories), window.location.origin);
+
+    if (searchQuery.trim()) {
+      nextUrl.searchParams.set("search", searchQuery.trim());
+    }
+
+    const nextHref = `${nextUrl.pathname}${nextUrl.search}${nextUrl.hash}`;
 
     if (`${window.location.pathname}${window.location.hash}` !== nextHref) {
       window.history.pushState({ category }, "", nextHref);
@@ -127,15 +187,15 @@ export function ProductsPageShell({
       <main className="pt-[50px]">
         <section className={`${containerClass} pt-32 pb-20 text-center max-sm:pt-[106px]`}>
           <div className="reveal">
-            <Tag>{isCategory ? `${selectedCategoryLabel} in Lahore` : "Current MacVault stock"}</Tag>
-            <h1 className="mx-auto mt-5 max-w-[920px] text-[clamp(48px,8vw,96px)] leading-[0.96] font-semibold tracking-normal">
+            <Tag>{isCategory ? "Category stock" : "Current stock"}</Tag>
+            <h1 className="page-title mx-auto mt-5 max-w-[1280px]">
               {isCategory ? (
                 <>
-                  Compare {selectedCategoryLabel} products before you buy.
+                  Compare <AnimatedText>{selectedCategoryLabel}</AnimatedText> products before you buy.
                 </>
               ) : (
                 <>
-                  Find the product you need. Check the facts first.
+                  Find the <AnimatedText>product</AnimatedText> you need. Check the facts first.
                 </>
               )}
             </h1>
@@ -167,7 +227,9 @@ export function ProductsPageShell({
                   key={mode.title}
                 >
                   <Icon className="mb-5 size-5 text-[#0a84ff]" strokeWidth={2} />
-                  <h3 className="text-xl font-semibold">{mode.title}</h3>
+                  <h3 className="text-xl font-semibold">
+                    <AnimatedText>{mode.title.split(" ")[0]}</AnimatedText>{mode.title.includes(" ") ? ` ${mode.title.split(" ").slice(1).join(" ")}` : ""}
+                  </h3>
                   <p className="mt-2 text-sm leading-normal text-[#667085]">{mode.text}</p>
                 </div>
               );
@@ -177,7 +239,7 @@ export function ProductsPageShell({
 
         <section id="inventory" className={`${containerClass} inventory-anchor py-[60px]`}>
           <SectionHead
-            kicker="Current product range"
+            kicker="Product range"
             title={inventoryTitle}
             accent={isCategory ? selectedCategoryLabel : "available"}
             text={`${resultLabel} shown with photos, condition, specifications, price status, package details, and a direct way to ask about the exact unit.`}
@@ -186,7 +248,55 @@ export function ProductsPageShell({
             {`${resultLabel} shown for ${selectedCategory}.`}
           </p>
 
-          <div className="category-filter-bar reveal mb-8 flex flex-wrap justify-center gap-2">
+          <div className="inventory-tools reveal mb-6">
+            <label className="inventory-search" htmlFor="product-search">
+              <Search className="size-5 text-[#0a84ff]" strokeWidth={2} />
+              <span className="sr-only">Search products</span>
+              <input
+                id="product-search"
+                type="search"
+                value={searchQuery}
+                onChange={(event) => {
+                  const nextSearch = event.target.value;
+                  const nextUrl = new URL(window.location.href);
+                  setSearchQuery(nextSearch);
+
+                  if (nextSearch.trim()) {
+                    nextUrl.searchParams.set("search", nextSearch.trim());
+                  } else {
+                    nextUrl.searchParams.delete("search");
+                  }
+
+                  window.history.replaceState(
+                    window.history.state,
+                    "",
+                    `${nextUrl.pathname}${nextUrl.search}${nextUrl.hash}`,
+                  );
+                }}
+                placeholder="Search model, PTA, storage..."
+              />
+            </label>
+
+            {showPtaFilter ? <div className="pta-filter" aria-label="PTA filter">
+              {[
+                { label: "All", value: "all" },
+                { label: "PTA approved", value: "approved" },
+                { label: "Rest", value: "rest" },
+              ].map((item) => (
+                <button
+                  className={ptaFilter === item.value ? "is-active" : ""}
+                  type="button"
+                  aria-pressed={ptaFilter === item.value}
+                  onClick={() => setPtaFilter(item.value as PtaFilter)}
+                  key={item.value}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div> : null}
+          </div>
+
+          <div className="category-filter-bar reveal mb-8 flex flex-wrap justify-center gap-2" data-category-rail>
             {productCategories.map((category) => {
               const count =
                 category === allCategory
@@ -240,22 +350,24 @@ export function ProductsPageShell({
                     >
                       {getProductBadge(product.category)}
                     </button>
-                    <span className="rounded-full bg-[#23c87918] px-2.5 py-1.5 text-[#14773d]">
-                      {product.status}
+                    <span className={`stock-pill stock-pill-${getProductStockTone(product)}`}>
+                      {getProductStockLabel(product)}
                     </span>
                   </div>
-                  <h3 className="text-[26px] leading-[1.08] font-semibold">{product.title}</h3>
+                  <h3 className="text-[26px] leading-[1.08] font-semibold">
+                    <AnimatedText>{product.title.split(" ")[0]}</AnimatedText>{product.title.includes(" ") ? ` ${product.title.split(" ").slice(1).join(" ")}` : ""}
+                  </h3>
                   <p className="mt-3 text-[15px] leading-[1.55] text-[#667085]">
                     {product.summary}
                   </p>
                   <p className="mt-4 text-lg font-semibold text-[#102a43]">
-                    {product.price ?? "Ask for today’s price"}
+                    {getExpectedPriceLabel(product)}
                   </p>
                   <div className="mt-5 grid gap-3">
                     <div className="flex flex-wrap gap-2" aria-label="Technical specifications">
-                      {product.technicalSpecs.slice(0, 3).map((spec) => (
-                        <span className="product-property" key={spec.id} title={spec.label}>
-                          <strong>{spec.label}:</strong> {spec.value}
+                      {getProductCardHighlights(product).map((highlight, index) => (
+                        <span className="product-property" key={`${highlight.label}-${highlight.value}-${index}`} title={highlight.label}>
+                          <strong>{highlight.label}:</strong> {highlight.value}
                         </span>
                       ))}
                     </div>
@@ -272,11 +384,11 @@ export function ProductsPageShell({
                       View product details
                     </Cta>
                     <Cta
-                      href={createWhatsappHref(`Hi MacVault, I want to check ${product.title}.`)}
+                      href={createWhatsappHref(`Hi MacVault, I want to confirm today’s price for ${product.title}.`)}
                       icon={MessageCircle}
                       variant="secondary"
                     >
-                      Ask about this unit
+                      Confirm today&apos;s price
                     </Cta>
                   </div>
                 </div>
@@ -287,7 +399,7 @@ export function ProductsPageShell({
           {visibleItems.length === 0 ? (
             <div className="rounded-[8px] bg-white p-8 text-center shadow-[inset_0_0_0_1px_rgba(5,20,44,0.10)]">
               <p className="text-lg font-semibold">There are no current products in this category.</p>
-              <p className="mt-2 text-sm text-[#667085]">Browse all products or ask MacVault what is expected next.</p>
+              <p className="mt-2 text-sm text-[#667085]">Try another search, adjust the PTA filter, or browse all products.</p>
               <div className="mt-5">
                 <Cta
                   asButton

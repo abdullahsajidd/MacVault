@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import Image from "next/image";
-import type { ProductGalleryItem, ProductVisualKind } from "@/data/products";
+import type { ProductVisualKind } from "@/data/products";
 
 export function ProductVisual({
   kind,
@@ -8,7 +8,6 @@ export function ProductVisual({
   label,
   imageUrl,
   imageAlt,
-  imageUsage,
   size = "large",
   className = "",
 }: {
@@ -17,7 +16,7 @@ export function ProductVisual({
   label: string;
   imageUrl?: string;
   imageAlt?: string;
-  imageUsage?: ProductGalleryItem["usage"];
+  imageUsage?: "reference" | "exact-unit";
   size?: "large" | "compact";
   className?: string;
 }) {
@@ -35,19 +34,17 @@ export function ProductVisual({
     >
       <div className="absolute inset-x-8 top-8 h-px bg-linear-to-r from-transparent via-[#050b1424] to-transparent" />
       <div className="absolute right-8 bottom-8 left-8 h-px bg-linear-to-r from-transparent via-[#050b1424] to-transparent" />
-      {imageUrl && imageUsage === "reference" ? (
-        <span className="absolute top-4 left-4 z-10 rounded-full border border-white/70 bg-white/90 px-2.5 py-1 text-[11px] font-bold tracking-[0.08em] text-[#475467] uppercase shadow-[0_8px_24px_rgba(5,20,44,0.08)]">
-          Reference photo
-        </span>
-      ) : null}
       {imageUrl ? (
         <Image
           className={`product-visual-image ${size === "compact" ? "object-cover p-0" : "object-contain p-5"}`}
           src={imageUrl}
           alt={imageAlt ?? label}
           fill
-          sizes={size === "compact" ? "(max-width: 940px) 180px, 230px" : "(max-width: 1020px) 100vw, 52vw"}
-          unoptimized
+          sizes={
+            size === "compact"
+              ? "(max-width: 768px) calc(100vw - 40px), (max-width: 1024px) 46vw, (max-width: 1800px) 31vw, 560px"
+              : "(max-width: 1120px) calc(100vw - 40px), 52vw"
+          }
         />
       ) : (
         <div className={`relative grid place-items-center p-8 ${size === "compact" ? "scale-[0.72]" : ""}`}>

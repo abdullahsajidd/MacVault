@@ -1,79 +1,86 @@
+import Image from "next/image";
+import { BadgeCheck, CircleHelp, ClipboardCheck, MessageCircle, ShieldCheck } from "lucide-react";
 import { containerClass } from "@/components/layout-classes";
-import { Tag } from "@/components/site";
+import { AnimatedText, Tag } from "@/components/site-primitives";
 
-export type ComparisonRow = {
-  label: string;
-  listing: string;
-  confirmation: string;
-};
+const otherBrandPoints = [
+  "Listings often focus on the model name, storage, and a broad condition label.",
+  "PTA status, battery health, box contents, warranty, or current photos may need a separate question.",
+  "The buyer usually has to collect details from chat messages before deciding whether to visit or pay.",
+  "Final price and availability can change after the listing is opened.",
+];
 
-export const comparisonRows: ComparisonRow[] = [
-  {
-    label: "Stock",
-    listing: "The page shows whether the product is available, limited, arriving soon, reserved, or sold.",
-    confirmation: "Ask whether the exact model and variant are still available before you travel or send payment.",
-  },
-  {
-    label: "Condition",
-    listing: "The page states whether the product is sealed, open-box, or used, with the known condition notes.",
-    confirmation: "Check photos of the exact unit, marks, battery health, or cycle count when they apply.",
-  },
-  {
-    label: "Price and package",
-    listing: "The page shows a price when one is published and lists the expected box, cable, charger, controller, or accessories.",
-    confirmation: "Get the final price, included items, and warranty terms in writing for the exact unit.",
-  },
-  {
-    label: "Pickup or delivery",
-    listing: "The page explains whether pickup or delivery may be available.",
-    confirmation: "Agree on timing, charges, inspection, payment, and the handover before the order moves forward.",
-  },
+const macVaultPoints = [
+  "Product pages put model, condition, PTA where relevant, battery or cycle details, package, warranty, and availability in one place.",
+  "Ask for current photos or video before payment when exact-unit condition matters.",
+  "WhatsApp starts with useful product context, making it easier to confirm the exact unit before payment.",
+  "Lahore buyers can compare first, then ask for current photos, inspection, pickup, delivery, and written terms.",
 ];
 
 export function ComparisonSection() {
   return (
     <section className={`${containerClass} py-[60px]`}>
-      <div className="reveal mb-10 max-w-[780px]">
-        <Tag>What to check</Tag>
-        <h2 className="section-title mt-2">
-          What you can see now and what to check next.
+      <div className="reveal mb-10 w-full max-w-none">
+        <Tag>Buying compare</Tag>
+        <h2 className="section-title mt-2 max-w-[980px]">
+          Generic listings vs <AnimatedText>MacVault</AnimatedText> product detail.
         </h2>
-        <p className="mt-[18px] text-[17px] leading-[1.56] text-[#667085]">
-          Use the product page to compare your options. Before payment, make sure the exact unit,
-          final price, condition, included items, and warranty match what you were told.
+        <p className="mt-[18px] max-w-[920px] text-[17px] leading-[1.56] text-[#667085]">
+          A good product page should answer the questions that affect a real purchase before the
+          buyer starts a long chat.
         </p>
       </div>
 
-      <div className="comparison-table overflow-hidden rounded-[8px] border border-[#102a431f] bg-white">
-        <div className="comparison-table-head border-b border-[#102a431f] bg-[#f8fbff] text-sm font-semibold text-[#667085]">
-          <div className="border-r border-[#102a431f] p-5">Detail</div>
-          <div className="border-r border-[#102a431f] p-5">What the page shows</div>
-          <div className="p-5">What to check before payment</div>
-        </div>
-
-        {comparisonRows.map((row, index) => (
-          <div
-            className="comparison-table-row reveal border-b border-[#102a431f] last:border-b-0"
-            style={{ transitionDelay: `${index * 60}ms` }}
-            key={row.label}
-          >
-            <div className="border-r border-[#102a431f] p-5 text-sm font-bold text-[#0057d8] max-[768px]:border-r-0 max-[768px]:border-b max-[768px]:bg-[#f8fbff]">
-              {row.label}
-            </div>
-            <div className="border-r border-[#102a431f] p-5 text-[15px] leading-normal text-[#667085] max-[768px]:border-r-0 max-[768px]:border-b">
-              <span className="comparison-mobile-label mb-2 text-xs font-bold tracking-[0.1em] text-[#98a2b3] uppercase">
-                What the page shows
-              </span>
-              {row.listing}
-            </div>
-            <div className="p-5 text-[15px] leading-normal font-medium text-[#102a43]">
-              <span className="comparison-mobile-label mb-2 text-xs font-bold tracking-[0.1em] text-[#0057d8] uppercase">
-                What to check before payment
-              </span>
-              {row.confirmation}
+      <div className="brand-compare-grid reveal">
+        <div className="brand-compare-panel">
+          <div className="brand-compare-logo">
+            <div className="grid size-20 place-items-center rounded-[8px] border border-[#102a4314] bg-[#f8fbff] text-[#667085]">
+              <CircleHelp className="size-9" />
             </div>
           </div>
-        ))}
+          <div>
+            <h3 className="brand-compare-title">
+              Other <AnimatedText>brands</AnimatedText>
+            </h3>
+            <ul className="brand-compare-list mt-6">
+              {otherBrandPoints.map((point) => (
+                <li key={point}>
+                  <ClipboardCheck className="size-5" />
+                  <span>{point}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <div className="brand-compare-panel">
+          <div className="brand-compare-logo">
+            <Image
+              src="/images/brand/macvault-selected-logo.svg"
+              alt="MacVault"
+              width={340}
+              height={102}
+              className="h-auto w-[min(340px,100%)]"
+            />
+          </div>
+          <div>
+            <h3 className="brand-compare-title">
+              Built for the <AnimatedText>exact unit</AnimatedText>.
+            </h3>
+            <ul className="brand-compare-list mt-6">
+              {macVaultPoints.map((point, index) => {
+                const Icon = index === 0 ? BadgeCheck : index === 1 ? ShieldCheck : MessageCircle;
+
+                return (
+                  <li key={point}>
+                    <Icon className="size-5" />
+                    <span>{point}</span>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </div>
       </div>
     </section>
   );

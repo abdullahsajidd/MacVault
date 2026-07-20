@@ -88,7 +88,6 @@ export function ProductSlider({
               alt={item.imageAlt}
               fill
               sizes="140px"
-              unoptimized
             />
           </button>
         ))}
