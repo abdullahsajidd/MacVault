@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { ProductGalleryItem } from "@/data/products";
-import { ProductVisual } from "@/components/product-visual";
+import { ProductThumbnailFallback, ProductVisual } from "@/components/product-visual";
 
 const categoryGalleryCopy: Record<string, { title: string; description: string }> = {
   iPhone: {
@@ -170,13 +170,17 @@ export function ProductSlider({
             }}
             key={`${item.title}-${index}`}
           >
-            <Image
-              className="object-contain p-2"
-              src={item.imageUrl}
-              alt={item.imageAlt}
-              fill
-              sizes="140px"
-            />
+            {item.imageUrl ? (
+              <Image
+                className="object-contain p-2"
+                src={item.imageUrl}
+                alt={item.imageAlt}
+                fill
+                sizes="140px"
+              />
+            ) : (
+              <ProductThumbnailFallback kind={item.kind} accent={accent} />
+            )}
           </button>
         ))}
       </div>

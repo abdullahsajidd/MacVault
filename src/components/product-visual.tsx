@@ -48,15 +48,58 @@ export function ProductVisual({
         />
       ) : (
         <div className={`relative grid place-items-center p-8 ${size === "compact" ? "scale-[0.72]" : ""}`}>
-          {kind === "phone" ? <PhoneMock /> : null}
-          {kind === "laptop" ? <LaptopMock /> : null}
-          {kind === "tablet" ? <TabletMock /> : null}
-          {kind === "watch" ? <WatchMock /> : null}
-          {kind === "console" ? <ConsoleMock /> : null}
-          {kind === "audio" ? <AudioMock /> : null}
+          <ProductMock kind={kind} />
         </div>
       )}
     </div>
+  );
+}
+
+export function ProductThumbnailFallback({
+  kind,
+  accent,
+}: {
+  kind: ProductVisualKind;
+  accent: string;
+}) {
+  const shapeClass =
+    kind === "phone"
+      ? "h-14 w-9 rounded-[12px]"
+      : kind === "laptop"
+        ? "h-10 w-20 rounded-lg"
+        : kind === "tablet"
+          ? "h-14 w-11 rounded-[10px]"
+          : kind === "watch"
+            ? "h-12 w-10 rounded-[12px]"
+            : kind === "console"
+              ? "h-12 w-16 rounded-[10px]"
+              : "h-10 w-16 rounded-[12px]";
+
+  return (
+    <div
+      className="absolute inset-0 grid place-items-center overflow-hidden bg-white"
+      aria-hidden="true"
+    >
+      <div className={`relative border-2 bg-[#f5f5f7] shadow-[0_5px_12px_rgba(5,20,44,0.12)] ${shapeClass}`} style={{ borderColor: accent }}>
+        <div
+          className="absolute inset-[22%] rounded-[5px]"
+          style={{ backgroundColor: accent, opacity: 0.22 }}
+        />
+      </div>
+    </div>
+  );
+}
+
+function ProductMock({ kind }: { kind: ProductVisualKind }) {
+  return (
+    <>
+      {kind === "phone" ? <PhoneMock /> : null}
+      {kind === "laptop" ? <LaptopMock /> : null}
+      {kind === "tablet" ? <TabletMock /> : null}
+      {kind === "watch" ? <WatchMock /> : null}
+      {kind === "console" ? <ConsoleMock /> : null}
+      {kind === "audio" ? <AudioMock /> : null}
+    </>
   );
 }
 
