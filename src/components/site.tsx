@@ -326,7 +326,7 @@ export function Footer() {
           </div>
 
           <div className="flex items-center justify-between gap-5 px-3 pb-1 text-sm text-[#667085] max-sm:flex-col max-sm:items-start">
-            <span>© MacVault</span>
+            <span>&copy; MacVault</span>
             <span>Apple and PlayStation products in Lahore.</span>
           </div>
         </div>

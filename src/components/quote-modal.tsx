@@ -175,7 +175,7 @@ function QuoteModal({
                   ? "WhatsApp opened with your request. Review the message, then send it to MacVault."
                   : `This form does not take payment or place an order. Messages open to ${phoneDisplay}.`}
               </p>
-              <Cta asButton type="submit" icon={Send}>
+              <Cta asButton type="submit" icon={Send} className="shrink-0 whitespace-nowrap">
                 Send on WhatsApp
               </Cta>
             </div>

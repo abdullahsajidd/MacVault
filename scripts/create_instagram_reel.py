@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import math
 import os
+import shutil
 import subprocess
 import wave
 from pathlib import Path
@@ -16,12 +17,7 @@ from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC = ROOT / "public"
 OUTPUT_DIR = ROOT / "artifacts" / "instagram"
-FFMPEG = Path(
-    os.environ.get(
-        "FFMPEG_BIN",
-        "/tmp/macvault-reel-tools/node_modules/@ffmpeg-installer/darwin-x64/ffmpeg",
-    )
-)
+FFMPEG = os.environ.get("FFMPEG_BIN") or shutil.which("ffmpeg")
 
 W, H = 720, 1280
 FPS = 24
@@ -34,14 +30,32 @@ SURFACE = (245, 248, 252)
 WHITE = (255, 255, 255)
 LINE = (216, 227, 241)
 
-FONT_REGULAR = "/System/Library/Fonts/SFNS.ttf"
-FONT_ROUNDED = "/System/Library/Fonts/SFNSRounded.ttf"
-FONT_BOLD = "/System/Library/Fonts/Supplemental/Arial Bold.ttf"
+WINDOWS_FONTS = Path(os.environ.get("WINDIR", "C:/Windows")) / "Fonts"
+FONT_CANDIDATES = {
+    "regular": [
+        WINDOWS_FONTS / "arial.ttf",
+        Path("/System/Library/Fonts/SFNS.ttf"),
+        Path("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"),
+    ],
+    "rounded": [
+        WINDOWS_FONTS / "arial.ttf",
+        Path("/System/Library/Fonts/SFNSRounded.ttf"),
+        Path("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"),
+    ],
+    "bold": [
+        WINDOWS_FONTS / "arialbd.ttf",
+        Path("/System/Library/Fonts/Supplemental/Arial Bold.ttf"),
+        Path("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"),
+    ],
+}
 
 
 def font(size: int, bold: bool = False, rounded: bool = False) -> ImageFont.FreeTypeFont:
-    path = FONT_BOLD if bold else (FONT_ROUNDED if rounded else FONT_REGULAR)
-    return ImageFont.truetype(path, size=size)
+    style = "bold" if bold else ("rounded" if rounded else "regular")
+    path = next((candidate for candidate in FONT_CANDIDATES[style] if candidate.exists()), None)
+    if path is None:
+        raise FileNotFoundError(f"No supported {style} font was found")
+    return ImageFont.truetype(str(path), size=size)
 
 
 def smoothstep(value: float) -> float:
@@ -129,10 +143,18 @@ def base_dark() -> Image.Image:
 
 
 def add_wordmark(canvas: Image.Image, y: int, width: int = 330) -> None:
-    logo = Image.open("/tmp/macvault-selected-logo.png").convert("RGBA")
-    height = int(logo.height * width / logo.width)
-    logo = logo.resize((width, height), Image.Resampling.LANCZOS)
-    canvas.alpha_composite(logo, ((W - width) // 2, y))
+    draw = ImageDraw.Draw(canvas)
+    mark_font = font(max(40, width // 6), bold=True)
+    name_font = font(max(34, width // 8), bold=True)
+    mark_box = draw.textbbox((0, 0), "MV", font=mark_font)
+    name_box = draw.textbbox((0, 0), "MacVault", font=name_font)
+    gap = max(14, width // 24)
+    total_width = mark_box[2] + gap + name_box[2]
+    x = (W - total_width) // 2
+    draw.text((x, y), "M", font=mark_font, fill=INK)
+    m_width = draw.textlength("M", font=mark_font)
+    draw.text((x + m_width - 5, y), "V", font=mark_font, fill=BLUE)
+    draw.text((x + mark_box[2] + gap, y + 8), "MacVault", font=name_font, fill=INK)
 
 
 def add_top_mark(canvas: Image.Image, text: str = "MACVAULT / LAHORE", dark: bool = False) -> None:
@@ -332,8 +354,8 @@ def write_audio(path: Path) -> None:
 
 
 def render() -> tuple[Path, Path]:
-    if not FFMPEG.exists():
-        raise FileNotFoundError(f"ffmpeg was not found at {FFMPEG}")
+    if not FFMPEG or not Path(FFMPEG).exists():
+        raise FileNotFoundError("ffmpeg was not found. Install it or set FFMPEG_BIN.")
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     silent_video = OUTPUT_DIR / "macvault-instagram-reel-silent.mp4"

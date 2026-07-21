@@ -10,7 +10,9 @@
     "studio:dev": "npm --prefix studio run dev",
     "studio:build": "npm --prefix studio run build",
     "studio:deploy": "npm --prefix studio run deploy",
-    "sanity:migrate-catalog": "cd studio && npx sanity exec scripts/migrateCatalog.ts --with-user-token"
+    "sanity:add-category-products": "npm --prefix studio run products:add-category-samples",
+    "sanity:migrate-catalog": "npm --prefix studio run migrate",
+    "sanity:regenerate-slugs": "npm --prefix studio run slugs:regenerate"
   },
   "dependencies": {
     "@sanity/image-url": "^2.1.1",

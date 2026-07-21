@@ -1,9 +1,11 @@
 import type { Metadata, Viewport } from "next";
+import { Suspense } from "react";
 import { buildMetadata, metadataBase } from "@/lib/seo";
 import { Analytics } from "@vercel/analytics/next";
 import { CatalogProvider } from "@/components/catalog-provider";
 import { AnalyticsEvents } from "@/components/analytics-events";
 import { JsonLd } from "@/components/json-ld";
+import { ScrollProgress } from "@/components/scroll-progress";
 import { emailAddress, phoneDisplay } from "@/data/contact";
 import { getCategories, getProducts } from "@/sanity/lib/catalog";
 import { SanityLive } from "@/sanity/lib/live";
@@ -96,6 +98,9 @@ export default async function RootLayout({
   return (
     <html lang="en-PK" className="h-full">
       <body className="min-h-full">
+        <Suspense fallback={null}>
+          <ScrollProgress />
+        </Suspense>
         <JsonLd
           data={[
             {

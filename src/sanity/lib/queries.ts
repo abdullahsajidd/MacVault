@@ -4,6 +4,7 @@ const productProjection = `{
   _id,
   "lastUpdated": _updatedAt,
   editorialVersion,
+  sourceKey,
   "slug": slug.current,
   "category": coalesce(category->name, model->category->name),
   "categoryKey": coalesce(categoryKey, model->category->name),
@@ -68,11 +69,18 @@ const productProjection = `{
   packageItems,
   gallery[]{
     _key,
-    title,
-    caption,
-    kind,
+    "title": coalesce(title, "Product image"),
+    "caption": coalesce(caption, "Ask MacVault for current photos of the exact unit."),
+    "kind": coalesce(kind, select(
+      ^.categoryKey == "iPhone" => "phone",
+      ^.categoryKey == "Mac" => "laptop",
+      ^.categoryKey == "iPad" => "tablet",
+      ^.categoryKey == "Watch" => "watch",
+      ^.categoryKey == "PlayStation" => "console",
+      "audio"
+    )),
     "imageUrl": image.asset->url,
-    "imageAlt": alt,
+    "imageAlt": coalesce(alt, ^.title, ^.model->name, "MacVault product"),
     sourceUrl,
     usage
   }

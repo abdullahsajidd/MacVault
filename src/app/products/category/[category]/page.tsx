@@ -10,6 +10,7 @@ import {
   getPublishedCategorySlugs,
 } from "@/sanity/lib/catalog";
 import { buildMetadata, metadataBase } from "@/lib/seo";
+import { productPath } from "@/lib/product-routes";
 
 export async function generateStaticParams() {
   const categories = await getPublishedCategorySlugs();
@@ -94,7 +95,7 @@ export default async function CategoryPage({
             itemListElement: products.map((product, index) => ({
               "@type": "ListItem",
               position: index + 1,
-              url: new URL(`/products/${product.slug}`, metadataBase).toString(),
+              url: new URL(productPath(product.slug), metadataBase).toString(),
               name: product.title,
             })),
           },

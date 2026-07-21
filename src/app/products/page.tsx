@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { JsonLd } from "@/components/json-ld";
 import { ProductsPageShell } from "@/components/products-page-shell";
 import { buildMetadata, metadataBase } from "@/lib/seo";
+import { productPath } from "@/lib/product-routes";
 import { getCategories, getProducts } from "@/sanity/lib/catalog";
 
 export const metadata: Metadata = buildMetadata({
@@ -27,7 +28,7 @@ export default async function ProductsPage({
     itemListElement: products.map((product, index) => ({
       "@type": "ListItem",
       position: index + 1,
-      url: new URL(`/products/${product.slug}`, metadataBase).toString(),
+      url: new URL(productPath(product.slug), metadataBase).toString(),
       name: product.title,
     })),
   };

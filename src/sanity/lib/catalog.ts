@@ -1,3 +1,4 @@
+import { cache } from "react";
 import {
   categoryDefinitions,
   categoryRoutes,
@@ -15,6 +16,34 @@ import {
 } from "@/sanity/lib/queries";
 import type { SanityCategory, SanityProduct } from "@/sanity/types";
 
+const visualKindByCategory = {
+  iPhone: "phone",
+  Mac: "laptop",
+  iPad: "tablet",
+  Watch: "watch",
+  Accessories: "audio",
+  Cables: "audio",
+  PlayStation: "console",
+} as const;
+
+function normalizedGallery(product: SanityProduct) {
+  if (product.gallery?.length) {
+    return product.gallery;
+  }
+
+  return [
+    {
+      title: product.title || "Product image",
+      caption: "Ask MacVault for current photos of the exact unit.",
+      kind: visualKindByCategory[product.category as keyof typeof visualKindByCategory] ?? "audio",
+      imageUrl: "",
+      imageAlt: product.title || "MacVault product",
+      sourceUrl: "",
+      usage: "reference" as const,
+    },
+  ];
+}
+
 function normalizeProductArrays(product: SanityProduct): SanityProduct {
   return {
     ...product,
@@ -26,7 +55,7 @@ function normalizeProductArrays(product: SanityProduct): SanityProduct {
     listingOptions: product.listingOptions ?? [],
     highlights: product.highlights ?? [],
     packageItems: product.packageItems ?? [],
-    gallery: product.gallery ?? [],
+    gallery: normalizedGallery(product),
   };
 }
 
@@ -45,6 +74,7 @@ function localProductRecords(): SanityProduct[] {
   return localProducts.map((product, index) => ({
     ...product,
     _id: `local-product-${product.slug}`,
+    sourceKey: `product:${product.slug}`,
     editorialVersion: "local-fallback",
     lastUpdated: new Date().toISOString(),
     categoryKey: product.category,
@@ -132,7 +162,10 @@ function mergeModelSpecifications(product: SanityProduct): SanityProduct {
 
 function applyEditorialBaseline(product: SanityProduct): SanityProduct {
   const normalizedProduct = normalizeProductArrays(product);
-  const local = getLocalProduct(normalizedProduct.slug);
+  const sourceSlug = normalizedProduct.sourceKey?.startsWith("product:")
+    ? normalizedProduct.sourceKey.slice("product:".length)
+    : normalizedProduct.slug;
+  const local = getLocalProduct(sourceSlug);
 
   if (!local) {
     return mergeModelSpecifications(normalizedProduct);
@@ -168,7 +201,7 @@ function applyEditorialBaseline(product: SanityProduct): SanityProduct {
   });
 }
 
-export async function getCategories() {
+async function fetchCategories() {
   try {
     const { data } = await sanityFetch({
       query: CATEGORIES_QUERY,
@@ -182,7 +215,9 @@ export async function getCategories() {
   }
 }
 
-export async function getProducts() {
+export const getCategories = cache(fetchCategories);
+
+async function fetchProducts() {
   try {
     const { data } = await sanityFetch({
       query: PRODUCTS_QUERY,
@@ -197,7 +232,9 @@ export async function getProducts() {
   }
 }
 
-export async function getProductsByCategorySlug(slug: string) {
+export const getProducts = cache(fetchProducts);
+
+async function fetchProductsByCategorySlug(slug: string) {
   try {
     const { data } = await sanityFetch({
       query: PRODUCTS_BY_CATEGORY_QUERY,
@@ -215,7 +252,9 @@ export async function getProductsByCategorySlug(slug: string) {
   }
 }
 
-export async function getProduct(slug: string) {
+export const getProductsByCategorySlug = cache(fetchProductsByCategorySlug);
+
+async function fetchProduct(slug: string) {
   try {
     const { data } = await sanityFetch({
       query: PRODUCT_QUERY,
@@ -240,7 +279,9 @@ export async function getProduct(slug: string) {
   }
 }
 
-export async function getPublishedProductSlugs(): Promise<{ slug: string }[]> {
+export const getProduct = cache(fetchProduct);
+
+async function fetchPublishedProductSlugs(): Promise<{ slug: string }[]> {
   try {
     const { data } = await sanityFetch({
       query: PRODUCT_SLUGS_QUERY,
@@ -254,7 +295,9 @@ export async function getPublishedProductSlugs(): Promise<{ slug: string }[]> {
   }
 }
 
-export async function getPublishedCategorySlugs(): Promise<{ slug: string }[]> {
+export const getPublishedProductSlugs = cache(fetchPublishedProductSlugs);
+
+async function fetchPublishedCategorySlugs(): Promise<{ slug: string }[]> {
   try {
     const { data } = await sanityFetch({
       query: CATEGORY_SLUGS_QUERY,
@@ -267,6 +310,8 @@ export async function getPublishedCategorySlugs(): Promise<{ slug: string }[]> {
     return localCatalogFallback().categorySlugs;
   }
 }
+
+export const getPublishedCategorySlugs = cache(fetchPublishedCategorySlugs);
 
 export function findCategoryBySlug(categories: SanityCategory[], slug: string) {
   return categories.find((category) => category.slug === slug);

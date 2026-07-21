@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { metadataBase } from "@/lib/seo";
+import { productPath } from "@/lib/product-routes";
 import { getCategories, getProducts } from "@/sanity/lib/catalog";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -27,7 +28,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
   const productEntries: MetadataRoute.Sitemap = products.map((product) => ({
-    url: new URL(`/products/${product.slug}`, metadataBase).toString(),
+    url: new URL(productPath(product.slug), metadataBase).toString(),
     lastModified: product.lastUpdated ? new Date(product.lastUpdated) : undefined,
     changeFrequency: "daily",
     priority: 0.8,

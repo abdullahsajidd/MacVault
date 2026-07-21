@@ -9,6 +9,7 @@ import { RevealController } from "@/components/reveal-controller";
 import { Footer, Header } from "@/components/site";
 import { AnimatedText, SectionHead, Tag } from "@/components/site-primitives";
 import { createWhatsappHref } from "@/data/contact";
+import { productPath } from "@/lib/product-routes";
 import {
   getExpectedPriceLabel,
   getProductBadge,
@@ -46,6 +47,10 @@ const buyingModes = [
 const allCategory = "All";
 type PtaFilter = "all" | "approved" | "rest";
 
+function normalizePtaFilter(value: string | null): PtaFilter {
+  return value === "approved" || value === "rest" ? value : "all";
+}
+
 function hrefForCategory(category: string, categories: SanityCategory[]) {
   return category === allCategory
     ? "/products#product-grid"
@@ -66,6 +71,38 @@ function categoryFromPathname(pathname: string, fallback: string, categories: Sa
   const categoryRoute = categories.find((route) => pathname === route.href);
 
   return categoryRoute?.category ?? fallback;
+}
+
+function syncStateFromLocation(
+  pathname: string,
+  searchParams: URLSearchParams,
+  fallbackCategory: string,
+  categories: SanityCategory[],
+) {
+  return {
+    category: categoryFromPathname(pathname, fallbackCategory, categories),
+    search: searchParams.get("search") ?? "",
+    ptaFilter: normalizePtaFilter(searchParams.get("pta")),
+  };
+}
+
+function buildCategoryHref(
+  category: string,
+  categories: SanityCategory[],
+  search: string,
+  ptaFilter: PtaFilter,
+) {
+  const nextUrl = new URL(hrefForCategory(category, categories), window.location.origin);
+
+  if (search.trim()) {
+    nextUrl.searchParams.set("search", search.trim());
+  }
+
+  if (ptaFilter !== "all" && (category === allCategory || category === "iPhone")) {
+    nextUrl.searchParams.set("pta", ptaFilter);
+  }
+
+  return `${nextUrl.pathname}${nextUrl.search}${nextUrl.hash}`;
 }
 
 function productsForCategory(category: string, allProducts: Product[]) {
@@ -143,34 +180,39 @@ export function ProductsPageShell({
 
   useEffect(() => {
     const syncCategoryFromUrl = () => {
-      setSelectedCategory((currentCategory) =>
-        categoryFromPathname(window.location.pathname, currentCategory, categories),
+      const nextState = syncStateFromLocation(
+        window.location.pathname,
+        new URLSearchParams(window.location.search),
+        activeCategory,
+        categories,
       );
+
+      setSelectedCategory(nextState.category);
+      setSearchQuery(nextState.search);
+      setPtaFilter(nextState.ptaFilter);
     };
 
+    syncCategoryFromUrl();
     window.addEventListener("popstate", syncCategoryFromUrl);
 
     return () => {
       window.removeEventListener("popstate", syncCategoryFromUrl);
     };
-  }, [categories]);
+  }, [activeCategory, categories]);
 
   const selectCategory = (category: string) => {
+    const nextPtaFilter =
+      category === allCategory || category === "iPhone" ? ptaFilter : "all";
+
     setSelectedCategory(category);
 
-    if (category !== allCategory && category !== "iPhone") {
-      setPtaFilter("all");
+    if (nextPtaFilter !== ptaFilter) {
+      setPtaFilter(nextPtaFilter);
     }
 
-    const nextUrl = new URL(hrefForCategory(category, categories), window.location.origin);
+    const nextHref = buildCategoryHref(category, categories, searchQuery, nextPtaFilter);
 
-    if (searchQuery.trim()) {
-      nextUrl.searchParams.set("search", searchQuery.trim());
-    }
-
-    const nextHref = `${nextUrl.pathname}${nextUrl.search}${nextUrl.hash}`;
-
-    if (`${window.location.pathname}${window.location.hash}` !== nextHref) {
+    if (`${window.location.pathname}${window.location.search}${window.location.hash}` !== nextHref) {
       window.history.pushState({ category }, "", nextHref);
     }
 
@@ -267,6 +309,12 @@ export function ProductsPageShell({
                     nextUrl.searchParams.delete("search");
                   }
 
+                  if (ptaFilter !== "all" && (selectedCategory === allCategory || selectedCategory === "iPhone")) {
+                    nextUrl.searchParams.set("pta", ptaFilter);
+                  } else {
+                    nextUrl.searchParams.delete("pta");
+                  }
+
                   window.history.replaceState(
                     window.history.state,
                     "",
@@ -287,7 +335,21 @@ export function ProductsPageShell({
                   className={ptaFilter === item.value ? "is-active" : ""}
                   type="button"
                   aria-pressed={ptaFilter === item.value}
-                  onClick={() => setPtaFilter(item.value as PtaFilter)}
+                  onClick={() => {
+                    const nextPtaFilter = item.value as PtaFilter;
+                    setPtaFilter(nextPtaFilter);
+
+                    const nextHref = buildCategoryHref(
+                      selectedCategory,
+                      categories,
+                      searchQuery,
+                      nextPtaFilter,
+                    );
+
+                    if (`${window.location.pathname}${window.location.search}${window.location.hash}` !== nextHref) {
+                      window.history.replaceState(window.history.state, "", nextHref);
+                    }
+                  }}
                   key={item.value}
                 >
                   {item.label}
@@ -326,8 +388,8 @@ export function ProductsPageShell({
           <div className="product-list-grid" id="product-grid">
             {visibleItems.map((product) => (
               <article
-                className="listing-card"
-                key={product.slug}
+                className="listing-card product-filter-card"
+                key={`${selectedCategory}-${ptaFilter}-${product.slug}`}
               >
                 <ProductVisual
                   accent={product.accent}
@@ -380,7 +442,7 @@ export function ProductsPageShell({
                     </div>
                   </div>
                   <div className="mt-auto flex flex-wrap justify-start gap-2 pt-6">
-                    <Cta href={`/products/${product.slug}`} icon={ArrowRight}>
+                    <Cta href={productPath(product.slug)} icon={ArrowRight}>
                       View product details
                     </Cta>
                     <Cta

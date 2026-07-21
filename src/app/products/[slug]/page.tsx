@@ -21,6 +21,7 @@ import {
 } from "@/data/products";
 import type { Product, ProductProperty, ProductUnitDetails } from "@/data/products";
 import { buildMetadata, metadataBase } from "@/lib/seo";
+import { productPath, productSlugFromParam } from "@/lib/product-routes";
 import {
   findCategoryByName,
   getCategories,
@@ -136,14 +137,14 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
-  const { slug } = await params;
+  const slug = productSlugFromParam((await params).slug);
   const product = await getProduct(slug);
 
   if (!product) {
     return buildMetadata({
       title: "Product not found",
       description: "The requested MacVault product could not be found.",
-      path: `/products/${slug}`,
+      path: productPath(slug),
       robots: { index: false, follow: true },
     });
   }
@@ -153,7 +154,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   return buildMetadata({
     title: product.title,
     description: `Shop ${product.title}. Check current stock, price, condition, specifications, included items, warranty, and exact unit details with MacVault.`,
-    path: `/products/${product.slug}`,
+    path: productPath(product.slug),
     images: productImage
       ? [
           {
@@ -166,7 +167,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 }
 
 export default async function ProductDetailPage({ params }: ProductPageProps) {
-  const { slug } = await params;
+  const slug = productSlugFromParam((await params).slug);
   const [product, products, categories] = await Promise.all([
     getProduct(slug),
     getProducts(),
@@ -179,13 +180,12 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
 
   const related = products
     .filter((item) => item.category === product.category && item.slug !== product.slug)
-    .concat(products.filter((item) => item.category !== product.category))
     .slice(0, 3);
   const whatsappHref = createWhatsappHref(
     `Hi MacVault, I want to confirm today’s price for ${product.title}. Please share the final price range, exact condition, current photos, warranty, and included items.`,
   );
   const productCategory = findCategoryByName(categories, product.category);
-  const productUrl = new URL(`/products/${product.slug}`, metadataBase).toString();
+  const productUrl = new URL(productPath(product.slug), metadataBase).toString();
   const priceRange = getExpectedPriceRange(product.price);
   const expectedPriceLabel = getExpectedPriceLabel(product);
   const stockLabel = getProductStockLabel(product);
@@ -288,6 +288,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                 gallery={product.gallery}
                 accent={product.accent}
                 title={product.title}
+                category={product.category}
               />
             </div>
 
@@ -431,10 +432,9 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
           </div>
 
           <div className="grid grid-cols-3 gap-[18px] max-[940px]:grid-cols-2 max-sm:grid-cols-1">
-            {related.map((item, index) => (
+            {related.map((item) => (
               <article
-                className="reveal overflow-hidden rounded-lg border border-[#050b141f] bg-white transition hover:-translate-y-1 hover:border-[#0a84ff52]"
-                style={{ transitionDelay: `${index * 100}ms` }}
+                className="related-product-card reveal overflow-hidden rounded-lg border border-[#050b141f] bg-white"
                 key={item.slug}
               >
                 <ProductVisual
@@ -458,7 +458,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                   </h3>
                   <p className="mt-2 text-sm leading-normal text-[#667085]">{item.summary}</p>
                   <p className="mt-4 text-base font-semibold text-[#102a43]">{getExpectedPriceLabel(item)}</p>
-                  <div className="mt-5 flex justify-start"><Cta href={`/products/${item.slug}`} variant="secondary">View product</Cta></div>
+                  <div className="mt-5 flex justify-start"><Cta href={productPath(item.slug)} variant="secondary">View product</Cta></div>
                 </div>
               </article>
             ))}

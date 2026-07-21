@@ -91,7 +91,7 @@ export const productType = defineType({
       description: 'Required internal price. The website never exposes this exact value and automatically shows Rs 5,000 below to Rs 5,000 above it.',
       validation: (rule) => rule.required().integer().positive(),
     }),
-    defineField({name: 'accent', title: 'Accent colour', type: 'string', group: 'listing', validation: (rule) => rule.required().regex(/^#[0-9a-fA-F]{6}$/, {name: 'hex colour'})}),
+    defineField({name: 'accent', title: 'Accent colour', type: 'string', group: 'listing', hidden: true, initialValue: '#0a84ff'}),
     defineField({name: 'description', title: 'Product copy', type: 'text', rows: 4, group: 'listing', validation: (rule) => rule.required().max(320)}),
     defineField({
       name: 'unitDetails',
@@ -136,26 +136,21 @@ export const productType = defineType({
       group: 'images',
       of: [defineArrayMember({type: 'object', name: 'productImage', fields: [
         defineField({name: 'image', title: 'Image', type: 'image', options: {hotspot: true}, validation: (rule) => rule.required()}),
-        defineField({name: 'kind', title: 'Product visual type', type: 'string', options: {list: [
+        defineField({name: 'kind', title: 'Product visual type', type: 'string', hidden: true, options: {list: [
           {title: 'Phone', value: 'phone'},
           {title: 'Laptop', value: 'laptop'},
           {title: 'Tablet', value: 'tablet'},
           {title: 'Watch', value: 'watch'},
           {title: 'Console', value: 'console'},
           {title: 'Audio', value: 'audio'},
-        ]}, validation: (rule) => rule.required()}),
+        ]}}),
         defineField({name: 'alt', title: 'Alternative text', type: 'string', validation: (rule) => rule.required()}),
-        defineField({name: 'title', title: 'Title', type: 'string'}),
-        defineField({name: 'caption', title: 'Caption', type: 'string'}),
+        defineField({name: 'title', title: 'Title', type: 'string', hidden: true}),
+        defineField({name: 'caption', title: 'Caption', type: 'string', hidden: true}),
         defineField({name: 'usage', title: 'Image usage', type: 'string', initialValue: 'exact-unit', options: {layout: 'radio', list: [{title: 'Exact unit', value: 'exact-unit'}, {title: 'Reference image', value: 'reference'}]}, validation: (rule) => rule.required()}),
-        defineField({name: 'sourceUrl', title: 'Original source URL', type: 'url'}),
+        defineField({name: 'sourceUrl', title: 'Original source URL', type: 'url', hidden: true}),
       ], preview: {select: {title: 'title', subtitle: 'alt', media: 'image'}}})],
-      validation: (rule) =>
-        rule.required().min(1).custom((value: Array<{usage?: string}> | undefined) =>
-          value?.some((item) => item.usage === 'exact-unit')
-            ? true
-            : 'Add at least one current photo of the exact unit before publishing.',
-        ),
+      validation: (rule) => rule.required().min(1),
     }),
     defineField({name: 'sortOrder', title: 'Display order', type: 'number', group: 'listing', initialValue: 0, validation: (rule) => rule.required().integer().min(0)}),
     defineField({name: 'visibility', title: 'Visibility', type: 'string', group: 'listing', initialValue: 'active', options: {layout: 'radio', list: [{title: 'Active', value: 'active'}, {title: 'Hidden', value: 'hidden'}]}, validation: (rule) => rule.required()}),

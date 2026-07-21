@@ -7,7 +7,10 @@
     "start": "sanity start",
     "build": "sanity build",
     "deploy": "sanity deploy",
-    "schema:deploy": "sanity schema deploy"
+    "schema:deploy": "sanity schema deploy",
+    "migrate": "sanity exec scripts/migrateCatalog.ts --with-user-token",
+    "products:add-category-samples": "sanity exec scripts/addCategoryProducts.ts --with-user-token",
+    "slugs:regenerate": "sanity exec scripts/regenerateProductSlugs.ts --with-user-token"
   },
   "dependencies": {
     "@sanity/icons": "^5.1.0",
