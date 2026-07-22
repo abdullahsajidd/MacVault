@@ -4,7 +4,8 @@ import { useCallback, useEffect, useId, useRef, useState, type RefObject } from 
 import { FileText, Send, X } from "lucide-react";
 import { useCatalog } from "@/components/catalog-provider";
 import { Cta } from "@/components/cta";
-import { createWhatsappHref, phoneDisplay } from "@/data/contact";
+import { phoneDisplay } from "@/data/contact";
+import { openConsentAwareWhatsapp } from "@/lib/whatsapp-inquiry";
 
 function QuoteTag({ children }: { children: string }) {
   return (
@@ -113,11 +114,12 @@ function QuoteModal({
 
           <form
             className="grid gap-3 p-5 max-sm:p-5"
-            onSubmit={(event) => {
+            onSubmit={async (event) => {
               event.preventDefault();
               const formData = new FormData(event.currentTarget);
               const message = [
                 "Hi MacVault, I want to confirm today’s price and product details.",
+                `Page URL: ${window.location.href}`,
                 `Name: ${fieldValue(formData, "name")}`,
                 `Phone: ${fieldValue(formData, "phone")}`,
                 `Product: ${fieldValue(formData, "product")}`,
@@ -125,8 +127,8 @@ function QuoteModal({
                 `Notes: ${fieldValue(formData, "notes")}`,
               ].join("\n");
 
-              window.open(createWhatsappHref(message), "_blank", "noopener,noreferrer");
               setSent(true);
+              await openConsentAwareWhatsapp(message);
             }}
           >
             <div className="grid grid-cols-2 gap-4 max-sm:grid-cols-1">

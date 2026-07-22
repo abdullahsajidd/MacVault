@@ -1,17 +1,15 @@
 import { defineQuery } from "next-sanity";
 
 const productProjection = `{
-  _id,
   "lastUpdated": _updatedAt,
   editorialVersion,
   sourceKey,
   "slug": slug.current,
   "category": coalesce(category->name, model->category->name),
   "categoryKey": coalesce(categoryKey, model->category->name),
-  "title": coalesce(title, model->name),
-  "shortTitle": coalesce(shortTitle, model->name),
+  "title": model->name,
+  "shortTitle": model->name,
   "model": model->{
-    "id": _id,
     "key": slug.current,
     name,
     brand,
@@ -41,14 +39,13 @@ const productProjection = `{
     connector,
     cableLength,
     serialStatus,
-    includedItems,
-    notes
+    includedItems
   },
   status,
   condition,
   price,
   accent,
-  "summary": coalesce(summary, description),
+  summary,
   description,
   specs,
   details[]{
@@ -81,7 +78,6 @@ const productProjection = `{
     )),
     "imageUrl": image.asset->url,
     "imageAlt": coalesce(alt, ^.title, ^.model->name, "MacVault product"),
-    sourceUrl,
     usage
   }
 }`;

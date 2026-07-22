@@ -28,7 +28,7 @@ export function buildProductSlug(
   categoryKey: string | undefined,
   unitDetails: ProductSlugDetails,
 ) {
-  const model = modelName?.replace(/^iphone\s+/i, '').trim()
+  const model = modelName?.trim()
   const parts = [model && slugPart(model)]
 
   const storage = propertyPart(unitDetails?.storage)
@@ -45,7 +45,7 @@ export function buildProductSlug(
     Mac: ['ram', 'batteryCycleCount', 'keyboardLayout'],
     iPad: ['connectivity'],
     Watch: ['size', 'connectivity'],
-    Accessories: ['connector', 'serialStatus'],
+    Accessories: ['connector'],
     Cables: ['connector', 'cableLength'],
     PlayStation: ['edition'],
   }

@@ -1,8 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
 import { buildMetadata, metadataBase } from "@/lib/seo";
-import { Analytics } from "@vercel/analytics/next";
 import { CatalogProvider } from "@/components/catalog-provider";
+import { PrivacyConsent } from "@/components/privacy-consent";
+import { ProductComparisonProvider } from "@/components/comparison-provider";
+import { FloatingCompareBar } from "@/components/product-comparison";
 import { AnalyticsEvents } from "@/components/analytics-events";
 import { JsonLd } from "@/components/json-ld";
 import { ScrollProgress } from "@/components/scroll-progress";
@@ -13,13 +15,6 @@ import "./globals.css";
 
 const homeDescription =
   "Browse iPhones, MacBooks, iPads, Apple Watch, AirPods, and PS5 products from MacVault in Lahore with clear condition, warranty, and stock details.";
-const googleTagManagerId = "GTM-PD3VKNCB";
-const googleTagManagerScript = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','${googleTagManagerId}');`;
-
 export const revalidate = 60;
 
 export const metadata: Metadata = {
@@ -104,17 +99,8 @@ export default async function RootLayout({
   return (
     <html lang="en-PK" className="h-full">
       <head>
-        <script dangerouslySetInnerHTML={{ __html: googleTagManagerScript }} />
       </head>
       <body className="min-h-full">
-        <noscript>
-          <iframe
-            src={`https://www.googletagmanager.com/ns.html?id=${googleTagManagerId}`}
-            height="0"
-            width="0"
-            style={{ display: "none", visibility: "hidden" }}
-          />
-        </noscript>
         <Suspense fallback={null}>
           <ScrollProgress />
         </Suspense>
@@ -168,11 +154,14 @@ export default async function RootLayout({
           Skip to main content
         </a>
         <CatalogProvider products={products} categories={categories}>
-          {children}
+          <ProductComparisonProvider>
+            {children}
+            <FloatingCompareBar />
+          </ProductComparisonProvider>
         </CatalogProvider>
         <AnalyticsEvents />
         <SanityLive />
-        {process.env.VERCEL ? <Analytics /> : null}
+        <PrivacyConsent />
       </body>
     </html>
   );

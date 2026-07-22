@@ -92,7 +92,7 @@ export function Header() {
         <nav className="flex items-center gap-1 max-[940px]:hidden" aria-label="Main navigation">
           {navigationLinks.map((link) => (
             <Link
-              className={`rounded-full border px-3 py-2.5 text-sm font-medium transition-colors duration-300 ${
+              className={`rounded-full border px-[10px] py-[5px] text-sm font-medium transition-colors duration-300 ${
                 isActive(link.href)
                   ? "border-[#0a84ff38] bg-[#eef7ff] text-[#0057d8]"
                   : "border-transparent text-[#475467] hover:border-[#0a84ff24] hover:bg-[#f4f9ff] hover:text-[#0057d8]"

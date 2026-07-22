@@ -706,7 +706,7 @@ export function getProductBadge(category: string) {
 }
 
 const expectedPriceRangeOffset = 5000;
-const fallbackTemplateValue = "Confirm with MacVault before payment";
+const fallbackTemplateValue = "Not Available";
 
 type DetailLike = {
   label: string;

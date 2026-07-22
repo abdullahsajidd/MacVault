@@ -15,6 +15,7 @@ import {
   PRODUCT_SLUGS_QUERY,
 } from "@/sanity/lib/queries";
 import type { SanityCategory, SanityProduct } from "@/sanity/types";
+import { client } from "@/sanity/lib/client";
 
 const visualKindByCategory = {
   iPhone: "phone",
@@ -25,6 +26,11 @@ const visualKindByCategory = {
   Cables: "audio",
   PlayStation: "console",
 } as const;
+
+const productsQuery = PRODUCTS_QUERY;
+const productsByCategoryQuery = PRODUCTS_BY_CATEGORY_QUERY;
+const productQuery = PRODUCT_QUERY;
+const productSlugsQuery = PRODUCT_SLUGS_QUERY;
 
 function normalizedGallery(product: SanityProduct) {
   if (product.gallery?.length) {
@@ -44,11 +50,24 @@ function normalizedGallery(product: SanityProduct) {
   ];
 }
 
+function cleanLegacyDescription(description?: string) {
+  if (!description) return "";
+
+  const paragraphs = description.split(/\n\s*\n/).map((part) => part.trim()).filter(Boolean);
+  if (paragraphs.length >= 2 && paragraphs[1].startsWith(`${paragraphs[0]} |`)) {
+    paragraphs.shift();
+    paragraphs[0] = paragraphs[0].slice(paragraphs[0].indexOf("|") + 1).trim();
+  }
+
+  return paragraphs.join("\n\n");
+}
+
 function normalizeProductArrays(product: SanityProduct): SanityProduct {
+  const description = cleanLegacyDescription(product.description || product.summary);
   return {
     ...product,
-    summary: product.summary || product.description,
-    description: product.description || product.summary,
+    summary: product.summary || description,
+    description,
     specs: product.specs ?? [],
     details: product.details ?? [],
     technicalSpecs: product.technicalSpecs ?? [],
@@ -105,31 +124,8 @@ function localCatalogFallback() {
   };
 }
 
-const modelSpecLabelsByCategory: Record<string, string[]> = {
-  iPhone: ["Display", "Chipset", "Cameras", "Charging port"],
-  Mac: ["Processor", "Chipset", "Display", "Ports", "Charging"],
-  iPad: ["Chipset", "Display", "Camera", "Cameras", "Port", "Connectivity", "Input"],
-  Watch: ["Chipset", "Display", "Water"],
-  Accessories: ["Chipset", "Audio", "Controls", "Water", "Design"],
-  Cables: ["Connector", "Data", "Power", "Compatibility"],
-  PlayStation: ["Output"],
-};
-
-function stableModelSpecs(product: SanityProduct) {
-  const allowed = new Set(
-    (modelSpecLabelsByCategory[product.category] ?? []).map((item) => item.toLowerCase()),
-  );
-
-  if (!allowed.size) {
-    return product.model?.specs ?? [];
-  }
-
-  return (product.model?.specs ?? []).filter((spec) => allowed.has(spec.label.toLowerCase()));
-}
-
 function mergeModelSpecifications(product: SanityProduct): SanityProduct {
-  const filteredModelSpecs = stableModelSpecs(product);
-  const modelSpecs = filteredModelSpecs.map((spec, index) => ({
+  const modelSpecs = (product.model?.specs ?? []).map((spec, index) => ({
     ...spec,
     id: `model-${product.model?.key ?? "spec"}-${spec.id ?? index}`,
   }));
@@ -219,16 +215,11 @@ export const getCategories = cache(fetchCategories);
 
 async function fetchProducts() {
   try {
-    const { data } = await sanityFetch({
-      query: PRODUCTS_QUERY,
-      perspective: "published",
-      stega: false,
-    });
-    const products = data as SanityProduct[];
+    const products = (await client.fetch<SanityProduct[]>(productsQuery, {}, {perspective: "published", cache: "no-store"})) as SanityProduct[];
 
     return products.map(applyEditorialBaseline);
   } catch {
-    return localCatalogFallback().products.map(applyEditorialBaseline);
+    return [];
   }
 }
 
@@ -236,19 +227,11 @@ export const getProducts = cache(fetchProducts);
 
 async function fetchProductsByCategorySlug(slug: string) {
   try {
-    const { data } = await sanityFetch({
-      query: PRODUCTS_BY_CATEGORY_QUERY,
-      params: { slug },
-      perspective: "published",
-      stega: false,
-    });
-    const products = data as SanityProduct[];
+    const products = (await client.fetch<SanityProduct[]>(productsByCategoryQuery, {slug}, {perspective: "published", cache: "no-store"})) as SanityProduct[];
 
     return products.map(applyEditorialBaseline);
   } catch {
-    return localCatalogFallback()
-      .products.filter((product) => product.category === categoryRoutes.find((route) => route.slug === slug)?.category)
-      .map(applyEditorialBaseline);
+    return [];
   }
 }
 
@@ -256,26 +239,11 @@ export const getProductsByCategorySlug = cache(fetchProductsByCategorySlug);
 
 async function fetchProduct(slug: string) {
   try {
-    const { data } = await sanityFetch({
-      query: PRODUCT_QUERY,
-      params: { slug },
-      perspective: "published",
-      stega: false,
-    });
-    const product = data as SanityProduct | null;
+    const product = await client.fetch<SanityProduct | null>(productQuery, {slug}, {perspective: "published", cache: "no-store"});
 
     return product ? applyEditorialBaseline(product) : null;
   } catch {
-    const fallback = getLocalProduct(slug);
-
-    return fallback
-      ? applyEditorialBaseline({
-          ...fallback,
-          _id: `local-product-${fallback.slug}`,
-          editorialVersion: "local-fallback",
-          categoryKey: fallback.category,
-        } as SanityProduct)
-      : null;
+    return null;
   }
 }
 
@@ -283,15 +251,9 @@ export const getProduct = cache(fetchProduct);
 
 async function fetchPublishedProductSlugs(): Promise<{ slug: string }[]> {
   try {
-    const { data } = await sanityFetch({
-      query: PRODUCT_SLUGS_QUERY,
-      perspective: "published",
-      stega: false,
-    });
-
-    return data as { slug: string }[];
+    return await client.fetch<{ slug: string }[]>(productSlugsQuery, {}, {perspective: "published", cache: "no-store"});
   } catch {
-    return localCatalogFallback().productSlugs;
+    return [];
   }
 }
 

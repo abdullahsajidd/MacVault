@@ -28,7 +28,7 @@ export default function PrivacyPage() {
         {
           title: "Other services involved",
           paragraphs: [
-            "WhatsApp, phone, email, website hosting, analytics, and delivery providers may process information under their own policies. Never send a password, one-time code, or unnecessary payment information through chat.",
+            "WhatsApp, phone, email, website hosting, optional analytics, and delivery providers may process information under their own policies. Optional analytics and technical inquiry details, including your IP address and browser information, are used only after you choose Accept analytics & details in the consent banner. The site stores that choice locally in your browser. Never send a password, one-time code, or unnecessary payment information through chat.",
           ],
         },
         {

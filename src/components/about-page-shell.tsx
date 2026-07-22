@@ -132,7 +132,7 @@ export function AboutPageShell() {
             </h1>
             <p className="mx-auto mt-6 max-w-[760px] text-[20px] leading-[1.58] text-[#667085] max-[768px]:text-[18px] max-[425px]:text-[16px]">
               MacVault helps you compare the product, understand the important details, and speak
-              directly with the seller before you inspect, collect, or arrange delivery.
+              directly with MacVault before you inspect, collect, or arrange delivery.
             </p>
             <div className="mt-[30px] flex flex-wrap justify-center gap-3">
               <Cta href={storyHref} icon={MessageCircle}>

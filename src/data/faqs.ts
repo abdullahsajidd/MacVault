@@ -18,7 +18,7 @@ export const faqItems: FaqItem[] = [
   { question: "What is the return policy?", answer: "Return eligibility depends on the product, disclosed condition, warranty, and agreed terms. Read the returns page and confirm any unit-specific exception in writing before payment." },
   { question: "How is my personal data handled?", answer: "Share only the information needed to answer your request or arrange handover. Never send passwords, verification codes, unnecessary card details, or device account credentials through chat." },
   { question: "What do JV, non-PTA, and factory unlocked mean?", answer: "These labels affect network use and value. Ask us to state the exact status in plain language, then verify SIM behaviour and PTA information for the exact phone before payment." },
-  { question: "How can I verify Apple warranty coverage?", answer: "Ask for the serial number when appropriate and check Apple's coverage information. Also confirm whether the seller offers any separate checking warranty and what it covers." },
+  { question: "How can I verify Apple warranty coverage?", answer: "Ask for the serial number when appropriate and check Apple's coverage information. Also confirm whether a separate checking warranty applies and what it covers." },
   { question: "What should I check on a PlayStation?", answer: "Confirm disc or digital edition, storage, region or version, controller count and condition, included games, ports, Wi-Fi, disc drive where relevant, seals, warranty, and bundle contents." },
   { question: "How do I contact MacVault about a product?", answer: "Send the product name through WhatsApp or email contact@macvault.pk. Include the model, storage, preferred condition, PTA requirement where relevant, budget, and location." },
 ];

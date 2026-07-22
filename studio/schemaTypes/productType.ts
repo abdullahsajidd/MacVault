@@ -25,8 +25,8 @@ export const productType = defineType({
     {name: 'images', title: 'Images'},
   ],
   fields: [
-    defineField({name: 'title', title: 'Optional listing title override', type: 'string', group: 'listing', description: 'Use this only when the exact listing needs variant wording, for example iPhone 14 Pro 256GB Non-PTA.'}),
-    defineField({name: 'shortTitle', title: 'Optional short title', type: 'string', group: 'listing', description: 'Leave blank to use the selected model name.'}),
+    defineField({name: 'title', title: 'Legacy title override', type: 'string', group: 'listing', description: 'Leave blank. The selected model name is the public product name.'}),
+    defineField({name: 'shortTitle', title: 'Legacy short title override', type: 'string', group: 'listing', description: 'Leave blank. The selected model name is used everywhere.'}),
     defineField({name: 'slug', title: 'Auto listing slug', type: 'slug', group: 'listing', hidden: true, readOnly: true, options: {source: 'title', maxLength: 96}}),
     defineField({name: 'category', title: 'Auto category', type: 'reference', group: 'listing', to: [{type: 'category'}], hidden: true, readOnly: true}),
     defineField({
@@ -92,7 +92,7 @@ export const productType = defineType({
       validation: (rule) => rule.required().integer().positive(),
     }),
     defineField({name: 'accent', title: 'Accent colour', type: 'string', group: 'listing', hidden: true, initialValue: '#0a84ff'}),
-    defineField({name: 'description', title: 'Product copy', type: 'text', rows: 4, group: 'listing', validation: (rule) => rule.required().max(320)}),
+    defineField({name: 'description', title: 'Product description', type: 'text', rows: 8, group: 'listing', description: 'Write buyer-facing prose only. Do not repeat the model name or specification headings. Model facts and exact-unit details belong in their dedicated fields.', validation: (rule) => rule.required().max(2000)}),
     defineField({
       name: 'unitDetails',
       title: 'Exact unit details',
@@ -126,7 +126,6 @@ export const productType = defineType({
         defineField({name: 'cableLength', title: 'Cable length', type: 'string', hidden: onlyFor(['Cables'])}),
         defineField({name: 'serialStatus', title: 'Serial or authenticity status', type: 'string', hidden: onlyFor(['Accessories', 'Cables'])}),
         defineField({name: 'includedItems', title: 'Included items', type: 'array', of: [defineArrayMember({type: 'string'})]}),
-        defineField({name: 'notes', title: 'Unit notes', type: 'text', rows: 3}),
       ],
     }),
     defineField({

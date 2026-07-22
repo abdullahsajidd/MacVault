@@ -3,6 +3,8 @@
 import { useEffect } from "react";
 import { track } from "@vercel/analytics";
 
+const CONSENT_STORAGE_KEY = "macvault-privacy-consent";
+
 function accessibleLabel(element: Element) {
   return (
     element.getAttribute("aria-label") ??
@@ -18,6 +20,8 @@ function accessibleLabel(element: Element) {
 export function AnalyticsEvents() {
   useEffect(() => {
     const handleClick = (event: MouseEvent) => {
+      if (window.localStorage.getItem(CONSENT_STORAGE_KEY) !== "accepted") return;
+
       const target = event.target instanceof Element ? event.target.closest("a, button, summary") : null;
 
       if (!target) {
@@ -51,6 +55,8 @@ export function AnalyticsEvents() {
     };
 
     const handleChange = (event: Event) => {
+      if (window.localStorage.getItem(CONSENT_STORAGE_KEY) !== "accepted") return;
+
       const target = event.target;
 
       if (target instanceof HTMLInputElement && target.type === "search") {

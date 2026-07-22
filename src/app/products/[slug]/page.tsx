@@ -7,14 +7,13 @@ import { JsonLd } from "@/components/json-ld";
 import { containerClass } from "@/components/layout-classes";
 import { ProductSlider } from "@/components/product-slider";
 import { ProductVisual } from "@/components/product-visual";
+import { ProductWhatsappCta } from "@/components/product-whatsapp-cta";
 import { RevealController } from "@/components/reveal-controller";
 import { Footer, Header } from "@/components/site";
 import { AnimatedText, Tag } from "@/components/site-primitives";
-import { createWhatsappHref } from "@/data/contact";
 import {
   getExpectedPriceLabel,
   getExpectedPriceRange,
-  getProductBadge,
   getProductStockLabel,
   getProductStockTone,
   getProductTemplate,
@@ -65,27 +64,10 @@ function schemaCondition(condition: string) {
   return "https://schema.org/NewCondition";
 }
 
-const modelSpecLabelsByCategory: Record<string, string[]> = {
-  iPhone: ["Display", "Chipset", "Cameras", "Charging port"],
-  Mac: ["Processor", "Chipset", "Display", "Ports", "Charging"],
-  iPad: ["Chipset", "Display", "Camera", "Cameras", "Port", "Connectivity", "Input"],
-  Watch: ["Chipset", "Display", "Water"],
-  Accessories: ["Chipset", "Audio", "Controls", "Water", "Design"],
-  Cables: ["Connector", "Data", "Power", "Compatibility"],
-  PlayStation: ["Output"],
-};
-
 const boxRelevantCategories = new Set(["iPhone", "iPad", "Watch", "Accessories", "PlayStation", "Cables"]);
 
 function displayModelSpecs(product: Product): ProductProperty[] {
-  const modelSpecs = product.model?.specs?.length ? product.model.specs : product.technicalSpecs;
-  const allowed = new Set((modelSpecLabelsByCategory[product.category] ?? []).map((item) => item.toLowerCase()));
-
-  if (!allowed.size) {
-    return modelSpecs;
-  }
-
-  return modelSpecs.filter((spec) => allowed.has(spec.label.toLowerCase()));
+  return product.model?.specs ?? [];
 }
 
 function yesNo(value: boolean) {
@@ -98,7 +80,7 @@ function unitDetailRows(product: Product) {
 
   if (!details) {
     return boxRelevantCategories.has(product.category)
-      ? [{ label: "Box", value: "Confirm on WhatsApp" }]
+      ? [{ label: "Box", value: "Not Available" }, { label: "Warranty", value: "Not Available" }]
       : rows;
   }
 
@@ -112,10 +94,10 @@ function unitDetailRows(product: Product) {
   if (details.boxStatus) {
     rows.push({ label: "Box", value: details.boxStatus });
   } else if (boxRelevantCategories.has(product.category)) {
-    rows.push({ label: "Box", value: "Confirm on WhatsApp" });
+    rows.push({ label: "Box", value: "Not Available" });
   }
 
-  if (details.warranty) rows.push({ label: "Warranty", value: details.warranty });
+  rows.push({ label: "Warranty", value: details.warranty || "Not Available" });
   if (details.keyboardLayout) rows.push({ label: "Keyboard layout", value: details.keyboardLayout });
   if (details.chargerIncluded != null) rows.push({ label: "Charger included", value: yesNo(details.chargerIncluded) });
   if (details.connectivity) rows.push({ label: "Connectivity", value: details.connectivity });
@@ -127,7 +109,6 @@ function unitDetailRows(product: Product) {
   if (details.cableLength) rows.push({ label: "Cable length", value: details.cableLength });
   if (details.serialStatus) rows.push({ label: "Serial status", value: details.serialStatus });
   if (details.includedItems?.length) rows.push({ label: "Included items", value: details.includedItems.join(" · ") });
-  if (details.notes) rows.push({ label: "Notes", value: details.notes });
 
   return rows;
 }
@@ -181,11 +162,8 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
   const related = products
     .filter((item) => item.category === product.category && item.slug !== product.slug)
     .slice(0, 3);
-  const whatsappHref = createWhatsappHref(
-    `Hi MacVault, I want to confirm today’s price for ${product.title}. Please share the final price range, exact condition, current photos, warranty, and included items.`,
-  );
-  const productCategory = findCategoryByName(categories, product.category);
   const productUrl = new URL(productPath(product.slug), metadataBase).toString();
+  const productCategory = findCategoryByName(categories, product.category);
   const priceRange = getExpectedPriceRange(product.price);
   const expectedPriceLabel = getExpectedPriceLabel(product);
   const stockLabel = getProductStockLabel(product);
@@ -232,7 +210,6 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
             offerCount: 1,
             availability,
             itemCondition,
-            seller: { "@id": new URL("/#organization", metadataBase).toString() },
           },
         }
       : {}),
@@ -293,11 +270,11 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
             </div>
 
             <div className="reveal self-start max-[1120px]:order-1">
-              <Tag>{getProductBadge(product.category)}</Tag>
+              <Tag>{product.category}</Tag>
               <h1 className="page-title mt-4">
-                <AnimatedText>{product.title.split(" ")[0]}</AnimatedText>{product.title.includes(" ") ? ` ${product.title.split(" ").slice(1).join(" ")}` : ""}
+                <AnimatedText>{product.shortTitle || product.title}</AnimatedText>
               </h1>
-              <p className="mt-5 text-[18px] leading-[1.58] text-[#667085]">{product.description}</p>
+              <p className="mt-5 whitespace-pre-line text-[18px] leading-[1.58] text-[#667085]">{product.description}</p>
 
               <div id="reserve" className="reserve-card mt-7 rounded-lg border border-[#050b141f] bg-white p-5 shadow-[0_18px_54px_rgba(5,20,44,0.06)]">
                 <div className="flex items-start justify-between gap-4 max-sm:flex-col">
@@ -314,7 +291,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                   </span>
                 </div>
                 <div className="mt-5 flex flex-wrap justify-start gap-3">
-                  <Cta href={whatsappHref}>Confirm today&apos;s price</Cta>
+                  <ProductWhatsappCta productName={product.title} productUrl={productUrl} />
                   <Cta href="/why-us" variant="secondary">How buying works</Cta>
                 </div>
               </div>
@@ -363,7 +340,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                 </div>
               </div>
 
-              <div className="reveal border-t border-[#050b141f] pt-5">
+              {modelSpecs.length > 0 && <div className="reveal border-t border-[#050b141f] pt-5">
                 <h3 className="text-2xl font-semibold"><AnimatedText>Model</AnimatedText> specifications</h3>
                 <div className="mt-5 flex flex-wrap gap-2">
                   {modelSpecs.map((spec) => (
@@ -372,7 +349,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                     </span>
                   ))}
                 </div>
-              </div>
+              </div>}
 
               <div className="reveal border-t border-[#050b141f] pt-5 delay-75">
                 <h3 className="text-2xl font-semibold"><AnimatedText>Product</AnimatedText> details</h3>
@@ -385,13 +362,13 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                     ))
                   ) : (
                     <span className="product-option">
-                      <strong>Exact details:</strong> Confirm on WhatsApp
+                      <strong>Exact details:</strong> Not Available
                     </span>
                   )}
                 </div>
               </div>
 
-              <div className="reveal border-t border-[#050b141f] pt-5">
+              {product.highlights.length > 0 && <div className="reveal border-t border-[#050b141f] pt-5">
                 <BadgeCheck className="mb-5 size-6 text-[#0a84ff]" strokeWidth={2} />
                 <h3 className="text-2xl font-semibold"><AnimatedText>Why</AnimatedText> it may suit you</h3>
                 <ul className="mt-5 space-y-3 text-[15px] leading-normal text-[#667085]">
@@ -402,9 +379,9 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                     </li>
                   ))}
                 </ul>
-              </div>
+              </div>}
 
-              <div className="reveal border-t border-[#050b141f] pt-5 delay-100">
+              {product.packageItems.length > 0 && <div className="reveal border-t border-[#050b141f] pt-5 delay-100">
                 <PackageCheck className="mb-5 size-6 text-[#0a84ff]" strokeWidth={2} />
                 <h3 className="text-2xl font-semibold"><AnimatedText>What</AnimatedText> to confirm before payment</h3>
                 <ul className="mt-5 space-y-3 text-[15px] leading-normal text-[#667085]">
@@ -415,7 +392,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                     </li>
                   ))}
                 </ul>
-              </div>
+              </div>}
             </div>
           </div>
         </section>

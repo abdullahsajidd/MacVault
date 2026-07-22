@@ -1,21 +1,19 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { ArrowRight, BadgeCheck, MessageCircle, Search, Truck } from "lucide-react";
+import { ArrowRight, BadgeCheck, MessageCircle, Scale, Search, Truck } from "lucide-react";
 import { Cta } from "@/components/cta";
+import { useProductComparison } from "@/components/comparison-provider";
 import { containerClass } from "@/components/layout-classes";
+import { ProductWhatsappCta } from "@/components/product-whatsapp-cta";
 import { ProductVisual } from "@/components/product-visual";
 import { RevealController } from "@/components/reveal-controller";
 import { Footer, Header } from "@/components/site";
 import { AnimatedText, SectionHead, Tag } from "@/components/site-primitives";
-import { createWhatsappHref } from "@/data/contact";
 import { productPath } from "@/lib/product-routes";
 import {
   getExpectedPriceLabel,
-  getProductBadge,
   getProductCardHighlights,
-  getProductStockLabel,
-  getProductStockTone,
   isPtaApprovedProduct,
   type Product,
 } from "@/data/products";
@@ -153,6 +151,7 @@ export function ProductsPageShell({
   activeCategory?: string;
   initialSearch?: string;
 }) {
+  const { isCompared, toggleCompare } = useProductComparison();
   const [selectedCategory, setSelectedCategory] = useState(activeCategory);
   const [searchQuery, setSearchQuery] = useState(initialSearch);
   const [ptaFilter, setPtaFilter] = useState<PtaFilter>("all");
@@ -410,16 +409,13 @@ export function ProductsPageShell({
                       type="button"
                       onClick={() => selectCategory(product.category)}
                     >
-                      {getProductBadge(product.category)}
+                      {product.category}
                     </button>
-                    <span className={`stock-pill stock-pill-${getProductStockTone(product)}`}>
-                      {getProductStockLabel(product)}
-                    </span>
                   </div>
                   <h3 className="text-[26px] leading-[1.08] font-semibold">
-                    <AnimatedText>{product.title.split(" ")[0]}</AnimatedText>{product.title.includes(" ") ? ` ${product.title.split(" ").slice(1).join(" ")}` : ""}
+                    <AnimatedText>{product.shortTitle || product.title}</AnimatedText>
                   </h3>
-                  <p className="mt-3 text-[15px] leading-[1.55] text-[#667085]">
+                  <p className="mt-3 line-clamp-2 text-[15px] leading-[1.55] text-[#667085]">
                     {product.summary}
                   </p>
                   <p className="mt-4 text-lg font-semibold text-[#102a43]">
@@ -441,17 +437,29 @@ export function ProductsPageShell({
                       ))}
                     </div>
                   </div>
-                  <div className="mt-auto flex flex-wrap justify-start gap-2 pt-6">
+                  <div className="mt-auto flex flex-wrap items-center justify-start gap-2 pt-6">
                     <Cta href={productPath(product.slug)} icon={ArrowRight}>
-                      View product details
+                      View details
                     </Cta>
-                    <Cta
-                      href={createWhatsappHref(`Hi MacVault, I want to confirm today’s price for ${product.title}.`)}
-                      icon={MessageCircle}
+                    <ProductWhatsappCta
+                      productName={product.title}
+                      productUrl={productPath(product.slug)}
+                      label="Confirm price"
                       variant="secondary"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => toggleCompare(product.slug)}
+                      className={`inline-flex items-center gap-1 rounded-full border px-3 py-2 text-xs font-semibold transition-all ${
+                        isCompared(product.slug)
+                          ? "border-[#0a84ff] bg-[#0a84ff] text-white"
+                          : "border-[#102a431a] bg-[#f8fafc] text-[#475467] hover:border-[#0a84ff40] hover:text-[#0057d8]"
+                      }`}
+                      title={isCompared(product.slug) ? "Remove from comparison" : "Add to specs comparison"}
                     >
-                      Confirm today&apos;s price
-                    </Cta>
+                      <Scale className="size-3.5" />
+                      <span>{isCompared(product.slug) ? "Comparing" : "Compare"}</span>
+                    </button>
                   </div>
                 </div>
               </article>
