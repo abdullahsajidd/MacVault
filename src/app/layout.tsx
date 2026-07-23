@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { buildMetadata, metadataBase } from "@/lib/seo";
 import { CatalogProvider } from "@/components/catalog-provider";
 import { PrivacyConsent } from "@/components/privacy-consent";
@@ -162,6 +163,7 @@ export default async function RootLayout({
         <AnalyticsEvents />
         <SanityLive />
         <PrivacyConsent />
+        <SpeedInsights />
       </body>
     </html>
   );
